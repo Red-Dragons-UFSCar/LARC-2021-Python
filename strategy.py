@@ -1,9 +1,7 @@
-import simClasses
-import main
 import action
-import numpy
 
-def strategy(ball, robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2):
+
+def strategy(ball, robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, mray):
     """Picks a strategy depending on the status of the field"""
     
     #For the time being, the only statuses considered are which side of the field the ball is in
