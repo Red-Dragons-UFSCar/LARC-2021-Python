@@ -6,7 +6,7 @@ from bridge import (Actuator, Replacer, Vision, Referee,
 from math import pi, fmod, atan2, fabs
 
 from simClasses import *
-import action
+
 import strategy
 
 if __name__ == "__main__":
