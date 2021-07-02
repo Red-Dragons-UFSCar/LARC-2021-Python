@@ -7,6 +7,7 @@ from math import pi, fmod, atan2, fabs
 
 from simClasses import *
 import action
+import strategy
 
 if __name__ == "__main__":
 
@@ -56,9 +57,10 @@ if __name__ == "__main__":
         if ref_data["game_on"]:
             # Se o modo de jogo estiver em "Game on"
 
-            action.shoot(robot2,ball,leftSide= not mray, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
-            action.protectGoal(robot1, ball,50, leftSide= not mray)
-            action.screenOutBall(robot0,ball,10,leftSide= not mray)
+            #action.shoot(robot2,ball,leftSide= not mray, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
+            #action.protectGoal(robot1, ball,50, leftSide= not mray)
+            #action.screenOutBall(robot0,ball,10,leftSide= not mray)
+            strategy.strategy(ball, robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, mray)
 
 
         elif ref_data["foul"] != 7:
