@@ -24,7 +24,6 @@ def approx(robot,target,avoidObst=True,obst=None,n=8,d=2):
 
 #% Function to control the robot with or without collision avoidance
 def univecController(robot,target,avoidObst=True,obst=None,n=8,d=2,stopWhenArrive=False, doubleFace=True):
-    inCorner(target,robot)
     navigate=Univector() #? Defines the navigation algorithm
     dl=0.000001          #? Constant to approximate phi_v
     k_w=1                #? Feedback constant (k_w=1 means no gain)
@@ -103,8 +102,6 @@ def changeTargetTheta(robot, corner):
         else:
             target.update(theta = 0)
 
-    return None
-
 def inCorner(target, robot):
 
     flagCorner = False
@@ -130,5 +127,3 @@ def inCorner(target, robot):
             target.update(yPos = target.yPos-3)
     if flagCorner:
         changeTargetTheta(robot, corner)
-
-    return flagCorner, corner
