@@ -90,14 +90,14 @@ def changeTargetTheta(robot, corner):
     if robot.yPos > 75:
         if corner == 1:
             target.update(theta = 90)
-        elif corner == 3
+        elif corner == 3:
             target.update(theta = -90)
         else:
             target.update(theta = 0)
     else:
         if corner == 1:
             target.update(theta = -90)
-        elif corner == 3
+        elif corner == 3:
             target.update(theta = 90)        
         else:
             target.update(theta = 0)

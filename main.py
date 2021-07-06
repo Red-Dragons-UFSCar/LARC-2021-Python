@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 
 from bridge import (Actuator, Replacer, Vision, Referee,
                         NUM_BOTS, convert_angle, Entity)
