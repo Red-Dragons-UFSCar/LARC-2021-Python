@@ -84,3 +84,46 @@ def whichFace(robot,target): #Apenas mudar o -1 aqui funciona!
             robot.theta = arctan2(sin(robot.theta + pi), cos(robot.theta + pi))
             robot.face = 1
 #'''
+
+def changeTargetTheta(robot, corner):
+
+    if robot.yPos > 75:
+        if corner == 1:
+            target.update(theta = 90)
+        elif corner == 3
+            target.update(theta = -90)
+        else:
+            target.update(theta = 0)
+    else:
+        if corner == 1:
+            target.update(theta = -90)
+        elif corner == 3
+            target.update(theta = 90)        
+        else:
+            target.update(theta = 0)
+
+def inCorner(target, robot):
+
+    flagCorner = False
+    if target.xPos < 7:
+        flagCorner = True
+        corner = 1
+        if target.xPos < 3:
+            target.update(xPos = target.xPos+3)
+    elif target.xPos > 143:
+        flagCorner = True
+        corner = 3
+        if target.xPos > 147:
+            target.update(xPos = target.xPos-3)
+    if target.yPos < 7:
+        flagCorner = True
+        corner = 2
+        if target.yPos < 3:
+            target.update(yPos = target.yPos+3)
+    elif target.yPos > 123:
+        flagCorner = True
+        corner = 4   
+        if target.yPos > 127:
+            target.update(yPos = target.yPos-3)
+    if flagCorner:
+        changeTargetTheta(robot, corner)
