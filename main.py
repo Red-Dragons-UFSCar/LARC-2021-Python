@@ -7,7 +7,7 @@ from math import pi, fmod, atan2, fabs
 
 from simClasses import *
 
-import strategy
+from strategy import *
 
 if __name__ == "__main__":
 
@@ -30,6 +30,8 @@ if __name__ == "__main__":
     robotEnemy2 = Robot(2, actuator)
 
     ball = Ball()
+
+    strategy = Strategy(robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball)
 
     # Main infinite loop
     while True:
@@ -56,11 +58,7 @@ if __name__ == "__main__":
 
         if ref_data["game_on"]:
             # Se o modo de jogo estiver em "Game on"
-
-            #action.shoot(robot2,ball,leftSide= not mray, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
-            #action.protectGoal(robot1, ball,50, leftSide= not mray)
-            #action.screenOutBall(robot0,ball,10,leftSide= not mray)
-            strategy.strategy(ball, robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, mray)
+            strategy.basicStg()
 
 
         elif ref_data["foul"] != 7:
