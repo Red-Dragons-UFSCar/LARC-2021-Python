@@ -130,6 +130,10 @@ def screenOutBall(robot,ball,staticPoint,leftSide=True,upperLim=200,lowerLim=0,f
 
     robot.simSetVel(v,w)
 
+
+
+    
+
 #% Goalkeeper Actions
 #TODO #1 More effective way to predict the ball position
 def blockBall(robot,ball,leftSide=True):

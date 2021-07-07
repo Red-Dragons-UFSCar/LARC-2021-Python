@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     ball = Ball()
 
-    strategy = Strategy(robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball)
+    strategy = Strategy(robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray)
 
     # Main infinite loop
     while True:
