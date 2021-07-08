@@ -12,20 +12,28 @@ class Strategy:
         self.ball = ball
         self.mray = mray
     
-
-    def basicStg(self):
+    def zagalo(self):
         """Picks a strategy depending on the status of the field"""
-        
         #For the time being, the only statuses considered are which side of the field the ball is in
         if self.ball.xPos < 0:
-            action.shoot(self.robot2, self.ball,leftSide= not self.mray, friend1 = self.robot0, friend2 = self.robot1, enemy1=self.robotEnemy0,  enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
-            action.protectGoal(self.robot1, self.ball,50, leftSide= not self.mray)
-            action.screenOutBall(self.robot0, self.ball, 10, leftSide= not self.mray)
-
+            self.basicStgDef(self)
         else:
-            action.shoot(self.robot2, self.ball, leftSide= not self.mray, friend1 = self.robot0, friend2 = self.robot1, enemy1=self.robotEnemy0,  enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
-            action.protectGoal(self.robot1, self.ball,50, leftSide= not self.mray)
-            action.screenOutBall(self.robot0, self.ball, 10, leftSide= not self.mray)
+            self.basicStgAtt(self)
+
+    def basicStgDef(self):
+        """Basic original strategy"""
+        action.shoot(self.robot2, self.ball,leftSide= not self.mray, friend1 = self.robot0, friend2 = self.robot1, enemy1=self.robotEnemy0,  enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
+        action.protectGoal(self.robot1, self.ball,50, leftSide= not self.mray)
+        action.screenOutBall(self.robot0, self.ball, 10, leftSide= not self.mray)
+
+    def basicStgAtt(self):
+        """Basic alternative strategy"""
+        action.shoot(self.robot2, self.ball, leftSide= not self.mray, friend1 = self.robot0, friend2 = self.robot1, enemy1=self.robotEnemy0,  enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
+        action.protectGoal(self.robot1, self.ball,50, leftSide= not self.mray)
+        action.screenOutBall(self.robot0, self.ball, 10, leftSide= not self.mray)
+        
+        
+        
 
     
 

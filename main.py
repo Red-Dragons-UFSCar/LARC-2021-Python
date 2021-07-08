@@ -58,7 +58,7 @@ if __name__ == "__main__":
 
         if ref_data["game_on"]:
             # Se o modo de jogo estiver em "Game on"
-            strategy.basicStg()
+            strategy.zagalo()
 
 
         elif ref_data["foul"] != 7:
