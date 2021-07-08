@@ -83,6 +83,12 @@ def convert_width(w) -> float:
     except TypeError:
         return 0
 
+def inverse_width(w) -> float:
+    try:
+        return (w / 100) - WIDTH
+    except TypeError:
+        return 0
+
 def convert_length(d) -> float:
     """
     Converts width from the simulator data to centimetres
@@ -90,6 +96,12 @@ def convert_length(d) -> float:
     """
     try:
         return (LENGTH + d) * 100
+    except TypeError:
+        return 0
+
+def inverse_length(d) -> float:
+    try:
+        return (d / 100) - LENGTH
     except TypeError:
         return 0
 
@@ -373,11 +385,15 @@ class Replacer():
                             c_bool(my_robots_are_yellow))
 
     def place(self, index, x, y, angle):
-        """Sends a index indicated bot to x, y and angle."""
+        """
+            Sends a index indicated bot to x, y and angle.
+            *Needs to use seld.send() to actualy send, or use place_all
+        """
         lib.replacer_place_robot(c_int32(index), 
-                                    c_double(x), 
-                                    c_double(y), 
+                                    c_double(inverse_length(x)), 
+                                    c_double(inverse_width(y)), 
                                     c_double(angle))
+        lib.replacer_send_frame()
 
     def place_all(self, placement):
         """Sends a list of Entities locations"""
@@ -387,6 +403,10 @@ class Replacer():
             except Exception as e:
                 print("placement exception:", e)
 
+        lib.replacer_send_frame()
+
+    def send(self):
+        '''Actualy sends the frame'''
         lib.replacer_send_frame()
 
     def __del__(self):
