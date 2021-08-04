@@ -169,6 +169,7 @@ from math import pi, fmod, atan2, fabs
 
 from simClasses import *
 import action
+import fouls
 
 if __name__ == "__main__":
 
@@ -221,23 +222,7 @@ if __name__ == "__main__":
             action.shoot(robot2,ball,leftSide= not mray, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
             action.protectGoal(robot1, ball,50, leftSide= not mray)
             action.screenOutBall(robot0,ball,10,leftSide= not mray)
-
-
-        #elif ref_data["foul"] != 7:
-            # foul behaviour
-            #actuator.stop()
-
-       # elif ref_data["foul"] == 1:
-
-        #elif ref_data["foul"] == 2:
-
-        #elif ref_data["foul"] == 3:
-
-        elif ref_data["foul"] == 4:
-            replacement.place(0,-0.2, 0, 0)
-            replacement.place(1,-0.2, 0.2, 0)
-            replacement.place(2,-0.2, -0.2, 0)
-            replacement.send()
-       # elif ref_data["foul"] == 5:
+    
+        else: fouls.replacement_fouls(replacement,ref_data,mray)
         
             
