@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 '''
-from bridge import (Actuator, Replacer, Vision, Referee, 
+from bridge import (Actuator, Replacer, Vision, Referee,
                         NUM_BOTS, convert_angle, Entity)
 
 from math import pi, fmod, atan2, fabs
@@ -30,7 +30,7 @@ def smallestAngleDiff(target, source):
 
 def controller(field, objectives):
     """
-        Basic PID controller that sets the speed of each motor 
+        Basic PID controller that sets the speed of each motor
         sends robot to objective coordinate
         Courtesy of RoboCin
     """
@@ -52,13 +52,13 @@ def controller(field, objectives):
         left_motor_speed = 0
 
         reversed = False
-        
+
         objective = objectives[i]
         our_bot = our_bots[i]
 
         angle_rob = our_bot.a
 
-        angle_obj = atan2( objective.y - our_bot.y, 
+        angle_obj = atan2( objective.y - our_bot.y,
                             objective.x - our_bot.x )
 
         error = smallestAngleDiff(angle_rob, angle_obj)
@@ -70,7 +70,7 @@ def controller(field, objectives):
 
         # set motor speed based on error and K constants
         error_speed = (Kp * error) + (Kd * (error - controller.lastError))
-        
+
         controller.lastError = error
 
         baseSpeed = 30
@@ -222,7 +222,6 @@ if __name__ == "__main__":
             action.shoot(robot2,ball,leftSide= not mray, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
             action.protectGoal(robot1, ball,50, leftSide= not mray)
             action.screenOutBall(robot0,ball,10,leftSide= not mray)
-    
-        else: fouls.replacement_fouls(replacement,ref_data,mray)
-        
-            
+
+        else:
+            fouls.replacement_fouls(replacement,ref_data,mray)

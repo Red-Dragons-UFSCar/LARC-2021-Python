@@ -3,7 +3,7 @@ from bridge import (Actuator, Replacer, Vision, Referee,NUM_BOTS, convert_angle,
 
 
 def replacement_fouls(replacement, ref_data, mray):
-    
+
 
     if ref_data["foul"] == 1:
         entidade0 = Entity(x=50, y=100,a=0, index=0)
@@ -41,5 +41,5 @@ def replacement_fouls(replacement, ref_data, mray):
         entidade2 = Entity(x=50, y=20,a=0, index=2)
         replacement.place_all([entidade0, entidade1, entidade2])
 
-    elif ref_data["foul"] == 7:
-        actuator.stop()
+    #elif ref_data["foul"] == 7:
+        #actuator.stop()
