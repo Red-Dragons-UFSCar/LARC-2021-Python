@@ -53,17 +53,22 @@ if __name__ == "__main__":
         robotEnemy2.simGetPose(data_their_bots[2])
         ball.simGetPose(data_ball)
 
-        if ref_data["game_on"]:
+        if ref_data["game_on"] or ref_data["foul"] == 5:
+        #if ref_data["game_on"]:
             # Se o modo de jogo estiver em "Game on"
 
-            action.shoot(robot2,ball,leftSide= not mray, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
-            action.protectGoal(robot1, ball,50, leftSide= not mray)
-            action.screenOutBall(robot0,ball,10,leftSide= not mray)
+            action.shoot(robot2,ball,leftSide= not mray, friend1 = robot1, friend2 = robot0)
+            #action.protectGoal(robot1, ball,50, leftSide= not mray)
+            #action.screenOutBall(robot0,ball,-10,leftSide= not mray)
 
 
-        elif ref_data["foul"] != 7:
+        elif ref_data["foul"] != 7 and ref_data["foul"] != 5:
+        #elif ref_data["foul"] != 7:
             # foul behaviour
             actuator.stop()
+            replacement.place(0, 0.3, 0, 0)
+            replacement.place(1, 0.3, 0.3, 0)
+            replacement.place(2, 0.3, -0.3, 0)
 
         else:
             # halt behavior

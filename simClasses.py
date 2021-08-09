@@ -97,6 +97,7 @@ class Robot:
     def __init__(self, index, actuator):
         self.flagDirectGoal=False
         self.flagCruzamento=False
+        self.flagTrocaFace=False
         self.index=int32(index)
         self.actuator=actuator
         self.face=1                          #? Defines the current face of the robot
@@ -111,7 +112,7 @@ class Robot:
         self.vTheta=0
         self.vL=0                            #? Left wheel velocity (cm/s) => updated on simClasses.py -> simSetVel()
         self.vR=0                            #? Right wheel velocity (cm/s) =>  updated on simClasses.py -> simSetVel()
-        self.vMax=30                             #! Robot max velocity (cm/s)
+        self.vMax=35                             #! Robot max velocity (cm/s)
         self.rMax=3*self.vMax                #! Robot max rotation velocity (rad*cm/s)
         self.L=7.5                           #? Base length of the robot (cm)
         self.LSimulador=6.11                 #? Base length on coppelia of the robot (cm)

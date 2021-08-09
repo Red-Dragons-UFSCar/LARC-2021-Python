@@ -68,13 +68,14 @@ def shoot(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enem
         arrivalTheta=arctan2(65-ball.yPos,150-ball.xPos) #? Angle between the ball and point (150,65)
     else:
         arrivalTheta=arctan2(65-ball.yPos,-ball.xPos) #? Angle between the ball and point (0,65)
+    #robot.target.update(ball.xPos,ball.yPos,0)
     robot.target.update(ball.xPos,ball.yPos,arrivalTheta)
 
     if friend1 is None and friend2 is None: #? No friends to avoid
-        v,w=univecController(robot,robot.target,avoidObst=False,n=16)
+        v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
     else: #? Both friends to avoid
         robot.obst.update(robot,friend1,friend2,enemy1,enemy2,enemy3)
-        v,w=univecController(robot,robot.target,True,robot.obst,16)
+        v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
 
     robot.simSetVel(v,w)
 
@@ -299,4 +300,4 @@ def positionChange(arrayFunctions, ball, arraySideCrossing, leftSide = True):
     return arrayFunctions
 
 def girar(robot):
-    robot.simSetVel(10,0)
+    robot.simSetVel(0,0)
