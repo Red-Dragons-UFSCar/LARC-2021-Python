@@ -14,34 +14,30 @@ class Univector:
 
 
     def rotMatrix(self,alpha):                                                  # Função que retorna uma matriz de rotação
-
         return array(((cos(alpha),-sin(alpha)),(sin(alpha),cos(alpha))))
 
 
     def phi_h_CW(self,x,y,xg,yg):                                               # Função que retorna o campo espiral hiperbólico horário
-
         rho=sqrt((x-xg)**2+(y-yg)**2)
         theta=arctan2(y-yg,x-xg)
 
         if rho > self.d_e:
             phi=theta-0.5*pi*(2-((self.d_e+self.k_r)/(rho+self.k_r)))
-            
+
         else:
             phi=theta-0.5*pi*sqrt(rho/self.d_e)
 
-        phi=arctan2(sin(phi),cos(phi)) #? Trick to mantain phi between [-pi,pi]
+        phi=arctan2(sin(phi),cos(phi))                                          #? Trick to mantain phi between [-pi,pi]
 
         return phi
 
 
     def phi_h_CCW(self,x,y,xg,yg):                                              # Função que retorna o campo espiral hiperbólico anti-horário
-
         rho=sqrt((x-xg)**2+(y-yg)**2)
         theta=arctan2(y-yg,x-xg)
 
         if rho > self.d_e:
             phi=theta+0.5*pi*(2-((self.d_e+self.k_r)/(rho+self.k_r)))
-
         else:
             phi=theta+0.5*pi*sqrt(rho/self.d_e)
 
@@ -51,19 +47,16 @@ class Univector:
 
 
     def N_h(self,phi):                                                          # Vetor diretor Nh de um angulo phi dado
-
         return array([[cos(phi)],[sin(phi)]])
 
-    def gaussianFunc(self,r):                                                   # Função gaussiana
 
+    def gaussianFunc(self,r):                                                   # Função gaussiana
         return exp(-0.5*(r/self.delta)**2)
+
 
     #% This is the hyperbolic vector field which yields us to the target position with the desired posture
     #% without avoiding any obstacle
-
-    #'''
     def hipVecField(self,robot,target):
-
         matrix=array(((cos(-target.theta),-sin(-target.theta)),(sin(-target.theta),cos(-target.theta))))    # Matrizes de rotação necessárias
         matrix2=array(((cos(target.theta),-sin(target.theta)),(sin(target.theta),cos(target.theta))))
 
@@ -91,10 +84,8 @@ class Univector:
             y_phi = 0.5*(abs(yl)*nCCW[1][0]+abs(yr)**2*nCW[1][0])/self.d_e
             phi = arctan2(y_phi, x_phi)
             phi = phi[0]
-
         elif (y < -self.d_e):
             phi=self.phi_h_CW(x,y+self.d_e,0,0)
-
         else:
             phi=self.phi_h_CCW(x,y-self.d_e,0,0)
 
