@@ -32,7 +32,11 @@ class Strategy:
         action.protectGoal(self.robot1, self.ball,50, leftSide= not self.mray)
         action.screenOutBall(self.robot0, self.ball, 10, leftSide= not self.mray)
         
-        
+    def stgFullAtt(self):
+        """Crazy test attack strategy"""
+        action.shoot(self.robot2, self.ball, leftSide= not self.mray, friend1 = self.robot0, friend2 = self.robot1, enemy1=self.robotEnemy0,  enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
+        action.shoot(self.robot1, self.ball, leftSide= not self.mray, friend1 = self.robot1, friend2 = self.robot2, enemy1=self.robotEnemy0,  enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
+        action.screenOutBall(self.robot0, self.ball, 10, leftSide= not self.mray)
         
 
     
