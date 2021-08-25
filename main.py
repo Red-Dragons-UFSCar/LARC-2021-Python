@@ -174,7 +174,7 @@ import fouls
 if __name__ == "__main__":
 
     # Choose team (my robots are yellow)
-    mray = False
+    mray = True
 
     # Initialize all clients
     actuator = Actuator(mray, "127.0.0.1", 20011)
@@ -222,6 +222,10 @@ if __name__ == "__main__":
             action.shoot(robot2,ball,leftSide= not mray, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
             action.protectGoal(robot1, ball,50, leftSide= not mray)
             action.screenOutBall(robot0,ball,10,leftSide= not mray)
+     
+        if ref_data["foul"] == 2:
+            print("robot0:", robot0.xPos, ",", robot0.yPos, "\nrobot1:", robot1.xPos, ",", robot1.yPos, "\nrobot2:", robot2.xPos, ",", robot2.yPos)
 
-        else:
+        '''else:
             fouls.replacement_fouls(replacement,ref_data,mray)
+'''
