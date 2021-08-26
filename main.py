@@ -56,7 +56,7 @@ if __name__ == "__main__":
         robotEnemy2.simGetPose(data_their_bots[2])
         ball.simGetPose(data_ball)
 
-        if ref_data["game_on"]:
+        if ref_data["game_on"] or ref_data["foul"] != 7:
             # Se o modo de jogo estiver em "Game on"
             strategy.zagalo()
 

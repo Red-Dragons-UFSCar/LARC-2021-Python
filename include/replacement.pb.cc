@@ -5,150 +5,187 @@
 
 #include <algorithm>
 
+#include <google/protobuf/stubs/common.h>
+#include <google/protobuf/stubs/port.h>
 #include <google/protobuf/io/coded_stream.h>
-#include <google/protobuf/extension_set.h>
-#include <google/protobuf/wire_format_lite.h>
+#include <google/protobuf/wire_format_lite_inl.h>
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/generated_message_reflection.h>
 #include <google/protobuf/reflection_ops.h>
 #include <google/protobuf/wire_format.h>
+// This is a temporary google only hack
+#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
+#include "third_party/protobuf/version.h"
+#endif
 // @@protoc_insertion_point(includes)
-#include <google/protobuf/port_def.inc>
-extern PROTOBUF_INTERNAL_EXPORT_common_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Robot_common_2eproto;
-extern PROTOBUF_INTERNAL_EXPORT_replacement_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_BallReplacement_replacement_2eproto;
-extern PROTOBUF_INTERNAL_EXPORT_replacement_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_RobotReplacement_replacement_2eproto;
+
+namespace protobuf_common_2eproto {
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_common_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_Robot;
+}  // namespace protobuf_common_2eproto
+namespace protobuf_replacement_2eproto {
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_replacement_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_BallReplacement;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_replacement_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_RobotReplacement;
+}  // namespace protobuf_replacement_2eproto
 namespace fira_message {
 namespace sim_to_ref {
 class RobotReplacementDefaultTypeInternal {
  public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<RobotReplacement> _instance;
+  ::google::protobuf::internal::ExplicitlyConstructed<RobotReplacement>
+      _instance;
 } _RobotReplacement_default_instance_;
 class BallReplacementDefaultTypeInternal {
  public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<BallReplacement> _instance;
+  ::google::protobuf::internal::ExplicitlyConstructed<BallReplacement>
+      _instance;
 } _BallReplacement_default_instance_;
 class ReplacementDefaultTypeInternal {
  public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Replacement> _instance;
+  ::google::protobuf::internal::ExplicitlyConstructed<Replacement>
+      _instance;
 } _Replacement_default_instance_;
 }  // namespace sim_to_ref
 }  // namespace fira_message
-static void InitDefaultsscc_info_BallReplacement_replacement_2eproto() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::fira_message::sim_to_ref::_BallReplacement_default_instance_;
-    new (ptr) ::fira_message::sim_to_ref::BallReplacement();
-    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::fira_message::sim_to_ref::BallReplacement::InitAsDefaultInstance();
-}
-
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_BallReplacement_replacement_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_BallReplacement_replacement_2eproto}, {}};
-
-static void InitDefaultsscc_info_Replacement_replacement_2eproto() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::fira_message::sim_to_ref::_Replacement_default_instance_;
-    new (ptr) ::fira_message::sim_to_ref::Replacement();
-    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::fira_message::sim_to_ref::Replacement::InitAsDefaultInstance();
-}
-
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<2> scc_info_Replacement_replacement_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 2, 0, InitDefaultsscc_info_Replacement_replacement_2eproto}, {
-      &scc_info_BallReplacement_replacement_2eproto.base,
-      &scc_info_RobotReplacement_replacement_2eproto.base,}};
-
-static void InitDefaultsscc_info_RobotReplacement_replacement_2eproto() {
+namespace protobuf_replacement_2eproto {
+static void InitDefaultsRobotReplacement() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
     void* ptr = &::fira_message::sim_to_ref::_RobotReplacement_default_instance_;
     new (ptr) ::fira_message::sim_to_ref::RobotReplacement();
-    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
   ::fira_message::sim_to_ref::RobotReplacement::InitAsDefaultInstance();
 }
 
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_RobotReplacement_replacement_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 1, 0, InitDefaultsscc_info_RobotReplacement_replacement_2eproto}, {
-      &scc_info_Robot_common_2eproto.base,}};
+::google::protobuf::internal::SCCInfo<1> scc_info_RobotReplacement =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsRobotReplacement}, {
+      &protobuf_common_2eproto::scc_info_Robot.base,}};
 
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_replacement_2eproto[3];
-static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_replacement_2eproto = nullptr;
-static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_replacement_2eproto = nullptr;
+static void InitDefaultsBallReplacement() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_replacement_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+  {
+    void* ptr = &::fira_message::sim_to_ref::_BallReplacement_default_instance_;
+    new (ptr) ::fira_message::sim_to_ref::BallReplacement();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::fira_message::sim_to_ref::BallReplacement::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_BallReplacement =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsBallReplacement}, {}};
+
+static void InitDefaultsReplacement() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::fira_message::sim_to_ref::_Replacement_default_instance_;
+    new (ptr) ::fira_message::sim_to_ref::Replacement();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::fira_message::sim_to_ref::Replacement::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<2> scc_info_Replacement =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 2, InitDefaultsReplacement}, {
+      &protobuf_replacement_2eproto::scc_info_BallReplacement.base,
+      &protobuf_replacement_2eproto::scc_info_RobotReplacement.base,}};
+
+void InitDefaults() {
+  ::google::protobuf::internal::InitSCC(&scc_info_RobotReplacement.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_BallReplacement.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Replacement.base);
+}
+
+::google::protobuf::Metadata file_level_metadata[3];
+
+const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::fira_message::sim_to_ref::RobotReplacement, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::fira_message::sim_to_ref::RobotReplacement, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::fira_message::sim_to_ref::RobotReplacement, position_),
-  PROTOBUF_FIELD_OFFSET(::fira_message::sim_to_ref::RobotReplacement, yellowteam_),
-  PROTOBUF_FIELD_OFFSET(::fira_message::sim_to_ref::RobotReplacement, turnon_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::fira_message::sim_to_ref::RobotReplacement, position_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::fira_message::sim_to_ref::RobotReplacement, yellowteam_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::fira_message::sim_to_ref::RobotReplacement, turnon_),
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::fira_message::sim_to_ref::BallReplacement, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::fira_message::sim_to_ref::BallReplacement, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::fira_message::sim_to_ref::BallReplacement, x_),
-  PROTOBUF_FIELD_OFFSET(::fira_message::sim_to_ref::BallReplacement, y_),
-  PROTOBUF_FIELD_OFFSET(::fira_message::sim_to_ref::BallReplacement, vx_),
-  PROTOBUF_FIELD_OFFSET(::fira_message::sim_to_ref::BallReplacement, vy_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::fira_message::sim_to_ref::BallReplacement, x_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::fira_message::sim_to_ref::BallReplacement, y_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::fira_message::sim_to_ref::BallReplacement, vx_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::fira_message::sim_to_ref::BallReplacement, vy_),
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::fira_message::sim_to_ref::Replacement, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::fira_message::sim_to_ref::Replacement, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::fira_message::sim_to_ref::Replacement, ball_),
-  PROTOBUF_FIELD_OFFSET(::fira_message::sim_to_ref::Replacement, robots_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::fira_message::sim_to_ref::Replacement, ball_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::fira_message::sim_to_ref::Replacement, robots_),
 };
-static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::fira_message::sim_to_ref::RobotReplacement)},
   { 8, -1, sizeof(::fira_message::sim_to_ref::BallReplacement)},
   { 17, -1, sizeof(::fira_message::sim_to_ref::Replacement)},
 };
 
-static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fira_message::sim_to_ref::_RobotReplacement_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fira_message::sim_to_ref::_BallReplacement_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fira_message::sim_to_ref::_Replacement_default_instance_),
+static ::google::protobuf::Message const * const file_default_instances[] = {
+  reinterpret_cast<const ::google::protobuf::Message*>(&::fira_message::sim_to_ref::_RobotReplacement_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::fira_message::sim_to_ref::_BallReplacement_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::fira_message::sim_to_ref::_Replacement_default_instance_),
 };
 
-const char descriptor_table_protodef_replacement_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\021replacement.proto\022\027fira_message.sim_to"
-  "_ref\032\014common.proto\"]\n\020RobotReplacement\022%"
-  "\n\010position\030\001 \001(\0132\023.fira_message.Robot\022\022\n"
-  "\nyellowteam\030\005 \001(\010\022\016\n\006turnon\030\006 \001(\010\"\?\n\017Bal"
-  "lReplacement\022\t\n\001x\030\001 \001(\001\022\t\n\001y\030\002 \001(\001\022\n\n\002vx"
-  "\030\003 \001(\001\022\n\n\002vy\030\004 \001(\001\"\200\001\n\013Replacement\0226\n\004ba"
-  "ll\030\001 \001(\0132(.fira_message.sim_to_ref.BallR"
-  "eplacement\0229\n\006robots\030\002 \003(\0132).fira_messag"
-  "e.sim_to_ref.RobotReplacementb\006proto3"
-  ;
-static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_replacement_2eproto_deps[1] = {
-  &::descriptor_table_common_2eproto,
-};
-static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_replacement_2eproto_sccs[3] = {
-  &scc_info_BallReplacement_replacement_2eproto.base,
-  &scc_info_Replacement_replacement_2eproto.base,
-  &scc_info_RobotReplacement_replacement_2eproto.base,
-};
-static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_replacement_2eproto_once;
-const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_replacement_2eproto = {
-  false, false, descriptor_table_protodef_replacement_2eproto, "replacement.proto", 357,
-  &descriptor_table_replacement_2eproto_once, descriptor_table_replacement_2eproto_sccs, descriptor_table_replacement_2eproto_deps, 3, 1,
-  schemas, file_default_instances, TableStruct_replacement_2eproto::offsets,
-  file_level_metadata_replacement_2eproto, 3, file_level_enum_descriptors_replacement_2eproto, file_level_service_descriptors_replacement_2eproto,
-};
+void protobuf_AssignDescriptors() {
+  AddDescriptors();
+  AssignDescriptors(
+      "replacement.proto", schemas, file_default_instances, TableStruct::offsets,
+      file_level_metadata, NULL, NULL);
+}
 
-// Force running AddDescriptors() at dynamic initialization time.
-static bool dynamic_init_dummy_replacement_2eproto = (static_cast<void>(::PROTOBUF_NAMESPACE_ID::internal::AddDescriptors(&descriptor_table_replacement_2eproto)), true);
+void protobuf_AssignDescriptorsOnce() {
+  static ::google::protobuf::internal::once_flag once;
+  ::google::protobuf::internal::call_once(once, protobuf_AssignDescriptors);
+}
+
+void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
+void protobuf_RegisterTypes(const ::std::string&) {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 3);
+}
+
+void AddDescriptorsImpl() {
+  InitDefaults();
+  static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
+      "\n\021replacement.proto\022\027fira_message.sim_to"
+      "_ref\032\014common.proto\"]\n\020RobotReplacement\022%"
+      "\n\010position\030\001 \001(\0132\023.fira_message.Robot\022\022\n"
+      "\nyellowteam\030\005 \001(\010\022\016\n\006turnon\030\006 \001(\010\"\?\n\017Bal"
+      "lReplacement\022\t\n\001x\030\001 \001(\001\022\t\n\001y\030\002 \001(\001\022\n\n\002vx"
+      "\030\003 \001(\001\022\n\n\002vy\030\004 \001(\001\"\200\001\n\013Replacement\0226\n\004ba"
+      "ll\030\001 \001(\0132(.fira_message.sim_to_ref.BallR"
+      "eplacement\0229\n\006robots\030\002 \003(\0132).fira_messag"
+      "e.sim_to_ref.RobotReplacementb\006proto3"
+  };
+  ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
+      descriptor, 357);
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
+    "replacement.proto", &protobuf_RegisterTypes);
+  ::protobuf_common_2eproto::AddDescriptors();
+}
+
+void AddDescriptors() {
+  static ::google::protobuf::internal::once_flag once;
+  ::google::protobuf::internal::call_once(once, AddDescriptorsImpl);
+}
+// Force AddDescriptors() to be called at dynamic initialization time.
+struct StaticDescriptorInitializer {
+  StaticDescriptorInitializer() {
+    AddDescriptors();
+  }
+} static_descriptor_initializer;
+}  // namespace protobuf_replacement_2eproto
 namespace fira_message {
 namespace sim_to_ref {
 
@@ -158,34 +195,33 @@ void RobotReplacement::InitAsDefaultInstance() {
   ::fira_message::sim_to_ref::_RobotReplacement_default_instance_._instance.get_mutable()->position_ = const_cast< ::fira_message::Robot*>(
       ::fira_message::Robot::internal_default_instance());
 }
-class RobotReplacement::_Internal {
- public:
-  static const ::fira_message::Robot& position(const RobotReplacement* msg);
-};
-
-const ::fira_message::Robot&
-RobotReplacement::_Internal::position(const RobotReplacement* msg) {
-  return *msg->position_;
-}
 void RobotReplacement::clear_position() {
-  if (GetArena() == nullptr && position_ != nullptr) {
+  if (GetArenaNoVirtual() == NULL && position_ != NULL) {
     delete position_;
   }
-  position_ = nullptr;
+  position_ = NULL;
 }
-RobotReplacement::RobotReplacement(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int RobotReplacement::kPositionFieldNumber;
+const int RobotReplacement::kYellowteamFieldNumber;
+const int RobotReplacement::kTurnonFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+RobotReplacement::RobotReplacement()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_replacement_2eproto::scc_info_RobotReplacement.base);
   SharedCtor();
-  RegisterArenaDtor(arena);
-  // @@protoc_insertion_point(arena_constructor:fira_message.sim_to_ref.RobotReplacement)
+  // @@protoc_insertion_point(constructor:fira_message.sim_to_ref.RobotReplacement)
 }
 RobotReplacement::RobotReplacement(const RobotReplacement& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  if (from._internal_has_position()) {
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  if (from.has_position()) {
     position_ = new ::fira_message::Robot(*from.position_);
   } else {
-    position_ = nullptr;
+    position_ = NULL;
   }
   ::memcpy(&yellowteam_, &from.yellowteam_,
     static_cast<size_t>(reinterpret_cast<char*>(&turnon_) -
@@ -194,7 +230,6 @@ RobotReplacement::RobotReplacement(const RobotReplacement& from)
 }
 
 void RobotReplacement::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_RobotReplacement_replacement_2eproto.base);
   ::memset(&position_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&turnon_) -
       reinterpret_cast<char*>(&position_)) + sizeof(turnon_));
@@ -203,125 +238,168 @@ void RobotReplacement::SharedCtor() {
 RobotReplacement::~RobotReplacement() {
   // @@protoc_insertion_point(destructor:fira_message.sim_to_ref.RobotReplacement)
   SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
 void RobotReplacement::SharedDtor() {
-  GOOGLE_DCHECK(GetArena() == nullptr);
   if (this != internal_default_instance()) delete position_;
 }
 
-void RobotReplacement::ArenaDtor(void* object) {
-  RobotReplacement* _this = reinterpret_cast< RobotReplacement* >(object);
-  (void)_this;
-}
-void RobotReplacement::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
-}
 void RobotReplacement::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
+const ::google::protobuf::Descriptor* RobotReplacement::descriptor() {
+  ::protobuf_replacement_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_replacement_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
 const RobotReplacement& RobotReplacement::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_RobotReplacement_replacement_2eproto.base);
+  ::google::protobuf::internal::InitSCC(&protobuf_replacement_2eproto::scc_info_RobotReplacement.base);
   return *internal_default_instance();
 }
 
 
 void RobotReplacement::Clear() {
 // @@protoc_insertion_point(message_clear_start:fira_message.sim_to_ref.RobotReplacement)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArena() == nullptr && position_ != nullptr) {
+  if (GetArenaNoVirtual() == NULL && position_ != NULL) {
     delete position_;
   }
-  position_ = nullptr;
+  position_ = NULL;
   ::memset(&yellowteam_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&turnon_) -
       reinterpret_cast<char*>(&yellowteam_)) + sizeof(turnon_));
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+  _internal_metadata_.Clear();
 }
 
-const char* RobotReplacement::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
-  while (!ctx->Done(&ptr)) {
-    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    CHK_(ptr);
-    switch (tag >> 3) {
+bool RobotReplacement::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:fira_message.sim_to_ref.RobotReplacement)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // .fira_message.Robot position = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          ptr = ctx->ParseMessage(_internal_mutable_position(), ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_position()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       // bool yellowteam = 5;
-      case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 40)) {
-          yellowteam_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(40u /* 40 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &yellowteam_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       // bool turnon = 6;
-      case 6:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 48)) {
-          turnon_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
+      case 6: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(48u /* 48 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &turnon_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
-        if ((tag & 7) == 4 || tag == 0) {
-          ctx->SetLastTag(tag);
+        if (tag == 0) {
           goto success;
         }
-        ptr = UnknownFieldParse(tag,
-            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-            ptr, ctx);
-        CHK_(ptr != nullptr);
-        continue;
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
       }
-    }  // switch
-  }  // while
+    }
+  }
 success:
-  return ptr;
+  // @@protoc_insertion_point(parse_success:fira_message.sim_to_ref.RobotReplacement)
+  return true;
 failure:
-  ptr = nullptr;
-  goto success;
-#undef CHK_
+  // @@protoc_insertion_point(parse_failure:fira_message.sim_to_ref.RobotReplacement)
+  return false;
+#undef DO_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* RobotReplacement::_InternalSerialize(
-    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:fira_message.sim_to_ref.RobotReplacement)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+void RobotReplacement::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:fira_message.sim_to_ref.RobotReplacement)
+  ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   // .fira_message.Robot position = 1;
   if (this->has_position()) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(
-        1, _Internal::position(this), target, stream);
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->_internal_position(), output);
   }
 
   // bool yellowteam = 5;
   if (this->yellowteam() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(5, this->_internal_yellowteam(), target);
+    ::google::protobuf::internal::WireFormatLite::WriteBool(5, this->yellowteam(), output);
   }
 
   // bool turnon = 6;
   if (this->turnon() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(6, this->_internal_turnon(), target);
+    ::google::protobuf::internal::WireFormatLite::WriteBool(6, this->turnon(), output);
   }
 
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
+  }
+  // @@protoc_insertion_point(serialize_end:fira_message.sim_to_ref.RobotReplacement)
+}
+
+::google::protobuf::uint8* RobotReplacement::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:fira_message.sim_to_ref.RobotReplacement)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .fira_message.Robot position = 1;
+  if (this->has_position()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        1, this->_internal_position(), deterministic, target);
+  }
+
+  // bool yellowteam = 5;
+  if (this->yellowteam() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(5, this->yellowteam(), target);
+  }
+
+  // bool turnon = 6;
+  if (this->turnon() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(6, this->turnon(), target);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
   // @@protoc_insertion_point(serialize_to_array_end:fira_message.sim_to_ref.RobotReplacement)
   return target;
@@ -331,14 +409,15 @@ size_t RobotReplacement::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:fira_message.sim_to_ref.RobotReplacement)
   size_t total_size = 0;
 
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
+  }
   // .fira_message.Robot position = 1;
   if (this->has_position()) {
     total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+      ::google::protobuf::internal::WireFormatLite::MessageSize(
         *position_);
   }
 
@@ -352,24 +431,20 @@ size_t RobotReplacement::ByteSizeLong() const {
     total_size += 1 + 1;
   }
 
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
-        _internal_metadata_, total_size, &_cached_size_);
-  }
-  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
 }
 
-void RobotReplacement::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+void RobotReplacement::MergeFrom(const ::google::protobuf::Message& from) {
 // @@protoc_insertion_point(generalized_merge_from_start:fira_message.sim_to_ref.RobotReplacement)
   GOOGLE_DCHECK_NE(&from, this);
   const RobotReplacement* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<RobotReplacement>(
+      ::google::protobuf::internal::DynamicCastToGenerated<const RobotReplacement>(
           &from);
-  if (source == nullptr) {
+  if (source == NULL) {
   // @@protoc_insertion_point(generalized_merge_from_cast_fail:fira_message.sim_to_ref.RobotReplacement)
-    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
   // @@protoc_insertion_point(generalized_merge_from_cast_success:fira_message.sim_to_ref.RobotReplacement)
     MergeFrom(*source);
@@ -379,22 +454,22 @@ void RobotReplacement::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
 void RobotReplacement::MergeFrom(const RobotReplacement& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:fira_message.sim_to_ref.RobotReplacement)
   GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from.has_position()) {
-    _internal_mutable_position()->::fira_message::Robot::MergeFrom(from._internal_position());
+    mutable_position()->::fira_message::Robot::MergeFrom(from.position());
   }
   if (from.yellowteam() != 0) {
-    _internal_set_yellowteam(from._internal_yellowteam());
+    set_yellowteam(from.yellowteam());
   }
   if (from.turnon() != 0) {
-    _internal_set_turnon(from._internal_turnon());
+    set_turnon(from.turnon());
   }
 }
 
-void RobotReplacement::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+void RobotReplacement::CopyFrom(const ::google::protobuf::Message& from) {
 // @@protoc_insertion_point(generalized_copy_from_start:fira_message.sim_to_ref.RobotReplacement)
   if (&from == this) return;
   Clear();
@@ -412,19 +487,21 @@ bool RobotReplacement::IsInitialized() const {
   return true;
 }
 
+void RobotReplacement::Swap(RobotReplacement* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
 void RobotReplacement::InternalSwap(RobotReplacement* other) {
   using std::swap;
-  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(RobotReplacement, turnon_)
-      + sizeof(RobotReplacement::turnon_)
-      - PROTOBUF_FIELD_OFFSET(RobotReplacement, position_)>(
-          reinterpret_cast<char*>(&position_),
-          reinterpret_cast<char*>(&other->position_));
+  swap(position_, other->position_);
+  swap(yellowteam_, other->yellowteam_);
+  swap(turnon_, other->turnon_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata RobotReplacement::GetMetadata() const {
-  return GetMetadataStatic();
+::google::protobuf::Metadata RobotReplacement::GetMetadata() const {
+  protobuf_replacement_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_replacement_2eproto::file_level_metadata[kIndexInFileMessages];
 }
 
 
@@ -432,19 +509,24 @@ void RobotReplacement::InternalSwap(RobotReplacement* other) {
 
 void BallReplacement::InitAsDefaultInstance() {
 }
-class BallReplacement::_Internal {
- public:
-};
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int BallReplacement::kXFieldNumber;
+const int BallReplacement::kYFieldNumber;
+const int BallReplacement::kVxFieldNumber;
+const int BallReplacement::kVyFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-BallReplacement::BallReplacement(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
+BallReplacement::BallReplacement()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_replacement_2eproto::scc_info_BallReplacement.base);
   SharedCtor();
-  RegisterArenaDtor(arena);
-  // @@protoc_insertion_point(arena_constructor:fira_message.sim_to_ref.BallReplacement)
+  // @@protoc_insertion_point(constructor:fira_message.sim_to_ref.BallReplacement)
 }
 BallReplacement::BallReplacement(const BallReplacement& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&x_, &from.x_,
     static_cast<size_t>(reinterpret_cast<char*>(&vy_) -
     reinterpret_cast<char*>(&x_)) + sizeof(vy_));
@@ -460,131 +542,186 @@ void BallReplacement::SharedCtor() {
 BallReplacement::~BallReplacement() {
   // @@protoc_insertion_point(destructor:fira_message.sim_to_ref.BallReplacement)
   SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
 void BallReplacement::SharedDtor() {
-  GOOGLE_DCHECK(GetArena() == nullptr);
 }
 
-void BallReplacement::ArenaDtor(void* object) {
-  BallReplacement* _this = reinterpret_cast< BallReplacement* >(object);
-  (void)_this;
-}
-void BallReplacement::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
-}
 void BallReplacement::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
+const ::google::protobuf::Descriptor* BallReplacement::descriptor() {
+  ::protobuf_replacement_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_replacement_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
 const BallReplacement& BallReplacement::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_BallReplacement_replacement_2eproto.base);
+  ::google::protobuf::internal::InitSCC(&protobuf_replacement_2eproto::scc_info_BallReplacement.base);
   return *internal_default_instance();
 }
 
 
 void BallReplacement::Clear() {
 // @@protoc_insertion_point(message_clear_start:fira_message.sim_to_ref.BallReplacement)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   ::memset(&x_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&vy_) -
       reinterpret_cast<char*>(&x_)) + sizeof(vy_));
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+  _internal_metadata_.Clear();
 }
 
-const char* BallReplacement::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
-  while (!ctx->Done(&ptr)) {
-    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    CHK_(ptr);
-    switch (tag >> 3) {
+bool BallReplacement::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:fira_message.sim_to_ref.BallReplacement)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // double x = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 9)) {
-          x_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
-          ptr += sizeof(double);
-        } else goto handle_unusual;
-        continue;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(9u /* 9 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &x_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       // double y = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 17)) {
-          y_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
-          ptr += sizeof(double);
-        } else goto handle_unusual;
-        continue;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(17u /* 17 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &y_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       // double vx = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 25)) {
-          vx_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
-          ptr += sizeof(double);
-        } else goto handle_unusual;
-        continue;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(25u /* 25 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &vx_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       // double vy = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 33)) {
-          vy_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
-          ptr += sizeof(double);
-        } else goto handle_unusual;
-        continue;
+      case 4: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(33u /* 33 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &vy_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
-        if ((tag & 7) == 4 || tag == 0) {
-          ctx->SetLastTag(tag);
+        if (tag == 0) {
           goto success;
         }
-        ptr = UnknownFieldParse(tag,
-            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-            ptr, ctx);
-        CHK_(ptr != nullptr);
-        continue;
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
       }
-    }  // switch
-  }  // while
+    }
+  }
 success:
-  return ptr;
+  // @@protoc_insertion_point(parse_success:fira_message.sim_to_ref.BallReplacement)
+  return true;
 failure:
-  ptr = nullptr;
-  goto success;
-#undef CHK_
+  // @@protoc_insertion_point(parse_failure:fira_message.sim_to_ref.BallReplacement)
+  return false;
+#undef DO_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* BallReplacement::_InternalSerialize(
-    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:fira_message.sim_to_ref.BallReplacement)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+void BallReplacement::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:fira_message.sim_to_ref.BallReplacement)
+  ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   // double x = 1;
-  if (!(this->x() <= 0 && this->x() >= 0)) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(1, this->_internal_x(), target);
+  if (this->x() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(1, this->x(), output);
   }
 
   // double y = 2;
-  if (!(this->y() <= 0 && this->y() >= 0)) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(2, this->_internal_y(), target);
+  if (this->y() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(2, this->y(), output);
   }
 
   // double vx = 3;
-  if (!(this->vx() <= 0 && this->vx() >= 0)) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(3, this->_internal_vx(), target);
+  if (this->vx() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(3, this->vx(), output);
   }
 
   // double vy = 4;
-  if (!(this->vy() <= 0 && this->vy() >= 0)) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(4, this->_internal_vy(), target);
+  if (this->vy() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(4, this->vy(), output);
   }
 
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
+  }
+  // @@protoc_insertion_point(serialize_end:fira_message.sim_to_ref.BallReplacement)
+}
+
+::google::protobuf::uint8* BallReplacement::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:fira_message.sim_to_ref.BallReplacement)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // double x = 1;
+  if (this->x() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(1, this->x(), target);
+  }
+
+  // double y = 2;
+  if (this->y() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(2, this->y(), target);
+  }
+
+  // double vx = 3;
+  if (this->vx() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(3, this->vx(), target);
+  }
+
+  // double vy = 4;
+  if (this->vy() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(4, this->vy(), target);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
   // @@protoc_insertion_point(serialize_to_array_end:fira_message.sim_to_ref.BallReplacement)
   return target;
@@ -594,48 +731,45 @@ size_t BallReplacement::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:fira_message.sim_to_ref.BallReplacement)
   size_t total_size = 0;
 
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
+  }
   // double x = 1;
-  if (!(this->x() <= 0 && this->x() >= 0)) {
+  if (this->x() != 0) {
     total_size += 1 + 8;
   }
 
   // double y = 2;
-  if (!(this->y() <= 0 && this->y() >= 0)) {
+  if (this->y() != 0) {
     total_size += 1 + 8;
   }
 
   // double vx = 3;
-  if (!(this->vx() <= 0 && this->vx() >= 0)) {
+  if (this->vx() != 0) {
     total_size += 1 + 8;
   }
 
   // double vy = 4;
-  if (!(this->vy() <= 0 && this->vy() >= 0)) {
+  if (this->vy() != 0) {
     total_size += 1 + 8;
   }
 
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
-        _internal_metadata_, total_size, &_cached_size_);
-  }
-  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
 }
 
-void BallReplacement::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+void BallReplacement::MergeFrom(const ::google::protobuf::Message& from) {
 // @@protoc_insertion_point(generalized_merge_from_start:fira_message.sim_to_ref.BallReplacement)
   GOOGLE_DCHECK_NE(&from, this);
   const BallReplacement* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<BallReplacement>(
+      ::google::protobuf::internal::DynamicCastToGenerated<const BallReplacement>(
           &from);
-  if (source == nullptr) {
+  if (source == NULL) {
   // @@protoc_insertion_point(generalized_merge_from_cast_fail:fira_message.sim_to_ref.BallReplacement)
-    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
   // @@protoc_insertion_point(generalized_merge_from_cast_success:fira_message.sim_to_ref.BallReplacement)
     MergeFrom(*source);
@@ -645,25 +779,25 @@ void BallReplacement::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
 void BallReplacement::MergeFrom(const BallReplacement& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:fira_message.sim_to_ref.BallReplacement)
   GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (!(from.x() <= 0 && from.x() >= 0)) {
-    _internal_set_x(from._internal_x());
+  if (from.x() != 0) {
+    set_x(from.x());
   }
-  if (!(from.y() <= 0 && from.y() >= 0)) {
-    _internal_set_y(from._internal_y());
+  if (from.y() != 0) {
+    set_y(from.y());
   }
-  if (!(from.vx() <= 0 && from.vx() >= 0)) {
-    _internal_set_vx(from._internal_vx());
+  if (from.vx() != 0) {
+    set_vx(from.vx());
   }
-  if (!(from.vy() <= 0 && from.vy() >= 0)) {
-    _internal_set_vy(from._internal_vy());
+  if (from.vy() != 0) {
+    set_vy(from.vy());
   }
 }
 
-void BallReplacement::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+void BallReplacement::CopyFrom(const ::google::protobuf::Message& from) {
 // @@protoc_insertion_point(generalized_copy_from_start:fira_message.sim_to_ref.BallReplacement)
   if (&from == this) return;
   Clear();
@@ -681,19 +815,22 @@ bool BallReplacement::IsInitialized() const {
   return true;
 }
 
+void BallReplacement::Swap(BallReplacement* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
 void BallReplacement::InternalSwap(BallReplacement* other) {
   using std::swap;
-  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(BallReplacement, vy_)
-      + sizeof(BallReplacement::vy_)
-      - PROTOBUF_FIELD_OFFSET(BallReplacement, x_)>(
-          reinterpret_cast<char*>(&x_),
-          reinterpret_cast<char*>(&other->x_));
+  swap(x_, other->x_);
+  swap(y_, other->y_);
+  swap(vx_, other->vx_);
+  swap(vy_, other->vy_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata BallReplacement::GetMetadata() const {
-  return GetMetadataStatic();
+::google::protobuf::Metadata BallReplacement::GetMetadata() const {
+  protobuf_replacement_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_replacement_2eproto::file_level_metadata[kIndexInFileMessages];
 }
 
 
@@ -703,153 +840,179 @@ void Replacement::InitAsDefaultInstance() {
   ::fira_message::sim_to_ref::_Replacement_default_instance_._instance.get_mutable()->ball_ = const_cast< ::fira_message::sim_to_ref::BallReplacement*>(
       ::fira_message::sim_to_ref::BallReplacement::internal_default_instance());
 }
-class Replacement::_Internal {
- public:
-  static const ::fira_message::sim_to_ref::BallReplacement& ball(const Replacement* msg);
-};
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Replacement::kBallFieldNumber;
+const int Replacement::kRobotsFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-const ::fira_message::sim_to_ref::BallReplacement&
-Replacement::_Internal::ball(const Replacement* msg) {
-  return *msg->ball_;
-}
-Replacement::Replacement(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena),
-  robots_(arena) {
+Replacement::Replacement()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_replacement_2eproto::scc_info_Replacement.base);
   SharedCtor();
-  RegisterArenaDtor(arena);
-  // @@protoc_insertion_point(arena_constructor:fira_message.sim_to_ref.Replacement)
+  // @@protoc_insertion_point(constructor:fira_message.sim_to_ref.Replacement)
 }
 Replacement::Replacement(const Replacement& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
       robots_(from.robots_) {
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  if (from._internal_has_ball()) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  if (from.has_ball()) {
     ball_ = new ::fira_message::sim_to_ref::BallReplacement(*from.ball_);
   } else {
-    ball_ = nullptr;
+    ball_ = NULL;
   }
   // @@protoc_insertion_point(copy_constructor:fira_message.sim_to_ref.Replacement)
 }
 
 void Replacement::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_Replacement_replacement_2eproto.base);
-  ball_ = nullptr;
+  ball_ = NULL;
 }
 
 Replacement::~Replacement() {
   // @@protoc_insertion_point(destructor:fira_message.sim_to_ref.Replacement)
   SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
 void Replacement::SharedDtor() {
-  GOOGLE_DCHECK(GetArena() == nullptr);
   if (this != internal_default_instance()) delete ball_;
 }
 
-void Replacement::ArenaDtor(void* object) {
-  Replacement* _this = reinterpret_cast< Replacement* >(object);
-  (void)_this;
-}
-void Replacement::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
-}
 void Replacement::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
+const ::google::protobuf::Descriptor* Replacement::descriptor() {
+  ::protobuf_replacement_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_replacement_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
 const Replacement& Replacement::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_Replacement_replacement_2eproto.base);
+  ::google::protobuf::internal::InitSCC(&protobuf_replacement_2eproto::scc_info_Replacement.base);
   return *internal_default_instance();
 }
 
 
 void Replacement::Clear() {
 // @@protoc_insertion_point(message_clear_start:fira_message.sim_to_ref.Replacement)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   robots_.Clear();
-  if (GetArena() == nullptr && ball_ != nullptr) {
+  if (GetArenaNoVirtual() == NULL && ball_ != NULL) {
     delete ball_;
   }
-  ball_ = nullptr;
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+  ball_ = NULL;
+  _internal_metadata_.Clear();
 }
 
-const char* Replacement::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
-  while (!ctx->Done(&ptr)) {
-    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    CHK_(ptr);
-    switch (tag >> 3) {
+bool Replacement::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:fira_message.sim_to_ref.Replacement)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // .fira_message.sim_to_ref.BallReplacement ball = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          ptr = ctx->ParseMessage(_internal_mutable_ball(), ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_ball()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       // repeated .fira_message.sim_to_ref.RobotReplacement robots = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
-          ptr -= 1;
-          do {
-            ptr += 1;
-            ptr = ctx->ParseMessage(_internal_add_robots(), ptr);
-            CHK_(ptr);
-            if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<18>(ptr));
-        } else goto handle_unusual;
-        continue;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+                input, add_robots()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
-        if ((tag & 7) == 4 || tag == 0) {
-          ctx->SetLastTag(tag);
+        if (tag == 0) {
           goto success;
         }
-        ptr = UnknownFieldParse(tag,
-            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-            ptr, ctx);
-        CHK_(ptr != nullptr);
-        continue;
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
       }
-    }  // switch
-  }  // while
+    }
+  }
 success:
-  return ptr;
+  // @@protoc_insertion_point(parse_success:fira_message.sim_to_ref.Replacement)
+  return true;
 failure:
-  ptr = nullptr;
-  goto success;
-#undef CHK_
+  // @@protoc_insertion_point(parse_failure:fira_message.sim_to_ref.Replacement)
+  return false;
+#undef DO_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* Replacement::_InternalSerialize(
-    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:fira_message.sim_to_ref.Replacement)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+void Replacement::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:fira_message.sim_to_ref.Replacement)
+  ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   // .fira_message.sim_to_ref.BallReplacement ball = 1;
   if (this->has_ball()) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(
-        1, _Internal::ball(this), target, stream);
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->_internal_ball(), output);
   }
 
   // repeated .fira_message.sim_to_ref.RobotReplacement robots = 2;
   for (unsigned int i = 0,
-      n = static_cast<unsigned int>(this->_internal_robots_size()); i < n; i++) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(2, this->_internal_robots(i), target, stream);
+      n = static_cast<unsigned int>(this->robots_size()); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2,
+      this->robots(static_cast<int>(i)),
+      output);
   }
 
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
+  }
+  // @@protoc_insertion_point(serialize_end:fira_message.sim_to_ref.Replacement)
+}
+
+::google::protobuf::uint8* Replacement::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:fira_message.sim_to_ref.Replacement)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .fira_message.sim_to_ref.BallReplacement ball = 1;
+  if (this->has_ball()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        1, this->_internal_ball(), deterministic, target);
+  }
+
+  // repeated .fira_message.sim_to_ref.RobotReplacement robots = 2;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->robots_size()); i < n; i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        2, this->robots(static_cast<int>(i)), deterministic, target);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
   // @@protoc_insertion_point(serialize_to_array_end:fira_message.sim_to_ref.Replacement)
   return target;
@@ -859,42 +1022,43 @@ size_t Replacement::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:fira_message.sim_to_ref.Replacement)
   size_t total_size = 0;
 
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // repeated .fira_message.sim_to_ref.RobotReplacement robots = 2;
-  total_size += 1UL * this->_internal_robots_size();
-  for (const auto& msg : this->robots_) {
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     total_size +=
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
+  }
+  // repeated .fira_message.sim_to_ref.RobotReplacement robots = 2;
+  {
+    unsigned int count = static_cast<unsigned int>(this->robots_size());
+    total_size += 1UL * count;
+    for (unsigned int i = 0; i < count; i++) {
+      total_size +=
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          this->robots(static_cast<int>(i)));
+    }
   }
 
   // .fira_message.sim_to_ref.BallReplacement ball = 1;
   if (this->has_ball()) {
     total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+      ::google::protobuf::internal::WireFormatLite::MessageSize(
         *ball_);
   }
 
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
-        _internal_metadata_, total_size, &_cached_size_);
-  }
-  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
 }
 
-void Replacement::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+void Replacement::MergeFrom(const ::google::protobuf::Message& from) {
 // @@protoc_insertion_point(generalized_merge_from_start:fira_message.sim_to_ref.Replacement)
   GOOGLE_DCHECK_NE(&from, this);
   const Replacement* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<Replacement>(
+      ::google::protobuf::internal::DynamicCastToGenerated<const Replacement>(
           &from);
-  if (source == nullptr) {
+  if (source == NULL) {
   // @@protoc_insertion_point(generalized_merge_from_cast_fail:fira_message.sim_to_ref.Replacement)
-    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
   // @@protoc_insertion_point(generalized_merge_from_cast_success:fira_message.sim_to_ref.Replacement)
     MergeFrom(*source);
@@ -904,17 +1068,17 @@ void Replacement::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
 void Replacement::MergeFrom(const Replacement& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:fira_message.sim_to_ref.Replacement)
   GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   robots_.MergeFrom(from.robots_);
   if (from.has_ball()) {
-    _internal_mutable_ball()->::fira_message::sim_to_ref::BallReplacement::MergeFrom(from._internal_ball());
+    mutable_ball()->::fira_message::sim_to_ref::BallReplacement::MergeFrom(from.ball());
   }
 }
 
-void Replacement::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+void Replacement::CopyFrom(const ::google::protobuf::Message& from) {
 // @@protoc_insertion_point(generalized_copy_from_start:fira_message.sim_to_ref.Replacement)
   if (&from == this) return;
   Clear();
@@ -932,32 +1096,38 @@ bool Replacement::IsInitialized() const {
   return true;
 }
 
+void Replacement::Swap(Replacement* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
 void Replacement::InternalSwap(Replacement* other) {
   using std::swap;
-  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  robots_.InternalSwap(&other->robots_);
+  CastToBase(&robots_)->InternalSwap(CastToBase(&other->robots_));
   swap(ball_, other->ball_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata Replacement::GetMetadata() const {
-  return GetMetadataStatic();
+::google::protobuf::Metadata Replacement::GetMetadata() const {
+  protobuf_replacement_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_replacement_2eproto::file_level_metadata[kIndexInFileMessages];
 }
 
 
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace sim_to_ref
 }  // namespace fira_message
-PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::fira_message::sim_to_ref::RobotReplacement* Arena::CreateMaybeMessage< ::fira_message::sim_to_ref::RobotReplacement >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::fira_message::sim_to_ref::RobotReplacement >(arena);
+namespace google {
+namespace protobuf {
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::fira_message::sim_to_ref::RobotReplacement* Arena::CreateMaybeMessage< ::fira_message::sim_to_ref::RobotReplacement >(Arena* arena) {
+  return Arena::CreateInternal< ::fira_message::sim_to_ref::RobotReplacement >(arena);
 }
-template<> PROTOBUF_NOINLINE ::fira_message::sim_to_ref::BallReplacement* Arena::CreateMaybeMessage< ::fira_message::sim_to_ref::BallReplacement >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::fira_message::sim_to_ref::BallReplacement >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::fira_message::sim_to_ref::BallReplacement* Arena::CreateMaybeMessage< ::fira_message::sim_to_ref::BallReplacement >(Arena* arena) {
+  return Arena::CreateInternal< ::fira_message::sim_to_ref::BallReplacement >(arena);
 }
-template<> PROTOBUF_NOINLINE ::fira_message::sim_to_ref::Replacement* Arena::CreateMaybeMessage< ::fira_message::sim_to_ref::Replacement >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::fira_message::sim_to_ref::Replacement >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::fira_message::sim_to_ref::Replacement* Arena::CreateMaybeMessage< ::fira_message::sim_to_ref::Replacement >(Arena* arena) {
+  return Arena::CreateInternal< ::fira_message::sim_to_ref::Replacement >(arena);
 }
-PROTOBUF_NAMESPACE_CLOSE
+}  // namespace protobuf
+}  // namespace google
 
 // @@protoc_insertion_point(global_scope)
-#include <google/protobuf/port_undef.inc>
