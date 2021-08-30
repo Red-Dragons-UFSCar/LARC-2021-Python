@@ -2,3 +2,10 @@ build/**
 __pycache__/**
 *.so
 include/**
+<<<<<<< HEAD
+=======
+*.pyc
+*.stash
+Makefile
+*.o
+>>>>>>> navigation

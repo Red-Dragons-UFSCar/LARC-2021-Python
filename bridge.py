@@ -30,12 +30,15 @@ from math import fmod, pi
 # witch save their respective data
 try:
     lib = ctypes.cdll.LoadLibrary('./libfira.so')
+    print('1')
 except Exception as e:
     try:
         lib = ctypes.cdll.LoadLibrary('./FIRAClient/libfira.so')
+        print('2')
     except Exception as e:
         try:
             lib = ctypes.cdll.LoadLibrary('../FIRAClient/libfira.so')
+            print('3')
         except Exception as e:
             print("Could not open lib in any directory")
             exit()
