@@ -6,13 +6,10 @@ from bridge import (Actuator, Replacer, Vision, Referee,
 from math import pi, fmod, atan2, fabs
 
 from simClasses import *
-<<<<<<< HEAD
 import action
 import fouls
-=======
 
 from strategy import *
->>>>>>> strategy
 
 if __name__ == "__main__":
 
@@ -61,7 +58,7 @@ if __name__ == "__main__":
         robotEnemy2.simGetPose(data_their_bots[2])
         ball.simGetPose(data_ball)
 
-        if ref_data["game_on"] or ref_data["foul"] != 7:
+        if ref_data["game_on"]:
             # Se o modo de jogo estiver em "Game on"
             strategy.zagalo()
 
