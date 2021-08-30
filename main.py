@@ -7,6 +7,7 @@ from math import pi, fmod, atan2, fabs
 
 from simClasses import *
 import action
+import fouls
 
 if __name__ == "__main__":
 
@@ -57,14 +58,13 @@ if __name__ == "__main__":
             # Se o modo de jogo estiver em "Game on"
 
             action.shoot(robot2,ball,leftSide= not mray, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
-            action.protectGoal(robot1, ball,50, leftSide= not mray)
-            action.screenOutBall(robot0,ball,10,leftSide= not mray)
-
+            #action.protectGoal(robot1, ball,50, leftSide= not mray)
+            action.screenOutBall(robot0,ball,-10,leftSide= not mray, upperLim=85, lowerLim=45)
+            print("robot0:", robot0.xPos, ",", robot0.yPos, "\nrobot1:", robot1.xPos, ",", robot1.yPos, "\nrobot2:", robot2.xPos, ",", robot2.yPos)
 
         elif ref_data["foul"] != 7:
-            # foul behaviour
+            fouls.replacement_fouls(replacement,ref_data,mray)
             actuator.stop()
 
         else:
-            # halt behavior
             actuator.stop()
