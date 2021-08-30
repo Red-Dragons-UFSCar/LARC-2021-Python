@@ -6,8 +6,13 @@ from bridge import (Actuator, Replacer, Vision, Referee,
 from math import pi, fmod, atan2, fabs
 
 from simClasses import *
+<<<<<<< HEAD
 import action
 import fouls
+=======
+
+from strategy import *
+>>>>>>> strategy
 
 if __name__ == "__main__":
 
@@ -30,6 +35,8 @@ if __name__ == "__main__":
     robotEnemy2 = Robot(2, actuator)
 
     ball = Ball()
+
+    strategy = Strategy(robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray)
 
     # Main infinite loop
     while True:
@@ -54,13 +61,10 @@ if __name__ == "__main__":
         robotEnemy2.simGetPose(data_their_bots[2])
         ball.simGetPose(data_ball)
 
-        if ref_data["game_on"]:
+        if ref_data["game_on"] or ref_data["foul"] != 7:
             # Se o modo de jogo estiver em "Game on"
+            strategy.zagalo()
 
-            action.shoot(robot2,ball,leftSide= not mray, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
-            #action.protectGoal(robot1, ball,50, leftSide= not mray)
-            action.screenOutBall(robot0,ball,-10,leftSide= not mray, upperLim=85, lowerLim=45)
-            print("robot0:", robot0.xPos, ",", robot0.yPos, "\nrobot1:", robot1.xPos, ",", robot1.yPos, "\nrobot2:", robot2.xPos, ",", robot2.yPos)
 
         elif ref_data["foul"] != 7:
             fouls.replacement_fouls(replacement,ref_data,mray)

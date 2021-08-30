@@ -114,7 +114,7 @@ class Robot:
         self.vMax=30                             #! Robot max velocity (cm/s)
         self.rMax=3*self.vMax                #! Robot max rotation velocity (rad*cm/s)
         self.L=7.5                           #? Base length of the robot (cm)
-        self.LSimulador=6.11                 #? Base length on coppelia of the robot (cm)
+        self.LSimulador=6.11                 #? Base length of the robot on coppelia (cm)
         self.R=3.4                           #? Wheel radius (cm)
         self.obst=Obstacle()                 #? Defines the robot obstacle
         self.target=Target()                 #? Defines the robot target
@@ -122,7 +122,7 @@ class Robot:
 
 
 
-    #% This method calculate the distance between the robot and an object
+    #% This method calculates the distance between the robot and an object
     def dist(self,obj):
         return sqrt((self.xPos-obj.xPos)**2+(self.yPos-obj.yPos)**2)
 
