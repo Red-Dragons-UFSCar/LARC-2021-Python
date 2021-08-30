@@ -31,7 +31,7 @@ def approx(robot,target,avoidObst=True,obst=None,n=8,d=2, fieldIsHiperbolic=True
 def univecController(robot,target,avoidObst=True,obst=None,n=8,d=2,stopWhenArrive=False, doubleFace=True, fieldIsHiperbolic=True):
     navigate=Univector()                    #? Defines the navigation algorithm
     dl=0.000001                             #? Constant to approximate phi_v
-    k_w=1.5                                 #? Feedback constant (k_w=1 means no gain)
+    k_w=1.9                                 #? Feedback constant (k_w=1 means no gain)
     k_p=1                                   #? Feedback constant (k_p=1 means no gain)
 
     #% Correção de ângulo caso o robô esteja jogando com a face de trás
