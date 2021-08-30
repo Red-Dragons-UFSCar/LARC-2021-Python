@@ -1,0 +1,8 @@
+build/**
+__pycache__/**
+*.so
+include/**
+*.pyc
+*.stash
+Makefile
+*.o
