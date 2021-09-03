@@ -8,6 +8,8 @@ from simClasses import *
 import action
 import fouls
 
+import time
+
 from strategy import *
 
 if __name__ == "__main__":
@@ -36,6 +38,7 @@ if __name__ == "__main__":
 
     # Main infinite loop
     while True:
+        t1 = time.time()
         # Atualiza a situação das faltas
         referee.update()
         ref_data = referee.get_data()
@@ -57,18 +60,18 @@ if __name__ == "__main__":
         robotEnemy2.simGetPose(data_their_bots[2])
         ball.simGetPose(data_ball)
 
-        if ref_data["game_on"] or ref_data["foul"] == 5:
-        #if ref_data["game_on"]:
+        if ref_data["game_on"]:
             # Se o modo de jogo estiver em "Game on"
-            strategy.zagalo()
+            strategy.coach()
 
 
         elif ref_data["foul"] != 7:
             fouls.replacement_fouls(replacement,ref_data,mray)
             actuator.stop()
-            replacement.place(0, 0.3, 0, 0)
-            replacement.place(1, 0.3, 0.3, 0)
-            replacement.place(2, 0.3, -0.3, 0)
 
         else:
             actuator.stop()
+
+        t2 = time.time()
+        if t2-t1<1/60:
+            time.sleep(1/60 - (t2-t1))

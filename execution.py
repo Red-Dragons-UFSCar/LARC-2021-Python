@@ -28,7 +28,7 @@ def approx(robot,target,avoidObst=True,obst=None,n=8,d=2, fieldIsHiperbolic=True
     return stpTheta
 
 #% Function to control the robot with or without collision avoidance
-def univecController(robot,target,avoidObst=True,obst=None,n=8,d=2,stopWhenArrive=False, doubleFace=True):
+def univecController(robot,target,avoidObst=True,obst=None,n=8,d=2,stopWhenArrive=False, doubleFace=True, fieldIsHiperbolic=True):
     flagCorner, corner= targetInCorner(target,robot)
     if flagCorner:
         robotLockedCorner(target, robot)
@@ -36,7 +36,6 @@ def univecController(robot,target,avoidObst=True,obst=None,n=8,d=2,stopWhenArriv
     dl=0.000001          #? Constant to approximate phi_v
     k_w=1.9                #? Feedback constant (k_w=1 means no gain)
     k_p=1                #? Feedback constant (k_p=1 means no gain)
-    robot_aux = deepcopy(robot)
 
     #% Correção de ângulo caso o robô esteja jogando com a face de trás
     if robot.face == -1:
@@ -141,10 +140,10 @@ def changeTargetTheta(robot, target,corner):
     if (corner == 2 or corner == 4):
         if dist < 6:
             if robot.yPos < 75:
-                thetaGol = angle([150- robot.xPos],75)
+                thetaGol = angle(150- robot.xPos,75)
 
             else:
-                thetaGol = angle([150- robot.xPos],-75)
+                thetaGol = angle(150- robot.xPos,-75)
             target.update(target.xPos,target.yPos,thetaGol)
         else:
             target.update(target.xPos,target.yPos,0)

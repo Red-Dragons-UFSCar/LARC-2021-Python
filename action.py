@@ -132,9 +132,6 @@ def screenOutBall(robot,ball,staticPoint,leftSide=True,upperLim=200,lowerLim=0,f
     robot.simSetVel(v,w)
 
 
-
-    
-
 #% Goalkeeper Actions
 #TODO #1 More effective way to predict the ball position
 def blockBall(robot,ball,leftSide=True):
@@ -197,19 +194,19 @@ def protectGoal(robot,ball,r,leftSide=True,friend1=None,friend2=None):
             if robot.xPos >= ball.xPos:
                 arrivalTheta = (pi/2 + theta)
 
-        if (robot.yPos < 100 and robot.yPos > 65):
+        if (robot.yPos <= 100 and robot.yPos > 65):
             if robot.yPos < ball.yPos:
                 arrivalTheta = (pi/2 + theta)
-            if robot.yPos > ball.yPos:
+            if robot.yPos >= ball.yPos:
                 arrivalTheta = -(pi/2 - theta)
 
-        if (robot.yPos < 65 and robot.yPos > 30):
+        if (robot.yPos <= 65 and robot.yPos > 30):
             if robot.yPos < ball.yPos:
                 arrivalTheta = pi/2 + theta
-            if robot.yPos > ball.yPos:
+            if robot.yPos >= ball.yPos:
                 arrivalTheta = -(pi/2 - theta)
 
-        if robot.yPos < 30:
+        if robot.yPos <= 30:
             if robot.xPos < ball.xPos:
                 arrivalTheta = pi/2 + theta
 

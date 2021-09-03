@@ -12,7 +12,7 @@ class Strategy:
         self.ball = ball
         self.mray = mray
 
-    def zagalo(self):
+    def coach(self):
         """Picks a strategy depending on the status of the field"""
         # For the time being, the only statuses considered are which side of the field the ball is in
         if self.ball.xPos < 85:
@@ -26,7 +26,7 @@ class Strategy:
         """Basic original strategy"""
         action.screenOutBall(self.robot2, self.ball, 95, leftSide=not self.mray, upperLim=120, lowerLim=10)
         action.shoot(self.robot1, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot2,
-                     enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
+                     enemy1=self.robotEnemy1, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
         action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray, upperLim=85, lowerLim=45)
 
     def basicStgAtt(self):
