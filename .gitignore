@@ -1,7 +1,7 @@
-build/**
-__pycache__/**
+build*/**
+__pycache__*/**
 *.so
-include/**
+include*/**
 <<<<<<< HEAD
 =======
 *.pyc
