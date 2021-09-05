@@ -1,4 +1,3 @@
-
 from bridge import (Actuator, Replacer, Vision, Referee,
                         NUM_BOTS, convert_angle, Entity)
 
@@ -24,13 +23,13 @@ if __name__ == "__main__":
     referee = Referee(mray, "224.5.23.2", 10003)
 
     # Initialize all  objects
-    robot0 = Robot(0, actuator)
-    robot1 = Robot(1, actuator)
-    robot2 = Robot(2, actuator)
+    robot0 = Robot(0, actuator, mray)
+    robot1 = Robot(1, actuator, mray)
+    robot2 = Robot(2, actuator, mray)
 
-    robotEnemy0 = Robot(0, actuator)
-    robotEnemy1 = Robot(1, actuator)
-    robotEnemy2 = Robot(2, actuator)
+    robotEnemy0 = Robot(0, actuator, not mray)
+    robotEnemy1 = Robot(1, actuator, not mray)
+    robotEnemy2 = Robot(2, actuator, not mray)
 
     ball = Ball()
 

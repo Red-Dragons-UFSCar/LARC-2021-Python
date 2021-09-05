@@ -94,10 +94,11 @@ class Ball:
 
 #% Class to create the robots in game
 class Robot:
-    def __init__(self, index, actuator):
+    def __init__(self, index, actuator, mray):
         self.flagDirectGoal=False
         self.flagCruzamento=False
         self.flagTrocaFace=False
+        self.teamYellow=mray
         self.index=int32(index)
         self.actuator=actuator
         self.face=1                          #? Defines the current face of the robot

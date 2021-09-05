@@ -121,7 +121,7 @@ def screenOutBall(robot,ball,staticPoint,leftSide=True,upperLim=200,lowerLim=0,f
             arrivalTheta=pi/2
         else:
             arrivalTheta=-pi/2
-        robot.target.update(150 - staticPoint,yPoint,arrivalTheta)
+        robot.target.update(170 - staticPoint,yPoint,arrivalTheta)
 
     if friend1 is None and friend2 is None: #? No friends to avoid
         v,w=univecController(robot,robot.target,avoidObst=False,stopWhenArrive=True)
@@ -213,6 +213,7 @@ def protectGoal(robot,ball,r,leftSide=True,friend1=None,friend2=None):
             if robot.xPos >= ball.xPos:
                 arrivalTheta = -(pi/2 - theta)
 
+    arrivalTheta = arctan2(sin(arrivalTheta), cos(arrivalTheta))
     robot.target.update(projX,projY,arrivalTheta)
 
     if friend1 is None and friend2 is None: #? No friends to avoid
