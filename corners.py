@@ -86,10 +86,10 @@ def changeTargetTheta(robot, target,corner):
         if (corner == 2 or corner == 4):
             if dist < 6:
                 if robot.yPos < 75:
-                    thetaGol = angle(160- robot.xPos,75)
+                    thetaGol = arctan2(75, 160- robot.xPos)
 
                 else:
-                    thetaGol = angle(160- robot.xPos,-75)
+                    thetaGol = arctan2(-75, 160- robot.xPos)
                 target.update(target.xPos,target.yPos,thetaGol)
             else:
                 target.update(target.xPos,target.yPos,0)
@@ -108,10 +108,10 @@ def changeTargetTheta(robot, target,corner):
         if (corner == 2 or corner == 4):
             if dist < 6:
                 if robot.yPos < 75:
-                    thetaGol = angle(10- robot.xPos,75)
+                    thetaGol = arctan2(75, 10- robot.xPos)
 
                 else:
-                    thetaGol = angle(10- robot.xPos,-75)
+                    thetaGol = arctan2(-75, 10- robot.xPos)
                 target.update(target.xPos,target.yPos,thetaGol)
             else:
                 if target.yPos > 65:
@@ -161,11 +161,11 @@ def robotLockedCorner(target, robot):
 def changeTargetPos(robot, target,corner):
 
     if corner == 1:
-        target.update(robot.xPos+10,robot.yPos,0)
+        target.update(robot.xPos+100,robot.yPos,0)
     if corner == 2:
-        target.update(robot.xPos,robot.yPos+10,pi/2)
+        target.update(robot.xPos,robot.yPos+100,pi/2)
     if corner == 3:
-        target.update(robot.xPos-10,robot.yPos,0)
+        target.update(robot.xPos-100,robot.yPos,0)
     if corner == 4:
-        target.update(robot.xPos,robot.yPos-10,-pi/2)
+        target.update(robot.xPos,robot.yPos-100,-pi/2)
     return None
