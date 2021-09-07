@@ -48,3 +48,7 @@ class Strategy:
         action.shoot(self.robot1, self.ball, leftSide=not self.mray, friend1=self.robot1, friend2=self.robot2,
                      enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
         action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray)
+
+    def twoAttackers(self):
+        action.Master_Slave(self.robot1,self.robot2, self.ball)
+        action.screenOutBall(self.robot0, self.ball, 15, leftSide=not self.mray)
