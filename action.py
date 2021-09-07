@@ -303,3 +303,37 @@ def positionChange(arrayFunctions, ball, arraySideCrossing, leftSide = True):
 
 def girar(robot):
     robot.simSetVel(0,0)
+
+def slave(robotSlave, robotMaster):
+
+    if robotMaster.xPos > 65:
+        projX = robotMaster.xPos - 15
+        projY = robotMaster.yPos - 15
+    else:
+        projX = robotMaster.xPos - 15
+        projY = robotMaster.yPos + 15
+
+    dist = sqrt((robotSlave.xPos - projX)**2 + (robotSlave.yPos - projY)**2)
+
+    if dist < 10:
+        stop(robotSlave)
+    else:
+        robotSalve.target.update(projX,projY,0)
+
+def Master_Slave(robot1, robot2, ball):
+
+    dist1 = sqrt((robot1.xPos - ball.xPos)**2 + (robot1.yPos - ball.yPos)**2)
+    ang1  = arctan2(robot1.yPos - ball.yPos,robot1.xPos - ball.xPos)
+
+    dist2 = sqrt((robot2.xPos - ball.xPos)**2 + (robot2.yPos - ball.yPos)**2)
+    ang2  = arctan2(robot2.yPos - ball.yPos,robot2.xPos - ball.xPos)
+
+    w1 = 0.65*cos(ang1) + 0.35*dist1/(dist1+dist2)
+    w2 = 0.65*cos(ang2) + 0.35*dist2/(dist1+dist2)
+
+    if w1 > w2:
+        shoot(robot2,ball,leftSide= not mray, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
+        slave(robot1,robot2)
+    else:
+        shoot(robot1,ball,leftSide= not mray, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
+        slave(robot2,robot1)
