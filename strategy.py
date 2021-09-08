@@ -11,20 +11,29 @@ class Strategy:
         self.robotEnemy2 = robotEnemy2
         self.ball = ball
         self.mray = mray
+        self.penalty = False
 
     def coach(self):
         """Picks a strategy depending on the status of the field"""
         # For the time being, the only statuses considered are which side of the field the ball is in
-        if self.mray:
-            if self.ball.xPos > 85:
-                self.basicStgDef()
-            else:
-                self.basicStgAtt()
+        
+        if self.penalty == True:
+            action.shoot(self.robot0, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot2,
+                     enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
+            if self.ball.xPos >37.5:
+                self.penalty = False
+                
         else:
-            if self.ball.xPos > 85:
-                self.basicStgAtt()
+            if self.mray:
+                if self.ball.xPos > 85:
+                    self.basicStgDef()
+                else:
+                    self.basicStgAtt()
             else:
-                self.basicStgDef()
+                if self.ball.xPos > 85:
+                    self.basicStgAtt()
+                else:
+                    self.basicStgDef()
 
     def basicStgDef(self):
         """Basic original strategy"""
