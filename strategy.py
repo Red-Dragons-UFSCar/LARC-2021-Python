@@ -16,13 +16,9 @@ class Strategy:
     def coach(self):
         """Picks a strategy depending on the status of the field"""
         # For the time being, the only statuses considered are which side of the field the ball is in
-        
+
         if self.penalty == True:
-            action.shoot(self.robot0, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot2,
-                     enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
-            if self.ball.xPos >37.5:
-                self.penalty = False
-                
+            self.penaltyMode()
         else:
             if self.mray:
                 if self.ball.xPos > 85:
@@ -57,3 +53,13 @@ class Strategy:
         action.shoot(self.robot1, self.ball, leftSide=not self.mray, friend1=self.robot1, friend2=self.robot2,
                      enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
         action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray)
+
+    def penaltyMode(self):
+        action.shoot(self.robot0, self.ball, leftSide=not self.mray, friend1=self.robot1, friend2=self.robot2,
+                 enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
+        action.shoot(self.robot1, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot2,
+                 enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
+        action.shoot(self.robot2, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot1,
+                 enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
+        if self.ball.xPos >48 or self.ball.yPos < 30 or self.ball.yPos > 100:
+            self.penalty = False

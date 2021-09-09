@@ -63,16 +63,22 @@ if __name__ == "__main__":
             # Se o modo de jogo estiver em "Game on"
             strategy.coach()
 
-        elif ref_data["foul"] == 1:
+        elif ref_data["foul"] == 1 and ref_data["yellow"] == (not mray):
+            #Detectando penalti defensivo
             strategy.penalty = True
+            actuator.stop()
 
 
         elif ref_data["foul"] != 7:
+            if ref_data["foul"] != 5: # Mudando a flag exceto em caso de Stop
+                strategy.penalty = False
             fouls.replacement_fouls(replacement,ref_data,mray)
             actuator.stop()
 
         else:
             actuator.stop()
+
+        print(strategy.penalty)
 
         t2 = time.time()
         if t2-t1<1/60:
