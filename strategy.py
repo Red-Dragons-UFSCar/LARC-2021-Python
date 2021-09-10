@@ -50,5 +50,6 @@ class Strategy:
         action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray)
 
     def twoAttackers(self):
+
         action.Master_Slave(self.robot0, self.robot1,self.robot2, self.ball, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2)
         action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray, upperLim=81, lowerLim=42)
