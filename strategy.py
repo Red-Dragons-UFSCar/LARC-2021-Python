@@ -36,9 +36,10 @@ class Strategy:
 
     def basicStgAtt(self):
         """Basic alternative strategy"""
-        action.shoot(self.robot2, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot1,
+        action.shoot2(self.robot2, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot1,
                      enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
-        action.protectGoal(self.robot1, self.ball, 50, leftSide=not self.mray)
+        #action.protectGoal(self.robot1, self.ball, 50, leftSide=not self.mray)
+        action.screenOutBall(self.robot1, self.ball, 70, leftSide=not self.mray, upperLim=120, lowerLim=10)
         action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray, upperLim=81, lowerLim=42)
 
     def stgFullAtt(self):
