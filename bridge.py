@@ -55,10 +55,10 @@ lib.vision_robot_vx.restype = c_double
 lib.vision_robot_vy.restype = c_double
 lib.vision_robot_vangle.restype = c_double
 
-NUM_BOTS = 3
+NUM_BOTS = 5
 
-LENGTH = 1.7 / 2.0
-WIDTH = 1.3 / 2.0
+LENGTH = 2.5 / 2.0
+WIDTH = 1.8 / 2.0
 
 class Entity():
     '''

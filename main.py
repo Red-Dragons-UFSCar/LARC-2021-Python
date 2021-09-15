@@ -26,14 +26,18 @@ if __name__ == "__main__":
     robot0 = Robot(0, actuator, mray)
     robot1 = Robot(1, actuator, mray)
     robot2 = Robot(2, actuator, mray)
+    robot3 = Robot(3, actuator, mray)
+    robot4 = Robot(4, actuator, mray)
 
     robotEnemy0 = Robot(0, actuator, not mray)
     robotEnemy1 = Robot(1, actuator, not mray)
     robotEnemy2 = Robot(2, actuator, not mray)
+    robotEnemy3 = Robot(3, actuator, not mray)
+    robotEnemy4 = Robot(4, actuator, not mray)
 
     ball = Ball()
 
-    strategy = Strategy(robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray)
+    #strategy = Strategy(robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray)
 
     # Main infinite loop
     while True:
@@ -54,18 +58,29 @@ if __name__ == "__main__":
         robot0.simGetPose(data_our_bot[0])
         robot1.simGetPose(data_our_bot[1])
         robot2.simGetPose(data_our_bot[2])
+        robot3.simGetPose(data_our_bot[3])
+        robot4.simGetPose(data_our_bot[4])
         robotEnemy0.simGetPose(data_their_bots[0])
         robotEnemy1.simGetPose(data_their_bots[1])
         robotEnemy2.simGetPose(data_their_bots[2])
+        robotEnemy3.simGetPose(data_their_bots[3])
+        robotEnemy4.simGetPose(data_their_bots[4])
         ball.simGetPose(data_ball)
 
+        #if ref_data["game_on"]:
         if ref_data["game_on"]:
             # Se o modo de jogo estiver em "Game on"
-            strategy.coach()
+            #strategy.coach()
+            action.screenOutBall(robot0,ball,15,leftSide= not mray, upperLim=107,lowerLim=73)
+            #action.shoot(robot1,ball,leftSide= not mray)
+            #action.shoot(robot2,ball,leftSide= not mray)
+            action.shoot(robot3,ball,leftSide= not mray)
+            #print(data_their_bots[4].x)
+            action.shoot(robot4,ball,leftSide= not mray)
 
 
         elif ref_data["foul"] != 7:
-            fouls.replacement_fouls(replacement,ref_data,mray)
+            #fouls.replacement_fouls(replacement,ref_data,mray)
             actuator.stop()
 
         else:

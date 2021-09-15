@@ -7,7 +7,7 @@
 #include "../FIRAClient/clients/actuator/actuatorclient.h"
 #include "../FIRAClient/clients/replacer/replacerclient.h"
 
-#define NUM_BOTS 3
+#define NUM_BOTS 5
 #define CONECTION_TRIES 100
 
 typedef struct {
