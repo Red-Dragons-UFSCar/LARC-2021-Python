@@ -43,7 +43,8 @@ class Strategy:
         """Basic alternative strategy"""
         action.shoot(self.robot2, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot1,
                      enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
-        action.protectGoal(self.robot1, self.ball, 50, leftSide=not self.mray)
+        #action.protectGoal(self.robot1, self.ball, 50, leftSide=not self.mray)
+        action.screenOutBall(self.robot1, self.ball, 55, leftSide=not self.mray, upperLim=120, lowerLim=10)
         action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray, upperLim=81, lowerLim=42)
 
     def stgFullAtt(self):
@@ -55,11 +56,15 @@ class Strategy:
         action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray)
 
     def penaltyMode(self):
-        action.shoot(self.robot0, self.ball, leftSide=not self.mray, friend1=self.robot1, friend2=self.robot2,
+        action.defenderPenalty(self.robot0, self.ball, leftSide=not self.mray, friend1=self.robot1, friend2=self.robot2,
                  enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
         action.shoot(self.robot1, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot2,
                  enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
         action.shoot(self.robot2, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot1,
                  enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
-        if self.ball.xPos >48 or self.ball.yPos < 30 or self.ball.yPos > 100:
-            self.penalty = False
+        if not self.mray:
+            if self.ball.xPos >48 or self.ball.yPos < 30 or self.ball.yPos > 100:
+                self.penalty = False
+        else:
+            if self.ball.xPos < 112 or self.ball.yPos < 30 or self.ball.yPos > 100:
+                self.penalty = False
