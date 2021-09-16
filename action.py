@@ -65,9 +65,9 @@ def holdPosition(robot,xg,yg,desTheta,friend1=None,friend2=None):
 #% Attacker Actions
 def shoot(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
     if leftSide:
-        arrivalTheta=arctan2(65-ball.yPos,150-ball.xPos) #? Angle between the ball and point (150,65)
+        arrivalTheta=arctan2(ball.yPos-65,ball.xPos-150) #? Angle between the ball and point (150,65)
     else:
-        arrivalTheta=arctan2(65-ball.yPos,-ball.xPos) #? Angle between the ball and point (0,65)
+        arrivalTheta=arctan2(ball.yPos-65,ball.xPos) #? Angle between the ball and point (0,65)
     #robot.target.update(ball.xPos,ball.yPos,0)
     robot.target.update(ball.xPos,ball.yPos,arrivalTheta)
 
