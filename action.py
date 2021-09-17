@@ -344,12 +344,16 @@ def Master_Slave(robot0, robot1, robot2, ball, robotEnemy0, robotEnemy1, robotEn
     dist2 = sqrt((robot2.xPos - ball.xPos)**2 + (robot2.yPos - ball.yPos)**2)
     ang2  = arctan2(ball.yPos - robot2.yPos,ball.xPos - robot2.xPos )
 
-    w1 = 0.50*(1-cos(ang1)) + 0.50*dist1/(dist1+dist2)
-    w2 = 0.50*(1-cos(ang2)) + 0.50*dist2/(dist1+dist2)
+    w1 = 0.20*(1-cos(ang1 - robot1.theta)) + 0.80*dist1/(dist1+dist2)
+    w2 = 0.20*(1-cos(ang2 - robot2.theta)) + 0.80*dist2/(dist1+dist2)
 
     if w1 > w2:
+        # linhas 352 e 353 condicionais para não entrar no gol, o mesmo para 365 e 366
         if ball.xPos < 25 and (ball.yPos < 100 and ball.yPos > 40): 
-            screenOutBall(robot2, ball, 30, leftSide=not robot2.teamYellow, upperLim=120, lowerLim=10)
+            if robot1.xPos < 25:
+                screenOutBall(robot2, robot2, 30, leftSide=not robot2.teamYellow, upperLim=120, lowerLim=10)
+            else:
+                screenOutBall(robot2, ball, 30, leftSide=not robot2.teamYellow, upperLim=120, lowerLim=10)
             slave(robot1,robot2, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
 
         else:
@@ -359,7 +363,10 @@ def Master_Slave(robot0, robot1, robot2, ball, robotEnemy0, robotEnemy1, robotEn
     else:
 
         if ball.xPos < 25 and (ball.yPos < 100 and ball.yPos > 40): 
-            screenOutBall(robot1, ball, 30, leftSide=not robot1.teamYellow, upperLim=120, lowerLim=10)
+            if robot1.xPos < 25:
+                screenOutBall(robot1, robot1, 30, leftSide=not robot1.teamYellow, upperLim=120, lowerLim=10) 
+            else:      
+                screenOutBall(robot1, ball, 30, leftSide=not robot1.teamYellow, upperLim=120, lowerLim=10)
             slave(robot2,robot1, robot0, robotEnemy0, robotEnemy1, robotEnemy2)  
 
         else:
