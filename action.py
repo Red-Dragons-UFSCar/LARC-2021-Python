@@ -319,3 +319,23 @@ def defenderPenalty(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=N
         v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
 
     robot.simSetVel(v,w)
+
+def attackPenalty(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
+    if leftSide:
+        if robot.yPos > 65:
+            arrivalTheta = -45
+        else:
+            arrivalTheta = 45
+    else:
+        if robot.yPos > 65:
+            arrivalTheta = -135
+        else:
+            arrivalTheta = 135
+
+    if friend1 is None and friend2 is None: #? No friends to avoid
+        v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
+    else: #? Both friends to avoid
+        robot.obst.update(robot,friend1,friend2,enemy1,enemy2,enemy3)
+        v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
+
+    robot.simSetVel(v,w)

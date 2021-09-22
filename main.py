@@ -65,9 +65,13 @@ if __name__ == "__main__":
 
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (not mray):
             #Detectando penalti defensivo
-            strategy.penalty = True
+            strategy.penaltyDefensive = True
             actuator.stop()
 
+        elif ref_data["foul"] == 1 and ref_data["yellow"] == (mray):
+            #Detectando penalti ofensivo
+            strategy.penaltyOffensive = True
+            actuator.stop()
 
         elif ref_data["foul"] != 7:
             if ref_data["foul"] != 5: # Mudando a flag exceto em caso de Stop
