@@ -67,22 +67,25 @@ if __name__ == "__main__":
             #Detectando penalti defensivo
             strategy.penaltyDefensive = True
             actuator.stop()
+            fouls.replacement_fouls(replacement,ref_data,mray)
 
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (mray):
             #Detectando penalti ofensivo
             strategy.penaltyOffensive = True
             actuator.stop()
+            fouls.replacement_fouls(replacement,ref_data,mray)
 
         elif ref_data["foul"] != 7:
             if ref_data["foul"] != 5: # Mudando a flag exceto em caso de Stop
-                strategy.penalty = False
+                strategy.penaltyOffensive = False
+                strategy.penaltyDefensive = False
             fouls.replacement_fouls(replacement,ref_data,mray)
             actuator.stop()
 
         else:
             actuator.stop()
 
-        print(strategy.penalty)
+        print(strategy.penaltyOffensive)
 
         t2 = time.time()
         if t2-t1<1/60:

@@ -1,4 +1,4 @@
-from numpy import pi,cos,sin,tan,arctan2,sqrt ,matmul,array
+from numpy import pi,cos,sin,tan,arctan2,sqrt ,matmul,array, deg2rad
 from execution import univecController, whichFace
 from behaviours import Univector
 
@@ -323,14 +323,16 @@ def defenderPenalty(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=N
 def attackPenalty(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
     if leftSide:
         if robot.yPos > 65:
-            arrivalTheta = -45
+            arrivalTheta = -deg2rad(15)
         else:
-            arrivalTheta = 45
+            arrivalTheta = deg2rad(15)
     else:
         if robot.yPos > 65:
             arrivalTheta = -135
         else:
             arrivalTheta = 135
+
+    robot.target.update(ball.xPos, ball.yPos, arrivalTheta)
 
     if friend1 is None and friend2 is None: #? No friends to avoid
         v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)

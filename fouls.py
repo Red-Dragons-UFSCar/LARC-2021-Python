@@ -17,6 +17,7 @@ def replacement_fouls(replacement, ref_data, mray):
     if mray == False:
         if ref_data["foul"] == 1:
             if ref_data["yellow"] == True: # Defensivo
+                print("Entrei aqui")
                 entidade0 = Entity(x=13.75, y=65,a=0, index=0)
                 entidade1 = Entity(x=96, y=25,a=180, index=1)
                 entidade2 = Entity(x=96, y=90,a=0, index=2)
@@ -24,12 +25,12 @@ def replacement_fouls(replacement, ref_data, mray):
                 if random.uniform(0,1) <0.5:
                     entidade0 = Entity(x=17.5, y=65,a=0, index=0)
                     entidade1 = Entity(x=73.75, y=105,a=0, index=1)
-                    entidade2 = Entity(x=107.5, y=75,a=0, index=2)
+                    entidade2 = Entity(x=115, y=68,a=-15, index=2)
                 else:
                     entidade0 = Entity(x=17.5, y=65,a=0, index=0)
                     entidade1 = Entity(x=73.75, y=105,a=0, index=1)
-                    entidade2 = Entity(x=107.5, y=55,a=0, index=2)
-            replacement.place_all([entidade0, entidade1, entidade2])
+                    entidade2 = Entity(x=115, y=62,a=15, index=2)
+                replacement.place_all([entidade0, entidade1, entidade2])
 
         #TODO FOULS: Revisar as posições futuramente do goalKick
         #elif ref_data["foul"] == 2:
