@@ -328,9 +328,9 @@ def attackPenalty(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=Non
             arrivalTheta = deg2rad(15)
     else:
         if robot.yPos > 65:
-            arrivalTheta = -135
+            arrivalTheta = -deg2rad(165)
         else:
-            arrivalTheta = 135
+            arrivalTheta = deg2rad(165)
 
     robot.target.update(ball.xPos, ball.yPos, arrivalTheta)
 

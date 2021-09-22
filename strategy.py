@@ -78,6 +78,5 @@ class Strategy:
                      enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
         action.attackPenalty(self.robot2, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot1,
                  enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
-        print(sqrt((self.ball.xPos-self.robot2.xPos)**2+(self.ball.yPos-self.robot2.yPos)**2))
-        if sqrt((self.ball.xPos-self.robot2.xPos)**2+(self.ball.yPos-self.robot2.yPos)**2) > 30:
+        if sqrt((self.ball.xPos-self.robot2.xPos)**2+(self.ball.yPos-self.robot2.yPos)**2) > 20:
             self.penaltyOffensive = False

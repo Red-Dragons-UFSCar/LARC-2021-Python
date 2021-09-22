@@ -14,7 +14,7 @@ from strategy import *
 if __name__ == "__main__":
 
     # Choose team (my robots are yellow)
-    mray = False
+    mray = True
 
     # Initialize all clients
     actuator = Actuator(mray, "127.0.0.1", 20011)
@@ -84,8 +84,6 @@ if __name__ == "__main__":
 
         else:
             actuator.stop()
-
-        print(strategy.penaltyOffensive)
 
         t2 = time.time()
         if t2-t1<1/60:

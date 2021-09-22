@@ -66,19 +66,19 @@ def replacement_fouls(replacement, ref_data, mray):
 
     if mray == True:
         if ref_data["foul"] == 1: #Defensivo
-            if ref_data["yellow"] == True:
+            if ref_data["yellow"] == False:
                 entidade0 = Entity(x=152.5, y=65,a=180, index=0)
                 entidade1 = Entity(x=96, y=105,a=180, index=1)
                 entidade2 = Entity(x=62.5, y=65,a=180, index=2)
             else: #Ofensivo
                 if random.uniform(0,1) <0.5:
                     entidade0 = Entity(x=152.5, y=65,a=180, index=0)
-                    entidade1 = Entity(x=73.75, y=25,a=0, index=1)
-                    entidade2 = Entity(x=62.5, y=75,a=180, index=2)
+                    entidade1 = Entity(x=90, y=65,a=0, index=1)
+                    entidade2 = Entity(x=55, y=68,a=-165, index=2)
                 else:
                     entidade0 = Entity(x=152.5, y=65,a=180, index=0)
-                    entidade1 = Entity(x=73.75, y=25,a=0, index=1)
-                    entidade2 = Entity(x=62.5, y=55,a=180, index=2)
+                    entidade1 = Entity(x=90, y=65,a=0, index=1)
+                    entidade2 = Entity(x=55, y=62,a=165, index=2)
             replacement.place_all([entidade0, entidade1, entidade2])
 
         #elif ref_data["foul"] == 2:
