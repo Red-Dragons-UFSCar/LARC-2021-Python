@@ -35,37 +35,17 @@ class Obstacle:
         self.theta=theta
 
     #% This method verify which is the closest obstacle and sets it as the current obstacle to avoid
-    def update(self,robot,friend1,friend2,enemy1=None,enemy2=None,enemy3=None):
-        if (enemy1 is None) and (enemy2 is None) and (enemy3 is None):
-            d=array([[robot.dist(friend1)],
-                     [robot.dist(friend2)]])
-        elif (enemy2 is None) and (enemy3 is None):
-            d=array([[robot.dist(friend1)],
-                     [robot.dist(friend2)],
-                     [robot.dist(enemy1) ]])
-        elif (enemy3 is None):
-            d=array([[robot.dist(friend1)],
-                     [robot.dist(friend2)],
-                     [robot.dist(enemy1) ],
-                     [robot.dist(enemy2) ]])
-        else:
-            d=array([[robot.dist(friend1)],
-                     [robot.dist(friend2)],
-                     [robot.dist(enemy1) ],
-                     [robot.dist(enemy2) ],
-                     [robot.dist(enemy3) ]])
-
-        index=where(d==amin(d))
-        if index[0][0]==0:
-            self.setObst(friend1.xPos,friend1.yPos,friend1.v,friend1.theta)
-        elif index[0][0]==1:
-            self.setObst(friend2.xPos,friend2.yPos,friend2.v,friend2.theta)
-        elif index[0][0]==2:
-            self.setObst(enemy1.xPos,enemy1.yPos,0,0)
-        elif index[0][0]==3:
-            self.setObst(enemy2.xPos,enemy2.yPos,0,0)
-        else:
-            self.setObst(enemy3.xPos,enemy3.yPos,0,0)
+    def update(self,robot,obstacles):
+        n = len(obstacles)
+        dist = zeros(n)
+        for i in range(n):
+            dist[i] = robot.dist(obstacles[i])
+        minima = min(dist)
+        index = 0
+        for i in range(n):
+            if minima==dist[i]:
+                index = i
+        self.setObst(obstacles[index].xPos,obstacles[index].yPos,obstacles[index].v,obstacles[index].theta)
 
     #% This method print a little log on console
     def showInfo(self):

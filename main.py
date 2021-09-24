@@ -14,7 +14,7 @@ from strategy import *
 if __name__ == "__main__":
 
     # Choose team (my robots are yellow)
-    mray = False
+    mray = True
 
     # Initialize all clients
     actuator = Actuator(mray, "127.0.0.1", 20011)
@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
     ball = Ball()
 
-    #strategy = Strategy(robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray)
+    strategy = Strategy(robot0, robot1, robot2, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4, ball, mray)
 
     # Main infinite loop
     while True:
@@ -67,16 +67,9 @@ if __name__ == "__main__":
         robotEnemy4.simGetPose(data_their_bots[4])
         ball.simGetPose(data_ball)
 
-        #if ref_data["game_on"]:
         if ref_data["game_on"]:
             # Se o modo de jogo estiver em "Game on"
-            #strategy.coach()
-            action.screenOutBall(robot0,ball,15,leftSide= not mray, upperLim=107,lowerLim=73)
-            #action.shoot(robot1,ball,leftSide= not mray)
-            #action.shoot(robot2,ball,leftSide= not mray)
-            action.shoot(robot3,ball,leftSide= not mray)
-            #print(data_their_bots[4].x)
-            action.shoot(robot4,ball,leftSide= not mray)
+            strategy.coach()
 
 
         elif ref_data["foul"] != 7:
