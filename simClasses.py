@@ -163,9 +163,9 @@ class Grid:
         
         # criando um grid 5x6
         self.gridv = array([[17.5, 13],[42.5, 13], [67.5, 13],[92.5, 13], [117.5, 13],[142.5, 13],
-                      [17.5, 39],[42.5, 39], [67.5, 39],[92.5, 39], [117.5, 39],[142.5, 39]
-                      [17.5, 65],[42.5, 65], [67.5, 65],[92.5, 65], [117.5, 65],[142.5, 65]
-                      [17.5, 91],[42.5, 91], [67.5, 91],[92.5, 91], [117.5, 91],[142.5, 91]
+                      [17.5, 39],[42.5, 39], [67.5, 39],[92.5, 39], [117.5, 39],[142.5, 39],
+                      [17.5, 65],[42.5, 65], [67.5, 65],[92.5, 65], [117.5, 65],[142.5, 65],
+                      [17.5, 91],[42.5, 91], [67.5, 91],[92.5, 91], [117.5, 91],[142.5, 91],
                       [17.5, 117],[42.5, 117], [67.5, 117],[92.5, 117], [117.5, 117],[142.5, 117] ])
         
         # definindo os angulos de cada grid
@@ -180,10 +180,10 @@ class Grid:
     def update(self, robot0, robot1, robot2, ball):
         
         # encontrando o indice em que cada robo e a bola se encontra
-        index0 = argmin(distance.cdist(self.gridv, [robot0.xPos, robot0.yPos], 'euclidian'))
-        index1 = argmin(distance.cdist(self.gridv, [robot1.xPos, robot1.yPos], 'euclidian'))
-        index2 = argmin(distance.cdist(self.gridv, [robot2.xPos, robot2.yPos], 'euclidian'))
-        indexb = argmin(distance.cdist(self.gridv, [ball.xPos, ball.yPos], 'euclidian'))
+        index0 = argmin(distance.cdist(self.gridv, [robot0.xPos, robot0.yPos]))
+        index1 = argmin(distance.cdist(self.gridv, [robot1.xPos, robot1.yPos]))
+        index2 = argmin(distance.cdist(self.gridv, [robot2.xPos, robot2.yPos]))
+        indexb = argmin(distance.cdist(self.gridv, [ball.xPos, ball.yPos]))
 
         # Atualizando os valores
         self.robotGridPos = array([index0, index1, index2])
@@ -197,47 +197,73 @@ class Grid:
         pos2 = self.gridv[index[2]]
 
         # Lista dos grids mais próximos de cada robô 
-        listAux0 = distance.cdist(self.gridv, self.gridv[pos0], 'euclidian') # calcula a distancia
-        listId0 = where(list0Aux == list0Aux.min()) # encontra o indice dos valores min
-        list0 = take(self.gridv, listId0) # salva a posição dos valores min
+        listAux0 = distance.cdist(self.gridv, self.gridv[pos0]) # calcula a distancia
         
-        listAux1 = distance.cdist(self.gridv, self.gridv[pos1], 'euclidian')
-        listId1 = where(listAux1 == listAux1.min())
-        list1 = take(self.gridv, listId1)
+        # Removendo o valor 0 da lista de distancias
+        zeroId = where(listAux0 == 0)
+        listAux0[zeroId] = 1000
+        listAux0[zeroId] = listAux0.min()
         
-        listAux2 = distance.cdist(self.gridv, self.gridv[pos2], 'euclidian')
-        listId2 = where(listAux2 == listAux2.min())
-        list2 = take(self.gridv, listId2)
+        listId0 = where(list0Aux <= 37) # encontra o indice dos valores min
+        # salva a posição dos valores min
+        list0 = []
+        for index in listId0[0]:
+            list0.append(self.gridv[index])
+        
+        listAux1 = distance.cdist(self.gridv, self.gridv[pos1])
+        
+        zeroId = where(listAux1 == 0)
+        listAux1[zeroId] = 1000
+        listAux1[zeroId] = listAux1.min()
+
+        listId1 = where(listAux1 <= 37)
+    
+        list1 = []
+        for index in listId1[0]:
+            list1.append(self.gridv[index])
+        
+        listAux2 = distance.cdist(self.gridv, self.gridv[pos2])
+
+        zeroId = where(listAux2 == 0)
+        listAux2[zeroId] = 1000
+        listAux2[zeroId] = listAux2.min()
+
+        listId2 = where(listAux2 <= 37)
+        list2 = []
+        for index in listId2[0]:
+            list0.append(self.gridv[index])
 
         #Verifica se a posição que ele vai se mover já tem algum robô
         
         if self.robotGridPos[1] in listId0:
-            listId0 = delete(listId0, where(listId0 == self.robotGridPos[1]))
-            list0 = delete(list0, where(listId0 == self.robotGridPos[1]))
+            listId0n = delete(listId0[0], where(listId0 == self.robotGridPos[1]))
+            list0 = delete(list0, where(listId0 == self.robotGridPos[1]), axis = 0)
         if self.robotGridPos[2] in listId0:
-            listId0 = delete(listId0, where(listId0 == self.robotGridPos[2]))
-            list0 = delete(list0, where(listId0 == self.robotGridPos[2]))
+            listId0 = delete(listId0[0], where(listId0 == self.robotGridPos[2]))
+            list0 = delete(list0, where(listId0 == self.robotGridPos[2]), axis = 0)
        
         if self.robotGridPos[0] in listId1:
-            listId1 = delete(listId1, where(listId1 == self.robotGridPos[0]))
-            list1 = delete(list1, where(listId1 == self.robotGridPos[0]))
+            listId1n = delete(listId1[0], where(listId1 == self.robotGridPos[0]))
+            list1 = delete(list1, where(listId1 == self.robotGridPos[0]), axis = 0)
         if self.robotGridPos[2] in listId1:
-            listId1 = delete(listId1, where(listId1 == self.robotGridPos[2]))
-            list1 = delete(list1, where(listId1 == self.robotGridPos[2]))
+            listId1 = delete(listId1[0], where(listId1 == self.robotGridPos[2]))
+            list1 = delete(list1, where(listId1 == self.robotGridPos[2]), axis = 0)
 
         if self.robotGridPos[0] in listId2:
-            listId2 = delete(listId2, where(listId2 == self.robotGridPos[0]))
-            list2 = delete(list2, where(listId2 == self.robotGridPos[0]))
+            listId2n = delete(listId2[0], where(listId2 == self.robotGridPos[0]))
+            list2 = delete(list2, where(listId2 == self.robotGridPos[0]), axis = 0)
         if self.robotGridPos[1] in listId2:
-            listId2 = delete(listId2, where(listId2 == self.robotGridPos[1]))
-            list2 = delete(list2, where(listId2 == self.robotGridPos[1]))
+            listId2 = delete(listId2[0], where(listId2 == self.robotGridPos[1]))
+            list2 = delete(list2, where(listId2 == self.robotGridPos[1]), axis = 0)
 
         # Encontrando qual grid é o mais próximo da bola
-        targetId0 = argmin(distance.cdist(list0, self.gridv[indexb], 'euclidian'))
-        target0 = self.gridv[listId0[targetId0]]
+        targetId0 = argmin(distance.cdist(list0, self.gridv[indexb]))
+        target0 = self.gridv[listId0n[0][targetId0]]
 
-        targetId1 = argmin(distance.cdist(list1, self.gridv[indexb], 'euclidian'))
-        target1 = self.gridv[listId0[targetId1]]
+        targetId1 = argmin(distance.cdist(list1, self.gridv[indexb]))
+        target1 = self.gridv[listId1n[0][targetId1]]
 
-        targetId2 = argmin(distance.cdist(list2, self.gridv[indexb], 'euclidian'))
-        target2 = self.gridv[listId0[targetId2]]
+        targetId2 = argmin(distance.cdist(list2, self.gridv[indexb]))
+        target2 = self.gridv[listId2n[0][targetId2]]
+
+    def doInGrid():
