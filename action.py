@@ -227,3 +227,19 @@ def Master_Slave(robot1, robot2, robots, ball):
                 listObstacles = robots + [robot2]
                 shoot(robot1,ball,leftSide= not robot1.teamYellow, obstacles=listObstacles)
                 slave(robot2,robot1, robots)
+
+def defenderPenalty(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
+    if leftSide:
+        arrivalTheta=arctan2(ball.yPos-90,ball.xPos-15) #? Angle between the ball and point (150,65)
+    else:
+        arrivalTheta=arctan2(ball.yPos-90,ball.xPos-235) #? Angle between the ball and point (0,65)
+    #robot.target.update(ball.xPos,ball.yPos,0)
+    robot.target.update(ball.xPos,ball.yPos,arrivalTheta)
+
+    if friend1 is None and friend2 is None: #? No friends to avoid
+        v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
+    else: #? Both friends to avoid
+        robot.obst.update(robot,friend1,friend2,enemy1,enemy2,enemy3)
+        v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
+
+    robot.simSetVel(v,w)
