@@ -176,29 +176,54 @@ def Master_Slave(robot1, robot2, robots, ball):
     w2 = 0.20*(1-cos(ang2 - robot2.theta)) + 0.80*dist2/(dist1+dist2)
 
     if w1 > w2:
-        # linhas 352 e 353 condicionais para não entrar no gol, o mesmo para 365 e 366
-        if ball.xPos < 40 and (ball.yPos < 130 and ball.yPos > 50):
-            if robot1.xPos < 55:
-                screenOutBall(robot2, robot2, 55, leftSide=not robot2.teamYellow, upperLim=170, lowerLim=10)
-            else:
-                screenOutBall(robot2, ball, 55, leftSide=not robot2.teamYellow, upperLim=170, lowerLim=10)
-            slave(robot1,robot2, robots)
+        if not robot1.teamYellow:
+            # linhas 352 e 353 condicionais para não entrar no gol, o mesmo para 365 e 366
+            if ball.xPos < 40 and (ball.yPos < 130 and ball.yPos > 50):
+                if robot1.xPos < 55:
+                    screenOutBall(robot2, robot2, 55, leftSide=not robot2.teamYellow, upperLim=170, lowerLim=10)
+                else:
+                    screenOutBall(robot2, ball, 55, leftSide=not robot2.teamYellow, upperLim=170, lowerLim=10)
+                slave(robot1,robot2, robots)
 
+            else:
+                listObstacles = robots + [robot1]
+                shoot(robot2,ball,leftSide= not robot2.teamYellow, obstacles = listObstacles)
+                slave(robot1,robot2, robots)
         else:
-            listObstacles = robots + [robot1]
-            shoot(robot2,ball,leftSide= not robot2.teamYellow, obstacles = listObstacles)
-            slave(robot1,robot2, robots)
+            if ball.xPos > 195 and (ball.yPos < 130 and ball.yPos > 50):
+                if robot1.xPos > 180:
+                    screenOutBall(robot2, robot2, 55, leftSide=not robot2.teamYellow, upperLim=170, lowerLim=10)
+                else:
+                    screenOutBall(robot2, ball, 55, leftSide=not robot2.teamYellow, upperLim=170, lowerLim=10)
+                slave(robot1,robot2, robots)
+
+            else:
+                listObstacles = robots + [robot1]
+                shoot(robot2,ball,leftSide= not robot2.teamYellow, obstacles = listObstacles)
+                slave(robot1,robot2, robots)
 
     else:
+        if not robot1.teamYellow:
+            if ball.xPos < 40 and (ball.yPos < 130 and ball.yPos > 50):
+                if robot1.xPos < 55:
+                    screenOutBall(robot1, robot1, 55, leftSide=not robot1.teamYellow, upperLim=170, lowerLim=10)
+                else:
+                    screenOutBall(robot1, ball, 55, leftSide=not robot1.teamYellow, upperLim=170, lowerLim=10)
+                slave(robot2,robot1, robots)
 
-        if ball.xPos < 40 and (ball.yPos < 130 and ball.yPos > 50):
-            if robot1.xPos < 55:
-                screenOutBall(robot1, robot1, 55, leftSide=not robot1.teamYellow, upperLim=170, lowerLim=10)
             else:
-                screenOutBall(robot1, ball, 55, leftSide=not robot1.teamYellow, upperLim=170, lowerLim=10)
-            slave(robot2,robot1, robots)
-
+                listObstacles = robots + [robot2]
+                shoot(robot1,ball,leftSide= not robot1.teamYellow, obstacles=listObstacles)
+                slave(robot2,robot1, robots)
         else:
-            listObstacles = robots + [robot2]
-            shoot(robot1,ball,leftSide= not robot1.teamYellow, obstacles=listObstacles)
-            slave(robot2,robot1, robots)
+            if ball.xPos > 195 and (ball.yPos < 130 and ball.yPos > 50):
+                if robot1.xPos > 180:
+                    screenOutBall(robot1, robot1, 55, leftSide=not robot1.teamYellow, upperLim=170, lowerLim=10)
+                else:
+                    screenOutBall(robot1, ball, 55, leftSide=not robot1.teamYellow, upperLim=170, lowerLim=10)
+                slave(robot2,robot1, robots)
+
+            else:
+                listObstacles = robots + [robot2]
+                shoot(robot1,ball,leftSide= not robot1.teamYellow, obstacles=listObstacles)
+                slave(robot2,robot1, robots)

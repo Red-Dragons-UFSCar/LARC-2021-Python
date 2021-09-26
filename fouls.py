@@ -16,14 +16,18 @@ def replacement_fouls(replacement, ref_data, mray):
     if mray == False:
         if ref_data["foul"] == 1:
             if ref_data["yellow"] == True: # Defensivo
-                entidade0 = Entity(x=13.75, y=65,a=0, index=0)
-                entidade1 = Entity(x=96, y=25,a=180, index=1)
-                entidade2 = Entity(x=96, y=90,a=0, index=2)
+                entidade0 = Entity(x=18.75, y=90,a=0, index=0)
+                entidade1 = Entity(x=130, y=115,a=180, index=1)
+                entidade2 = Entity(x=130, y=65,a=180, index=2)
+                entidade3 = Entity(x=155, y=70,a=180, index=3)
+                entidade4 = Entity(x=155, y=120,a=180, index=4)
             else: # Ofensivo
-                entidade0 = Entity(x=17.5, y=65,a=0, index=0)
-                entidade1 = Entity(x=73.75, y=105,a=0, index=1)
-                entidade2 = Entity(x=107.5, y=65,a=0, index=2)
-            replacement.place_all([entidade0, entidade1, entidade2])
+                entidade0 = Entity(x=22, y=90,a=0, index=0)
+                entidade1 = Entity(x=95, y=45,a=0, index=1)
+                entidade2 = Entity(x=95, y=145,a=0, index=2)
+                entidade3 = Entity(x=110, y=95,a=0, index=3)
+                entidade4 = Entity(x=185, y=90,a=0, index=4)
+            replacement.place_all([entidade0, entidade1, entidade2, entidade3, entidade4])
 
         #TODO FOULS: Revisar as posições futuramente do goalKick
         #elif ref_data["foul"] == 2:
@@ -34,40 +38,62 @@ def replacement_fouls(replacement, ref_data, mray):
 
         elif ref_data["foul"] == 3:
             if ref_data["quad"] == 1:
-                entidade0 = Entity(x=17.5, y=65,a=0, index=0)
-                entidade1 = Entity(x=95, y=45,a=0, index=1)
-                entidade2 = Entity(x=102.5, y=105,a=0, index=2)
+                entidade0 = Entity(x=22, y=90,a=0, index=0)
+                entidade1 = Entity(x=85, y=30,a=0, index=1)
+                entidade2 = Entity(x=85, y=150,a=0, index=2)
+                entidade3 = Entity(x=155, y=150,a=0, index=3)
+                entidade4 = Entity(x=195, y=80,a=0, index=4)
             elif ref_data["quad"] == 2:
-                entidade0 = Entity(x=17.5, y=72.5,a=0, index=0)
-                entidade1 = Entity(x=27.5, y=105,a=0, index=1)
-                entidade2 = Entity(x=55, y=55,a=0, index=2)
+                entidade0 = Entity(x=22, y=90,a=0, index=0)
+                entidade1 = Entity(x=45, y=150,a=0, index=1)
+                entidade2 = Entity(x=85, y=80,a=0, index=2)
+                entidade3 = Entity(x=95, y=40,a=0, index=3)
+                entidade4 = Entity(x=165, y=90,a=0, index=4)
             elif ref_data["quad"] == 3:
-                entidade0 = Entity(x=17.5, y=57.5,a=0, index=0)
-                entidade1 = Entity(x=27.5, y=25,a=0, index=1)
-                entidade2 = Entity(x=55, y=75,a=0, index=2)
+                entidade0 = Entity(x=22, y=90,a=0, index=0)
+                entidade1 = Entity(x=45, y=30,a=0, index=1)
+                entidade2 = Entity(x=85, y=100,a=0, index=2)
+                entidade3 = Entity(x=95, y=140,a=0, index=3)
+                entidade4 = Entity(x=164, y=90,a=0, index=4)
             elif ref_data["quad"] == 4:
-                entidade0 = Entity(x=17.5, y=65,a=0, index=0)
-                entidade1 = Entity(x=95, y=85,a=180, index=1)
-                entidade2 = Entity(x=102.5, y=25,a=0, index=2)
-            replacement.place_all([entidade0, entidade1, entidade2])
+                entidade0 = Entity(x=22, y=90,a=0, index=0)
+                entidade1 = Entity(x=85, y=30,a=0, index=1)
+                entidade2 = Entity(x=85, y=150,a=0, index=2)
+                entidade3 = Entity(x=155, y=30,a=0, index=3)
+                entidade4 = Entity(x=195, y=100,a=0, index=4)
+            replacement.place_all([entidade0, entidade1, entidade2, entidade3, entidade4])
 
         elif ref_data["foul"] == 4:
-            entidade0 = Entity(x=17.5, y=65,a=0, index=0)
-            entidade1 = Entity(x=45, y=65,a=0, index=1)
-            entidade2 = Entity(x=65, y=65,a=0, index=2)
-            replacement.place_all([entidade0, entidade1, entidade2])
+            if ref_data["yellow"] == False: # Ofensivo
+                entidade0 = Entity(x=15, y=90,a=0, index=0)
+                entidade1 = Entity(x=80, y=70,a=0, index=1)
+                entidade2 = Entity(x=80, y=110,a=0, index=2)
+                entidade3 = Entity(x=120, y=120,a=0, index=3)
+                entidade4 = Entity(x=115, y=80,a=45, index=4)
+            else: # Defensivo
+                entidade0 = Entity(x=15, y=90,a=0, index=0)
+                entidade1 = Entity(x=60, y=70,a=0, index=1)
+                entidade2 = Entity(x=60, y=110,a=0, index=2)
+                entidade3 = Entity(x=90, y=70,a=30, index=3)
+                entidade4 = Entity(x=90, y=110,a=-30, index=4)
+            replacement.place_all([entidade0, entidade1, entidade2, entidade3, entidade4])
+
 
     if mray == True:
         if ref_data["foul"] == 1:
-            if ref_data["yellow"] == True:
-                entidade0 = Entity(x=152.5, y=65,a=180, index=0)
-                entidade1 = Entity(x=96, y=105,a=180, index=1)
-                entidade2 = Entity(x=62.5, y=65,a=180, index=2)
-            else:
-                entidade0 = Entity(x=152.5, y=65,a=180, index=0)
-                entidade1 = Entity(x=73.75, y=25,a=0, index=1)
-                entidade2 = Entity(x=62.5, y=65,a=180, index=2)
-            replacement.place_all([entidade0, entidade1, entidade2])
+            if ref_data["yellow"] == True: # Ofensivo
+                entidade0 = Entity(x=228, y=90,a=180, index=0)
+                entidade1 = Entity(x=155, y=45,a=180, index=1)
+                entidade2 = Entity(x=155, y=145,a=180, index=2)
+                entidade3 = Entity(x=135, y=95,a=180, index=3)
+                entidade4 = Entity(x=65, y=90,a=180, index=4)
+            else: # Defensivo
+                entidade0 = Entity(x=231, y=90,a=180, index=0)
+                entidade1 = Entity(x=120, y=65,a=0, index=1)
+                entidade2 = Entity(x=120, y=115,a=0, index=2)
+                entidade3 = Entity(x=95, y=70,a=0, index=3)
+                entidade4 = Entity(x=95, y=120,a=0, index=4)
+            replacement.place_all([entidade0, entidade1, entidade2, entidade3, entidade4])
 
         #elif ref_data["foul"] == 2:
             #entidade0 = Entity(x=50, y=100,a=0, index=0)
@@ -77,25 +103,43 @@ def replacement_fouls(replacement, ref_data, mray):
 
         elif ref_data["foul"] == 3:
             if ref_data["quad"] == 1:
-                entidade0 = Entity(x=152.5, y=72.5,a=180, index=0)
-                entidade1 = Entity(x=142.5, y=105,a=180, index=1)
-                entidade2 = Entity(x=115, y=55,a=180, index=2)
+                entidade0 = Entity(x=228, y=90,a=0, index=0)
+                entidade1 = Entity(x=205, y=150,a=180, index=1)
+                entidade2 = Entity(x=165, y=80,a=0, index=2)
+                entidade3 = Entity(x=85, y=90,a=0, index=3)
+                entidade4 = Entity(x=155, y=40,a=0, index=4)
             elif ref_data["quad"] == 2:
-                entidade0 = Entity(x=152.5, y=65,a=180, index=0)
-                entidade1 = Entity(x=100, y=65,a=180, index=1)
-                entidade2 = Entity(x=67.5, y=105,a=180, index=2)
+                entidade0 = Entity(x=228, y=90,a=0, index=0)
+                entidade1 = Entity(x=165, y=30,a=180, index=1)
+                entidade2 = Entity(x=165, y=150,a=180, index=2)
+                entidade3 = Entity(x=95, y=150,a=180, index=3)
+                entidade4 = Entity(x=55, y=80,a=180, index=4)
             elif ref_data["quad"] == 3:
-                entidade0 = Entity(x=152.5, y=65,a=180, index=0)
-                entidade1 = Entity(x=100, y=65,a=180, index=1)
-                entidade2 = Entity(x=67.5, y=25,a=180, index=2)
+                entidade0 = Entity(x=228, y=90,a=0, index=0)
+                entidade1 = Entity(x=165, y=30,a=180, index=1)
+                entidade2 = Entity(x=165, y=150,a=180, index=2)
+                entidade3 = Entity(x=95, y=30,a=0, index=3)
+                entidade4 = Entity(x=55, y=100,a=0, index=4)
             elif ref_data["quad"] == 4:
-                entidade0 = Entity(x=152, y=57.5,a=180, index=0)
-                entidade1 = Entity(x=142, y=25,a=180, index=1)
-                entidade2 = Entity(x=115, y=75,a=180, index=2)
-            replacement.place_all([entidade0, entidade1, entidade2])
+                entidade0 = Entity(x=228, y=90,a=0, index=0)
+                entidade1 = Entity(x=205, y=30,a=180, index=1)
+                entidade2 = Entity(x=165, y=100,a=180, index=2)
+                entidade3 = Entity(x=155, y=140,a=180, index=3)
+                entidade4 = Entity(x=85, y=90,a=180, index=4)
+            replacement.place_all([entidade0, entidade1, entidade2, entidade3, entidade4])
+
 
         elif ref_data["foul"] == 4:
-            entidade0 = Entity(x=152, y=65,a=180, index=0)
-            entidade1 = Entity(x=125, y=65,a=180, index=1)
-            entidade2 = Entity(x=100, y=65,a=180, index=2)
-            replacement.place_all([entidade0, entidade1, entidade2])
+            if ref_data["yellow"] == False: # Defensivo
+                entidade0 = Entity(x=235, y=90,a=0, index=0)
+                entidade1 = Entity(x=175, y=70,a=0, index=1)
+                entidade2 = Entity(x=175, y=110,a=0, index=2)
+                entidade3 = Entity(x=145, y=70,a=150, index=3)
+                entidade4 = Entity(x=145, y=110,a=-150, index=4)
+            else: # Ofensivo
+                entidade0 = Entity(x=235, y=90,a=0, index=0)
+                entidade1 = Entity(x=175, y=70,a=0, index=1)
+                entidade2 = Entity(x=175, y=110,a=0, index=2)
+                entidade3 = Entity(x=130, y=120,a=180, index=3)
+                entidade4 = Entity(x=135, y=80,a=135, index=4)
+            replacement.place_all([entidade0, entidade1, entidade2, entidade3, entidade4])

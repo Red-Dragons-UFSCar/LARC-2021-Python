@@ -35,7 +35,7 @@ class Strategy:
         listRobots = [self.robot0, self.robot3, self.robot4, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
         action.Master_Slave(self.robot1,self.robot2, listRobots, self.ball)
 
-        action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray, upperLim=106, lowerLim=74)
+        action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
         action.screenOutBall(self.robot3, self.ball, 135, leftSide=not self.mray, upperLim=85, lowerLim=5)
         action.screenOutBall(self.robot4, self.ball, 135, leftSide=not self.mray, upperLim=175, lowerLim=95)
 
@@ -44,6 +44,6 @@ class Strategy:
         listRobots = [self.robot0, self.robot1, self.robot2, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
         action.Master_Slave(self.robot3,self.robot4, listRobots, self.ball)
 
-        action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray, upperLim=106, lowerLim=74)
+        action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
         action.screenOutBall(self.robot1, self.ball, 90, leftSide=not self.mray, upperLim=85, lowerLim=5)
         action.screenOutBall(self.robot2, self.ball, 90, leftSide=not self.mray, upperLim=175, lowerLim=95)

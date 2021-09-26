@@ -71,9 +71,8 @@ if __name__ == "__main__":
             # Se o modo de jogo estiver em "Game on"
             strategy.coach()
 
-
         elif ref_data["foul"] != 7:
-            #fouls.replacement_fouls(replacement,ref_data,mray)
+            fouls.replacement_fouls(replacement,ref_data,mray)
             actuator.stop()
 
         else:

@@ -67,8 +67,12 @@ def univecController(robot,target,avoidObst=True,obst=None,n=8,d=2,stopWhenArriv
     else:
         v3=robot.vMax
 
-    v=min(abs(v1),abs(v2),abs(v3))
-    w=v*phi_v+k_w*sign(theta_e)*sqrt(abs(theta_e))
+    if stopWhenArrive and robot.arrive():
+        v = 0
+        w = 0
+    else:
+        v=min(abs(v1),abs(v2),abs(v3))
+        w=v*phi_v+k_w*sign(theta_e)*sqrt(abs(theta_e))
 
     #% Some code to store the past position, orientation and velocity
     robot.v=v
