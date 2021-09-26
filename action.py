@@ -349,7 +349,7 @@ def Master_Slave(robot0, robot1, robot2, ball, robotEnemy0, robotEnemy1, robotEn
 
     if w1 > w2:
         # linhas 352 e 353 condicionais para não entrar no gol, o mesmo para 365 e 366
-        if ball.xPos < 25 and (ball.yPos < 100 and ball.yPos > 40): 
+        if ball.xPos < 25 and (ball.yPos < 100 and ball.yPos > 40):
             if robot1.xPos < 25:
                 screenOutBall(robot2, robot2, 30, leftSide=not robot2.teamYellow, upperLim=120, lowerLim=10)
             else:
@@ -362,13 +362,30 @@ def Master_Slave(robot0, robot1, robot2, ball, robotEnemy0, robotEnemy1, robotEn
 
     else:
 
-        if ball.xPos < 25 and (ball.yPos < 100 and ball.yPos > 40): 
+        if ball.xPos < 25 and (ball.yPos < 100 and ball.yPos > 40):
             if robot1.xPos < 25:
-                screenOutBall(robot1, robot1, 30, leftSide=not robot1.teamYellow, upperLim=120, lowerLim=10) 
-            else:      
+                screenOutBall(robot1, robot1, 30, leftSide=not robot1.teamYellow, upperLim=120, lowerLim=10)
+            else:
                 screenOutBall(robot1, ball, 30, leftSide=not robot1.teamYellow, upperLim=120, lowerLim=10)
-            slave(robot2,robot1, robot0, robotEnemy0, robotEnemy1, robotEnemy2)  
+            slave(robot2,robot1, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
 
         else:
             shoot(robot1,ball,leftSide= not robot1.teamYellow, friend1 = robot0, friend2 = robot2, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
-            slave(robot2,robot1, robot0, robotEnemy0, robotEnemy1, robotEnemy2)       
+            slave(robot2,robot1, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
+
+def defenderPenalty(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
+    print("Entrei")
+    if leftSide:
+        arrivalTheta=arctan2(ball.yPos-65,ball.xPos-10) #? Angle between the ball and point (150,65)
+    else:
+        arrivalTheta=arctan2(ball.yPos-65,ball.xPos-160) #? Angle between the ball and point (0,65)
+    #robot.target.update(ball.xPos,ball.yPos,0)
+    robot.target.update(ball.xPos,ball.yPos,arrivalTheta)
+
+    if friend1 is None and friend2 is None: #? No friends to avoid
+        v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
+    else: #? Both friends to avoid
+        robot.obst.update(robot,friend1,friend2,enemy1,enemy2,enemy3)
+        v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
+
+    robot.simSetVel(v,w)
