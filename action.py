@@ -1,4 +1,4 @@
-from numpy import pi,cos,sin,tan,arctan2,sqrt ,matmul,array, deg2rad
+from numpy import pi,cos,sin,tan,arctan2,sqrt ,matmul,array, rad2deg, deg2rad
 from execution import univecController, whichFace
 from behaviours import Univector
 
@@ -71,6 +71,34 @@ def shoot(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enem
     #robot.target.update(ball.xPos,ball.yPos,0)
     robot.target.update(ball.xPos,ball.yPos,arrivalTheta)
 
+    if friend1 is None and friend2 is None: #? No friends to avoid
+        v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
+    else: #? Both friends to avoid
+        robot.obst.update(robot,friend1,friend2,enemy1,enemy2,enemy3)
+        v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
+
+    robot.simSetVel(v,w)
+
+def shoot2(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
+    if leftSide:
+        if (ball.yPos > 45) and (ball.yPos < 85):
+            arrivalTheta = 0
+        elif ball.yPos <= 45:
+            y = 45 + (45-ball.yPos)/(45-0)*20
+            arrivalTheta=arctan2(y-45,160-ball.xPos)
+        else:
+            y = 85 - (ball.yPos-85)/(130-85)*20
+            arrivalTheta=arctan2(y-85,160-ball.xPos)
+    else:
+        if (ball.yPos > 45) and (ball.yPos < 85):
+            arrivalTheta = pi
+        elif ball.yPos <= 45:
+            y = 45 + (45-ball.yPos)/(45-0)*20
+            arrivalTheta=arctan2(y-45,10-ball.xPos)
+        else:
+            y = 85 - (ball.yPos-85)/(130-85)*20
+            arrivalTheta=arctan2(y-85,10-ball.xPos)
+    robot.target.update(ball.xPos, ball.yPos, arrivalTheta)
     if friend1 is None and friend2 is None: #? No friends to avoid
         v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
     else: #? Both friends to avoid
