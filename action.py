@@ -415,26 +415,49 @@ def Master_Slave(robot0, robot1, robot2, ball, robotEnemy0, robotEnemy1, robotEn
 
     if w1 > w2:
         # linhas 352 e 353 condicionais para não entrar no gol, o mesmo para 365 e 366
-        if ball.xPos < 25 and (ball.yPos < 100 and ball.yPos > 40):
-            if robot1.xPos < 25:
-                screenOutBall(robot2, robot2, 30, leftSide=not robot2.teamYellow, upperLim=120, lowerLim=10)
-            else:
-                screenOutBall(robot2, ball, 30, leftSide=not robot2.teamYellow, upperLim=120, lowerLim=10)
-            slave(robot1,robot2, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
+        if not robot1.teamYellow:
+            if ball.xPos < 25 and (ball.yPos < 100 and ball.yPos > 40):
+                if robot1.xPos < 25:
+                    screenOutBall(robot2, robot2, 30, leftSide=not robot2.teamYellow, upperLim=120, lowerLim=10)
+                else:
+                    screenOutBall(robot2, ball, 30, leftSide=not robot2.teamYellow, upperLim=120, lowerLim=10)
+                slave(robot1,robot2, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
 
+            else:
+                shoot(robot2,ball,leftSide= not robot2.teamYellow, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
+                slave(robot1,robot2, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
         else:
-            shoot(robot2,ball,leftSide= not robot2.teamYellow, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
-            slave(robot1,robot2, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
+            if ball.xPos > 140 and (ball.yPos < 100 and ball.yPos > 40):
+                if robot1.xPos > 140:
+                    screenOutBall(robot2, robot2, 30, leftSide=not robot2.teamYellow, upperLim=120, lowerLim=10)
+                else:
+                    screenOutBall(robot2, ball, 30, leftSide=not robot2.teamYellow, upperLim=120, lowerLim=10)
+                slave(robot1,robot2, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
+
+            else:
+                shoot(robot2,ball,leftSide= not robot2.teamYellow, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
+                slave(robot1,robot2, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
 
     else:
+        if not robot1.teamYellow:
+            if ball.xPos < 25 and (ball.yPos < 100 and ball.yPos > 40):
+                if robot1.xPos < 25:
+                    screenOutBall(robot1, robot1, 30, leftSide=not robot1.teamYellow, upperLim=120, lowerLim=10)
+                else:
+                    screenOutBall(robot1, ball, 30, leftSide=not robot1.teamYellow, upperLim=120, lowerLim=10)
+                slave(robot2,robot1, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
 
-        if ball.xPos < 25 and (ball.yPos < 100 and ball.yPos > 40):
-            if robot1.xPos < 25:
-                screenOutBall(robot1, robot1, 30, leftSide=not robot1.teamYellow, upperLim=120, lowerLim=10)
             else:
-                screenOutBall(robot1, ball, 30, leftSide=not robot1.teamYellow, upperLim=120, lowerLim=10)
-            slave(robot2,robot1, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
-
+                shoot(robot1,ball,leftSide= not robot1.teamYellow, friend1 = robot0, friend2 = robot2, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
+                slave(robot2,robot1, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
         else:
-            shoot(robot1,ball,leftSide= not robot1.teamYellow, friend1 = robot0, friend2 = robot2, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
-            slave(robot2,robot1, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
+            if ball.xPos > 140 and (ball.yPos < 100 and ball.yPos > 40):
+                if robot1.xPos > 140:
+                    screenOutBall(robot1, robot1, 30, leftSide=not robot1.teamYellow, upperLim=120, lowerLim=10)
+                else:
+                    screenOutBall(robot1, ball, 30, leftSide=not robot1.teamYellow, upperLim=120, lowerLim=10)
+                slave(robot2,robot1, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
+
+            else:
+                shoot(robot1,ball,leftSide= not robot1.teamYellow, friend1 = robot0, friend2 = robot2, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
+                slave(robot2,robot1, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
