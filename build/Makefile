@@ -38,9 +38,9 @@ DISTNAME      = libfira.so1.0.0
 DISTDIR = /home/brunoyoshihara/Simulador/LARC-2021-Python/build/tmp/obj/libfira.so1.0.0
 LINK          = g++
 LFLAGS        = -shared -Wl,-O1
-LIBS          = $(SUBLIBS) -lprotobuf -L/usr/local/lib/ -lz -lQt5Gui -lQt5Network -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -lprotobuf -L/usr/local/lib/ -lz -lQt5Gui -lQt5Network -lQt5Core -lGL -lpthread
 AR            = ar cqs
-RANLIB        = 
+RANLIB        =
 SED           = sed
 STRIP         = strip
 
@@ -62,7 +62,7 @@ SOURCES       = ../libfira.cpp \
 		../include/replacement.pb.cc \
 		../include/vssref_command.pb.cc \
 		../include/vssref_common.pb.cc \
-		../include/vssref_placement.pb.cc 
+		../include/vssref_placement.pb.cc
 OBJECTS       = tmp/obj/libfira.o \
 		tmp/obj/actuatorclient.o \
 		tmp/obj/client.o \
@@ -180,7 +180,7 @@ TARGET        = ../libfira.so
 first: all
 ####### Build rules
 
-$(TARGET):  $(OBJECTS)  
+$(TARGET):  $(OBJECTS)
 	@test -d ../ || mkdir -p ../
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
@@ -356,13 +356,13 @@ distdir: FORCE
 	$(COPY_FILE) --parents ../libfira.cpp ../clients/actuator/actuatorclient.cpp ../clients/client.cpp ../clients/referee/refereeclient.cpp ../clients/replacer/replacerclient.cpp ../clients/vision/visionclient.cpp ../include/command.pb.cc ../include/common.pb.cc ../include/packet.pb.cc ../include/replacement.pb.cc ../include/vssref_command.pb.cc ../include/vssref_common.pb.cc ../include/vssref_placement.pb.cc $(DISTDIR)/
 
 
-clean: compiler_clean 
+clean: compiler_clean
 	-$(DEL_FILE) $(OBJECTS)
 	-$(DEL_FILE) *~ core *.core
 
 
-distclean: clean 
-	-$(DEL_FILE) $(TARGET) 
+distclean: clean
+	-$(DEL_FILE) $(TARGET)
 	-$(DEL_FILE) .qmake.stash
 	-$(DEL_FILE) Makefile
 
@@ -395,7 +395,7 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_moc_predefs_clean 
+compiler_clean: compiler_moc_predefs_clean
 
 ####### Compile
 
@@ -482,7 +482,7 @@ install_target: first FORCE
 
 uninstall_target: FORCE
 	-$(DEL_FILE) $(INSTALL_ROOT)/opt/libfira.so/bin/$(QMAKE_TARGET)
-	-$(DEL_DIR) $(INSTALL_ROOT)/opt/libfira.so/bin/ 
+	-$(DEL_DIR) $(INSTALL_ROOT)/opt/libfira.so/bin/
 
 
 install: install_target  FORCE
@@ -490,4 +490,3 @@ install: install_target  FORCE
 uninstall: uninstall_target  FORCE
 
 FORCE:
-

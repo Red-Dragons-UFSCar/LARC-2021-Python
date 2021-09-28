@@ -36,18 +36,24 @@ class Strategy:
 
     def basicStgDef(self):
         """Basic original strategy"""
-        action.screenOutBall(self.robot2, self.ball, 95, leftSide=not self.mray, upperLim=120, lowerLim=10)
-        #action.protectGoal(self.robot1, self.ball, 50, leftSide=not self.mray)
-        action.shoot(self.robot1, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot2,
-                     enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
-        action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray, upperLim=81, lowerLim=42)
+        if not self.mray:
+            if self.ball.xPos < 40 and self.ball.yPos > 30 and self.ball.yPos < 110:
+                action.defenderPenalty(self.robot0, self.ball, leftSide=not self.mray)
+                self.twoAttackers()
+            else:
+                self.twoAttackers()
+                action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray, upperLim=81, lowerLim=42)
+        else:
+            if self.ball.xPos > 130 and self.ball.yPos > 30 and self.ball.yPos < 110:
+                action.defenderPenalty(self.robot0, self.ball, leftSide=not self.mray)
+                self.twoAttackers()
+            else:
+                self.twoAttackers()
+                action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray, upperLim=81, lowerLim=42)
 
     def basicStgAtt(self):
         """Basic alternative strategy"""
-        action.shoot2(self.robot2, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot1,
-                     enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
-        #action.protectGoal(self.robot1, self.ball, 50, leftSide=not self.mray)
-        action.screenOutBall(self.robot1, self.ball, 55, leftSide=not self.mray, upperLim=120, lowerLim=10)
+        self.twoAttackers()
         action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray, upperLim=81, lowerLim=42)
 
     def stgFullAtt(self):
@@ -80,3 +86,8 @@ class Strategy:
                  enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
         if sqrt((self.ball.xPos-self.robot2.xPos)**2+(self.ball.yPos-self.robot2.yPos)**2) > 20:
             self.penaltyOffensive = False
+
+    def twoAttackers(self):
+
+        action.Master_Slave(self.robot0, self.robot1,self.robot2, self.ball, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2)
+        #action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray, upperLim=81, lowerLim=42)
