@@ -1,4 +1,4 @@
-from numpy import pi,cos,sin,tan,arctan2,sqrt ,matmul,array,  rad2deg
+from numpy import pi,cos,sin,tan,arctan2,sqrt ,matmul,array, rad2deg, deg2rad
 from execution import univecController, whichFace
 from behaviours import Univector
 
@@ -65,9 +65,9 @@ def holdPosition(robot,xg,yg,desTheta,friend1=None,friend2=None):
 #% Attacker Actions
 def shoot(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
     if leftSide:
-        arrivalTheta=arctan2(65-ball.yPos,150-ball.xPos) #? Angle between the ball and point (150,65)
+        arrivalTheta=arctan2(65-ball.yPos,160-ball.xPos) #? Angle between the ball and point (150,65)
     else:
-        arrivalTheta=arctan2(65-ball.yPos,-ball.xPos) #? Angle between the ball and point (0,65)
+        arrivalTheta=arctan2(65-ball.yPos,10-ball.xPos) #? Angle between the ball and point (0,65)
     #robot.target.update(ball.xPos,ball.yPos,0)
     robot.target.update(ball.xPos,ball.yPos,arrivalTheta)
 
@@ -331,3 +331,41 @@ def positionChange(arrayFunctions, ball, arraySideCrossing, leftSide = True):
 
 def girar(robot):
     robot.simSetVel(0,0)
+
+def defenderPenalty(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
+    if leftSide:
+        arrivalTheta=arctan2(ball.yPos-65,ball.xPos-10) #? Angle between the ball and point (150,65)
+    else:
+        arrivalTheta=arctan2(ball.yPos-65,ball.xPos-160) #? Angle between the ball and point (0,65)
+    #robot.target.update(ball.xPos,ball.yPos,0)
+    robot.target.update(ball.xPos,ball.yPos,arrivalTheta)
+
+    if friend1 is None and friend2 is None: #? No friends to avoid
+        v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
+    else: #? Both friends to avoid
+        robot.obst.update(robot,friend1,friend2,enemy1,enemy2,enemy3)
+        v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
+
+    robot.simSetVel(v,w)
+
+def attackPenalty(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
+    if leftSide:
+        if robot.yPos > 65:
+            arrivalTheta = -deg2rad(15)
+        else:
+            arrivalTheta = deg2rad(15)
+    else:
+        if robot.yPos > 65:
+            arrivalTheta = -deg2rad(165)
+        else:
+            arrivalTheta = deg2rad(165)
+
+    robot.target.update(ball.xPos, ball.yPos, arrivalTheta)
+
+    if friend1 is None and friend2 is None: #? No friends to avoid
+        v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
+    else: #? Both friends to avoid
+        robot.obst.update(robot,friend1,friend2,enemy1,enemy2,enemy3)
+        v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
+
+    robot.simSetVel(v,w)

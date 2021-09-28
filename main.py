@@ -14,7 +14,7 @@ from strategy import *
 if __name__ == "__main__":
 
     # Choose team (my robots are yellow)
-    mray = False
+    mray = True
 
     # Initialize all clients
     actuator = Actuator(mray, "127.0.0.1", 20011)
@@ -63,8 +63,22 @@ if __name__ == "__main__":
             # Se o modo de jogo estiver em "Game on"
             strategy.coach()
 
+        elif ref_data["foul"] == 1 and ref_data["yellow"] == (not mray):
+            #Detectando penalti defensivo
+            strategy.penaltyDefensive = True
+            actuator.stop()
+            fouls.replacement_fouls(replacement,ref_data,mray)
+
+        elif ref_data["foul"] == 1 and ref_data["yellow"] == (mray):
+            #Detectando penalti ofensivo
+            strategy.penaltyOffensive = True
+            actuator.stop()
+            fouls.replacement_fouls(replacement,ref_data,mray)
 
         elif ref_data["foul"] != 7:
+            if ref_data["foul"] != 5: # Mudando a flag exceto em caso de Stop
+                strategy.penaltyOffensive = False
+                strategy.penaltyDefensive = False
             fouls.replacement_fouls(replacement,ref_data,mray)
             actuator.stop()
 
