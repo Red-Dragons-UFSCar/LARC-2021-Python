@@ -14,12 +14,12 @@ class PlotField:
     def __init__(self):
         self.figureOpen = False
 
-    def plotInteractive(self, target, obstacle = None):
+    def plotInteractive(self, target, robot, obstacle = None):
         self.univec = behaviours.Univector()                                                 # Objeto univector
         self.x_pos = range(1, 150, 5)                                                        # Plot do campo inteiro
         self.y_pos = range(1, 150, 5)
 
-        self.robo = Robot(0, "nada")
+        self.robo = robot
 
         self.x_plot = []
         self.y_plot = []
@@ -62,17 +62,19 @@ class PlotField:
         #plt.show(block=True)
 
 if __name__ == '__main__':
-    mray = False
+    mray = True
 
     vision = Vision(mray, "224.0.0.1", 10002)
 
-    robot0 = Robot(0, actuator=None)
-    robot1 = Robot(1, actuator=None)
-    robot2 = Robot(2, actuator=None)
+    teamYellow = mray
 
-    robotEnemy0 = Robot(0, actuator=None)
-    robotEnemy1 = Robot(1, actuator=None)
-    robotEnemy2 = Robot(2, actuator=None)
+    robot0 = Robot(0, actuator=None, mray=teamYellow)
+    robot1 = Robot(1, actuator=None, mray=teamYellow)
+    robot2 = Robot(2, actuator=None, mray=teamYellow)
+
+    robotEnemy0 = Robot(0, actuator=None, mray=teamYellow)
+    robotEnemy1 = Robot(1, actuator=None, mray=teamYellow)
+    robotEnemy2 = Robot(2, actuator=None, mray=teamYellow)
 
     ball = Ball()
 
@@ -98,12 +100,33 @@ if __name__ == '__main__':
         robotEnemy2.simGetPose(data_their_bots[2])
         ball.simGetPose(data_ball)
 
-        if not mray:
-            arrivalTheta=arctan2(65-ball.yPos,150-ball.xPos) #? Angle between the ball and point (150,65)
-        else:
-            arrivalTheta=arctan2(65-ball.yPos,-ball.xPos) #? Angle between the ball and point (0,65)
+        # Shoot
+        #if not mray:
+        #    arrivalTheta=arctan2(65-ball.yPos,150-ball.xPos) #? Angle between the ball and point (150,65)
+        #else:
+        #    arrivalTheta=arctan2(65-ball.yPos,-ball.xPos) #? Angle between the ball and point (0,65)
 
-        robot2.target.update(ball.xPos,ball.yPos,arrivalTheta)
+        # Shoot 2
+        if not mray:
+            if (ball.yPos > 45) and (ball.yPos < 85):
+                arrivalTheta = 0
+            elif ball.yPos <= 45:
+                y = 45 + (45-ball.yPos)/(45-0)*20
+                arrivalTheta=arctan2(y-45,160-ball.xPos)
+            else:
+                y = 85 - (ball.yPos-85)/(130-85)*20
+                arrivalTheta=arctan2(y-85,160-ball.xPos)
+        else:
+            if (ball.yPos > 45) and (ball.yPos < 85):
+                arrivalTheta = pi
+            elif ball.yPos <= 45:
+                y = 45 + (45-ball.yPos)/(45-0)*20
+                arrivalTheta=arctan2(y-45,10-ball.xPos)
+            else:
+                y = 85 - (ball.yPos-85)/(130-85)*20
+                arrivalTheta=arctan2(y-85,10-ball.xPos)
+
+        robot2.target.update(ball.xPos, ball.yPos, arrivalTheta)
         robot2.obst.update(robot2,robot0,robot1,robotEnemy0,robotEnemy1,robotEnemy2)
 
         plot.plotInteractive(robot2.target, robot2.obst)
