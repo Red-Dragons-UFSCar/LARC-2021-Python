@@ -1,5 +1,5 @@
 from numpy import arctan2,pi,sqrt,cos,sin,array,matmul,amin,where,take,zeros,delete,append,int32,argmin
-from scipy.spatial import distance
+# from scipy.spatial import distance -> Descomentar quando atividade do Grid voltar
 
 #! Units: cm, rad, s
 
@@ -158,6 +158,8 @@ class Robot:
     def showInfo(self):
         print('xPos: {:.2f} | yPos: {:.2f} | theta: {:.2f} | velocity: {:.2f}'.format(self.xPos,self.yPos,float(self.theta),float(self.v)))
 
+'''
+-------------------Descomentar quando atividade do Grid voltar
 class Grid:
     def __init__(self):
 
@@ -267,3 +269,5 @@ class Grid:
         target2 = self.gridv[listId2n[0][targetId2]]
 
     #def doInGrid():
+'''
+

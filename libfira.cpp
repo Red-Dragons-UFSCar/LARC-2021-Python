@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "../FIRAClient/clients/vision/visionclient.h"
-#include "../FIRAClient/clients/referee/refereeclient.h"
-#include "../FIRAClient/clients/actuator/actuatorclient.h"
-#include "../FIRAClient/clients/replacer/replacerclient.h"
+#include "clients/vision/visionclient.h"
+#include "clients/referee/refereeclient.h"
+#include "clients/actuator/actuatorclient.h"
+#include "clients/replacer/replacerclient.h"
 
 #define NUM_BOTS 3
 #define CONECTION_TRIES 100
