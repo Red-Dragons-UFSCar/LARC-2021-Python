@@ -92,7 +92,8 @@ class Obstacle:
                          [d2],
                          [d3]])
             index=argmin(d_gol)
-            if d_gol[index] < 20:
+            dballgol = sqrt( (xGol-ball.xPos)**2 + (yGol-ball.yPos)**2 )
+            if d_gol[index] < 20 and dballgol < 20:
                 enemys = delete(enemys, index)
         else:
             d1 = sqrt( (xGol-enemys[0].xPos)**2 + (yGol-enemys[0].yPos)**2 )
