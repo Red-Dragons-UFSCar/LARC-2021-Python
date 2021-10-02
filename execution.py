@@ -71,7 +71,7 @@ def univecController(robot,target,avoidObst=True,obst=None,n=8,d=2,stopWhenArriv
     w=v*phi_v+k_w*sign(theta_e)*sqrt(abs(theta_e))
 
     #% Some code to store the past position, orientation and velocity
-    robot.v=v
+    #robot.v=v
     robot.pastPose=delete(robot.pastPose,0,1)                                   #? Deleting the first column
     robot.pastPose=append(robot.pastPose,array([[round(robot.xPos)],[round(robot.yPos)],[round(float(robot.theta))],[round(float(v))]]),1)
 

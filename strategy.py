@@ -24,14 +24,14 @@ class Strategy:
         else:
             if self.mray:
                 if self.ball.xPos > 85:
-                    self.StgDef_V2()
+                    self.basicStgDef()
                 else:
-                    self.StgAtt_V2()
+                    self.basicStgAtt()
             else:
                 if self.ball.xPos > 85:
-                    self.StgAtt_V2()
+                    self.basicStgAtt()
                 else:
-                    self.StgDef_V2()
+                    self.basicStgDef()
 
     def basicStgDef(self):
         """Basic original strategy with goalkeeper advance"""
