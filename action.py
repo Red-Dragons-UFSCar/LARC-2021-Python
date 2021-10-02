@@ -106,8 +106,6 @@ def shoot2(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  ene
         robot.obst.update2(robot,ball,friend1,friend2,enemy1,enemy2,enemy3)
         v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
 
-    v = 0
-    w = 0
     robot.simSetVel(v,w)
 
 #% Defender Actions
