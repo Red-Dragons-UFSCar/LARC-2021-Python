@@ -47,7 +47,6 @@ class Strategy:
             if self.ball.xPos > 130 and self.ball.yPos > 30 and self.ball.yPos < 110:
                 action.defenderPenalty(self.robot0, self.ball, leftSide=not self.mray)
                 action.screenOutBall(self.robot1, self.ball, 55, leftSide=not self.mray)
-                print("entrei")
             else:
                 action.shoot(self.robot1, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot2,
                              enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)

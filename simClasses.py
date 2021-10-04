@@ -110,17 +110,17 @@ class Obstacle:
         enemys = append(enemys, friend1)
         enemys = append(enemys, friend2)
         d_robot = zeros(len(enemys))
-        for i in range(len(enemys)):
-            print("Index: ", enemys[i].index)
+        # for i in range(len(enemys)):
+        #     print("Index: ", enemys[i].index)
         for i in range(len(enemys)):
            d_robot[i] = robot.dist(enemys[i])
 
         index=argmin(d_robot)
         self.setObst(enemys[index].xPos,enemys[index].yPos,0,0)
-        if enemys[index].teamYellow:
-            print("Obstaculo: Amarelo " + str(enemys[index].index))
-        else:
-            print("Obstaculo: Azul " + str(enemys[index].index))
+        # if enemys[index].teamYellow:
+        #     print("Obstaculo: Amarelo " + str(enemys[index].index))
+        # else:
+        #     print("Obstaculo: Azul " + str(enemys[index].index))
         self.setObst(enemys[index].xPos,enemys[index].yPos,0,0)
 
 
