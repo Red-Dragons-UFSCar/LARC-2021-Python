@@ -68,6 +68,62 @@ class Obstacle:
         else:
             self.setObst(enemy3.xPos,enemy3.yPos,0,0)
 
+    def update2(self,robot,ball,friend1,friend2,enemy1,enemy2,enemy3):
+        enemys = array([enemy1, enemy2, enemy3])
+        d_ball=array([[enemy1.dist(ball)],
+                      [enemy2.dist(ball)],
+                      [enemy3.dist(ball)]])
+        index=argmin(d_ball)
+        if d_ball[index] < 15:
+            enemys = delete(enemys, [index])
+
+        if not robot.teamYellow:
+            xGol = 160
+            yGol = 65
+        else:
+            xGol = 10
+            yGol = 65
+
+        if len(enemys)==3:
+            d1 = sqrt( (xGol-enemy1.xPos)**2 + (yGol-enemy1.yPos)**2 )
+            d2 = sqrt( (xGol-enemy2.xPos)**2 + (yGol-enemy2.yPos)**2 )
+            d3 = sqrt( (xGol-enemy3.xPos)**2 + (yGol-enemy3.yPos)**2 )
+            d_gol=array([[d1],
+                         [d2],
+                         [d3]])
+            index=argmin(d_gol)
+            dballgol = sqrt( (xGol-ball.xPos)**2 + (yGol-ball.yPos)**2 )
+            if d_gol[index] < 20 and dballgol < 20:
+                enemys = delete(enemys, index)
+        else:
+            d1 = sqrt( (xGol-enemys[0].xPos)**2 + (yGol-enemys[0].yPos)**2 )
+            d2 = sqrt( (xGol-enemys[1].xPos)**2 + (yGol-enemys[1].yPos)**2 )
+            d_gol=array([[d1],
+                         [d2]])
+            index=argmin(d_gol)
+            if d_gol[index] < 20:
+                enemys = delete(enemys, index)
+
+        # for i in range(len(enemys)):
+        #     print("Index: ", enemys[i].index)
+
+        enemys = append(enemys, friend1)
+        enemys = append(enemys, friend2)
+        d_robot = zeros(len(enemys))
+        # for i in range(len(enemys)):
+        #     print("Index: ", enemys[i].index)
+        for i in range(len(enemys)):
+           d_robot[i] = robot.dist(enemys[i])
+
+        index=argmin(d_robot)
+        self.setObst(enemys[index].xPos,enemys[index].yPos,0,0)
+        # if enemys[index].teamYellow:
+        #     print("Obstaculo: Amarelo " + str(enemys[index].index))
+        # else:
+        #     print("Obstaculo: Azul " + str(enemys[index].index))
+        self.setObst(enemys[index].xPos,enemys[index].yPos,0,0)
+
+
     #% This method print a little log on console
     def showInfo(self):
         print('xPos: {:.2f} | yPos: {:.2f} | theta: {:.2f} | velocity: {:.2f}'.format(self.xPos,self.yPos,float(self.theta),self.v))
@@ -144,6 +200,7 @@ class Robot:
         self.vy = data_robot.vy
         self.theta = data_robot.a
         self.vTheta = data_robot.va
+        self.v = sqrt(self.vx**2 + self.vy**2)
 
     def simSetVel(self,v,w):
         if self.face==1:
@@ -270,4 +327,3 @@ class Grid:
 
     #def doInGrid():
 '''
-
