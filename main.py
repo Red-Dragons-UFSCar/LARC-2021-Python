@@ -14,7 +14,7 @@ from strategy import *
 if __name__ == "__main__":
 
     # Choose team (my robots are yellow)
-    mray = True
+    mray = False
 
     # Initialize all clients
     actuator = Actuator(mray, "127.0.0.1", 20011)

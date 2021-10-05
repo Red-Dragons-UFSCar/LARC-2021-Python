@@ -23,7 +23,7 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade2 = Entity(x=96, y=90,a=0, index=2)
             else: # Ofensivo
                 r = random.uniform(0,1)
-                if r <0:
+                if r <0.5:
                     entidade0 = Entity(x=17.5, y=65,a=0, index=0)
                     entidade1 = Entity(x=73.75, y=105,a=0, index=1)
                     #entidade2 = Entity(x=115, y=68,a=-15, index=2) # Descomentar para usar o penalti normal
