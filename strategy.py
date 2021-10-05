@@ -36,7 +36,7 @@ class Strategy:
     def basicStgDef(self):
         """Basic original strategy with goalkeeper advance"""
         if not self.mray:
-            if self.ball.xPos < 40 and self.ball.yPos > 30 and self.ball.yPos < 110:
+            if self.ball.xPos < 30 and self.ball.yPos > 30 and self.ball.yPos < 110:
                 action.defenderPenalty(self.robot0, self.ball, leftSide=not self.mray)
                 action.screenOutBall(self.robot1, self.ball, 55, leftSide=not self.mray)
             else:

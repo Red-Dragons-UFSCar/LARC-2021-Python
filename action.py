@@ -74,7 +74,8 @@ def shoot(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enem
     if friend1 is None and friend2 is None: #? No friends to avoid
         v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
     else: #? Both friends to avoid
-        robot.obst.update(robot,friend1,friend2,enemy1,enemy2,enemy3)
+        #robot.obst.update(robot,friend1,friend2,enemy1,enemy2,enemy3)
+        robot.obst.update2(robot,ball,friend1,friend2,enemy1,enemy2,enemy3)
         v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
 
     robot.simSetVel(v,w)
@@ -102,7 +103,7 @@ def shoot2(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  ene
     if friend1 is None and friend2 is None: #? No friends to avoid
         v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
     else: #? Both friends to avoid
-        robot.obst.update(robot,friend1,friend2,enemy1,enemy2,enemy3)
+        robot.obst.update2(robot,ball,friend1,friend2,enemy1,enemy2,enemy3)
         v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
 
     robot.simSetVel(v,w)

@@ -31,8 +31,8 @@ def approx(robot,target,avoidObst=True,obst=None,n=8,d=2, fieldIsHiperbolic=True
 #% Function to control the robot with or without collision avoidance
 def univecController(robot,target,avoidObst=True,obst=None,n=8,d=2,stopWhenArrive=False, doubleFace=True, fieldIsHiperbolic=True):
     flagCorner, corner= targetInCorner(target,robot)
-    if flagCorner:
-        robotLockedCorner(target, robot)
+    #if flagCorner:
+        #robotLockedCorner(target, robot)
     navigate=Univector() #? Defines the navigation algorithm
     dl=0.000001          #? Constant to approximate phi_v
     k_w=1.9                #? Feedback constant (k_w=1 means no gain)
@@ -75,7 +75,7 @@ def univecController(robot,target,avoidObst=True,obst=None,n=8,d=2,stopWhenArriv
         w=v*phi_v+k_w*sign(theta_e)*sqrt(abs(theta_e))
 
     #% Some code to store the past position, orientation and velocity
-    robot.v=v
+    #robot.v=v
     robot.pastPose=delete(robot.pastPose,0,1)                                   #? Deleting the first column
     robot.pastPose=append(robot.pastPose,array([[round(robot.xPos)],[round(robot.yPos)],[round(float(robot.theta))],[round(float(v))]]),1)
 
