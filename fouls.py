@@ -22,14 +22,17 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade1 = Entity(x=96, y=25,a=180, index=1)
                 entidade2 = Entity(x=96, y=90,a=0, index=2)
             else: # Ofensivo
-                if random.uniform(0,1) <0.5:
+                r = random.uniform(0,1)
+                if r <0:
                     entidade0 = Entity(x=17.5, y=65,a=0, index=0)
                     entidade1 = Entity(x=73.75, y=105,a=0, index=1)
-                    entidade2 = Entity(x=115, y=68,a=-15, index=2)
+                    #entidade2 = Entity(x=115, y=68,a=-15, index=2) # Descomentar para usar o penalti normal
+                    entidade2 = Entity(x=105, y=85,a=-50, index=2)
                 else:
                     entidade0 = Entity(x=17.5, y=65,a=0, index=0)
                     entidade1 = Entity(x=73.75, y=105,a=0, index=1)
-                    entidade2 = Entity(x=115, y=62,a=15, index=2)
+                    #entidade2 = Entity(x=115, y=62,a=15, index=2) # Descomentar para usar o penalti normal
+                    entidade2 = Entity(x=105, y=45,a=50, index=2)
                 replacement.place_all([entidade0, entidade1, entidade2])
 
         #TODO FOULS: Revisar as posições futuramente do goalKick
@@ -74,11 +77,13 @@ def replacement_fouls(replacement, ref_data, mray):
                 if random.uniform(0,1) <0.5:
                     entidade0 = Entity(x=152.5, y=65,a=180, index=0)
                     entidade1 = Entity(x=90, y=65,a=0, index=1)
-                    entidade2 = Entity(x=55, y=68,a=-165, index=2)
+                    #entidade2 = Entity(x=55, y=68,a=-165, index=2) # Descomentar para usar o penalti normal
+                    entidade2 = Entity(x=65, y=85,a=-130, index=2)
                 else:
                     entidade0 = Entity(x=152.5, y=65,a=180, index=0)
                     entidade1 = Entity(x=90, y=65,a=0, index=1)
-                    entidade2 = Entity(x=55, y=62,a=165, index=2)
+                    #entidade2 = Entity(x=55, y=62,a=165, index=2) # Descomentar para usar o penalti normal
+                    entidade2 = Entity(x=65, y=45,a=130, index=2)
             replacement.place_all([entidade0, entidade1, entidade2])
 
         #elif ref_data["foul"] == 2:
