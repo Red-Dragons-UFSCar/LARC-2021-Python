@@ -109,6 +109,39 @@ def shoot2(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  ene
     robot.simSetVel(v,w)
 
 #% Defender Actions
+def defenderSpin(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
+    if leftSide:
+        arrivalTheta=arctan2(65-ball.yPos,160-ball.xPos) #? Angle between the ball and point (150,65)
+    else:
+        arrivalTheta=arctan2(65-ball.yPos,10-ball.xPos) #? Angle between the ball and point (0,65)
+    #robot.target.update(ball.xPos,ball.yPos,0)
+    robot.target.update(ball.xPos,ball.yPos,arrivalTheta)
+
+    if friend1 is None and friend2 is None: #? No friends to avoid
+        v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
+    else: #? Both friends to avoid
+        robot.obst.update(robot,friend1,friend2,enemy1,enemy2,enemy3)
+        v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
+
+    d = robot.dist(ball)
+    if robot.spin and d < 10:
+        if not robot.teamYellow:
+            if robot.yPos > 65:
+                v = 0
+                w = -30
+            else:
+                v = 0
+                w = 30
+        else:
+            if robot.yPos > 65:
+                v = 0
+                w = 30
+            else:
+                v = 0
+                w = -30
+
+    robot.simSetVel(v,w)
+
 def pushBall(robot,ball,friend1=None,friend2=None):
     dSup=sqrt((75-ball.xPos)**2+(130-ball.yPos)**2) #? Distance between the ball and point (75,130)
     dInf=sqrt((75-ball.xPos)**2+(0-ball.yPos)**2)   #? Distance between the ball and point (75,0)
@@ -162,6 +195,38 @@ def screenOutBall(robot,ball,staticPoint,leftSide=True,upperLim=200,lowerLim=0,f
 
 
 #% Goalkeeper Actions
+def goalkeeperDefender(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
+    if leftSide:
+        arrivalTheta=arctan2(ball.yPos-65,ball.xPos-10) #? Angle between the ball and point (150,65)
+    else:
+        arrivalTheta=arctan2(ball.yPos-65,ball.xPos-160) #? Angle between the ball and point (0,65)
+    #robot.target.update(ball.xPos,ball.yPos,0)
+    robot.target.update(ball.xPos,ball.yPos,arrivalTheta)
+
+    if friend1 is None and friend2 is None: #? No friends to avoid
+        v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
+    else: #? Both friends to avoid
+        robot.obst.update(robot,friend1,friend2,enemy1,enemy2,enemy3)
+        v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
+
+    if robot.dist(ball) < 10:
+        if not robot.teamYellow:
+            if robot.yPos > 65:
+                v = 0
+                w = -30
+            else:
+                v = 0
+                w = 30
+        else:
+            if robot.yPos > 65:
+                v = 0
+                w = 30
+            else:
+                v = 0
+                w = -30
+
+    robot.simSetVel(v,w)
+
 #TODO #1 More effective way to predict the ball position
 def blockBall(robot,ball,leftSide=True):
     ballVec=(ball.pastPose[:,1]-ball.pastPose[:,0]).reshape(2,1) #? Building a vector between current and past position of the ball
@@ -330,8 +395,8 @@ def positionChange(arrayFunctions, ball, arraySideCrossing, leftSide = True):
             arrayFunctions[2].flagCruzamento = False
     return arrayFunctions
 
-def girar(robot):
-    robot.simSetVel(0,0)
+def girar(robot, v1, v2):
+    robot.simSetVel2(v1,v2)
 
 def defenderPenalty(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
     if leftSide:

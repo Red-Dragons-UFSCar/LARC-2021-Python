@@ -73,7 +73,9 @@ def targetInCorner(target, robot):
             else:
                 target.update(target.xPos,target.yPos-1.5, target.theta)
 
+    robot.spin = False
     if flagCorner:
+        robot.spin = True
         changeTargetTheta(robot, target,corner)
 
     return flagCorner, corner

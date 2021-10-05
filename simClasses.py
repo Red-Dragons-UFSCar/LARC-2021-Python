@@ -156,6 +156,7 @@ class Robot:
         self.flagCruzamento=False
         self.flagTrocaFace=False
         self.teamYellow=mray
+        self.spin=False
         self.index=int32(index)
         self.actuator=actuator
         self.face=1                          #? Defines the current face of the robot
@@ -210,6 +211,9 @@ class Robot:
             self.vL=-v-0.5*self.L*w
             self.vR=-v+0.5*self.L*w
         self.actuator.send(self.index, self.vL, self.vR)
+
+    def simSetVel2(self,v1,v2):
+        self.actuator.send(self.index, v1, v2)
 
     #% This method print a little log on console
     def showInfo(self):
