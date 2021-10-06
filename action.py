@@ -527,3 +527,37 @@ def Master_Slave(robot0, robot1, robot2, ball, robotEnemy0, robotEnemy1, robotEn
             else:
                 shoot(robot1,ball,leftSide= not robot1.teamYellow, friend1 = robot0, friend2 = robot2, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
                 slave(robot2,robot1, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
+
+def screenOutBallProj(robot,ball,staticPoint,leftSide=True,upperLim=200,lowerLim=0,friend1=None,friend2=None):
+    
+    coefAng = ball.vy/ball.vx
+    coefLin = -coefAng*ball.xPos + ball.yPos
+
+    yPoint = coefAng*staticPoint + coefLin
+
+    if yPoint >= upperLim:
+        yPoint = upperLim
+
+    elif yPoint <= lowerLim:
+        yPoint = lowerLim
+
+    if leftSide:
+        if robot.yPos <= ball.yPos:
+            arrivalTheta=pi/2
+        else:
+            arrivalTheta=-pi/2
+        robot.target.update(staticPoint,yPoint,arrivalTheta)
+    else:
+        if robot.yPos <= ball.yPos:
+            arrivalTheta=pi/2
+        else:
+            arrivalTheta=-pi/2
+        robot.target.update(160 - staticPoint,yPoint,arrivalTheta)
+
+    if friend1 is None and friend2 is None: #? No friends to avoid
+        v,w=univecController(robot,robot.target,avoidObst=False,stopWhenArrive=True)
+    else: #? Both friends to avoid
+        robot.obst.update(robot,friend1,friend2)
+        v,w=univecController(robot,robot.target,True,robot.obst,stopWhenArrive=True)
+
+    robot.simSetVel(v,w)

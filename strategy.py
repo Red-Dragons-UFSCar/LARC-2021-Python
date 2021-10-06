@@ -70,7 +70,7 @@ class Strategy:
             else:
                 action.defenderSpin(self.robot1, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot2,
                              enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
-                action.screenOutBall(self.robot0, self.ball, 14, leftSide=not self.mray, upperLim=81, lowerLim=42)
+                action.screenOutBallProj(self.robot0, self.ball, 14, leftSide=not self.mray, upperLim=81, lowerLim=42)
         else:
             if self.ball.xPos > 130 and self.ball.yPos > 30 and self.ball.yPos < 110:
                 #action.goalkeeperDefender(self.robot0, self.ball, leftSide=not self.mray)
@@ -79,7 +79,7 @@ class Strategy:
             else:
                 action.defenderSpin(self.robot1, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot2,
                              enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
-                action.screenOutBall(self.robot0, self.ball, 14, leftSide=not self.mray, upperLim=81, lowerLim=42)
+                action.screenOutBallProj(self.robot0, self.ball, 14, leftSide=not self.mray, upperLim=81, lowerLim=42)
         action.screenOutBall(self.robot2, self.ball, 110, leftSide=not self.mray, upperLim=120, lowerLim=10)
 
     def StgDef_V2(self):
