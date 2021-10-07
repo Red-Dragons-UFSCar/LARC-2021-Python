@@ -139,8 +139,20 @@ class Ball:
 
     #% This method gets position of the ball in FIRASim
     def simGetPose(self, data_ball):
-        self.xPos = data_ball.x
-        self.yPos = data_ball.y
+        self.xPos = data_ball.x + data_ball.vx*100*12/60
+        self.yPos = data_ball.y + data_ball.vy*100*12/60
+
+        # check if prev is out of field, in this case reflect ball moviment to reproduce the collision
+        if self.xPos > 160:
+            self.xPos = 160 - (self.yPos - 160)
+        elif self.xPos < 10:
+            self.xPos = 10 - (self.yPos - 10)
+
+        if self.yPos > 130:
+            self.yPos = 130 - (self.yPos - 130)
+        elif self.yPos < 0:
+            self.yPos = - (self.yPos)
+
         self.vx = data_ball.vx
         self.vy = data_ball.vy
 
