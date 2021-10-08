@@ -491,14 +491,9 @@ def Master_Slave(robot0, robot1, robot2, ball, robotEnemy0, robotEnemy1, robotEn
                 slave(robot1,robot2, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
 
             else:
-                shoot2(robot2,ball,leftSide= not robot2.teamYellow, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
-                if robot1.dist(ball) < 8:
-                    if robot1.yPos > 65:
-                        robot1.simSetVel(0,-30)
-                    else:
-                        robot1.simSetVel(0,30)
-                elif robot1.dist(ball) < 20:
-                    shoot2(robot1,ball,leftSide= not robot1.teamYellow, friend1 = robot0, friend2 = robot2, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)              
+                defenderSpin(robot2,ball,leftSide= not robot2.teamYellow, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
+                if robot1.dist(ball) < 20:
+                    defenderSpin(robot1,ball,leftSide= not robot1.teamYellow, friend1 = robot0, friend2 = robot2, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)              
                 else:                                      
                     slave(robot1,robot2, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
         else:
@@ -510,14 +505,9 @@ def Master_Slave(robot0, robot1, robot2, ball, robotEnemy0, robotEnemy1, robotEn
                 slave(robot1,robot2, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
 
             else:
-                shoot2(robot2,ball,leftSide= not robot2.teamYellow, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
-                if robot1.dist(ball) < 8:
-                    if robot1.yPos > 65:
-                        robot1.simSetVel(0,-30)
-                    else:
-                        robot1.simSetVel(0,30)
-                elif robot1.dist(ball) < 20:
-                    shoot2(robot1,ball,leftSide= not robot1.teamYellow, friend1 = robot0, friend2 = robot2, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)              
+                defenderSpin(robot2,ball,leftSide= not robot2.teamYellow, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
+                if robot1.dist(ball) < 20:
+                    defenderSpin(robot1,ball,leftSide= not robot1.teamYellow, friend1 = robot0, friend2 = robot2, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)              
                 else:                                      
                     slave(robot1,robot2, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
 
@@ -531,14 +521,9 @@ def Master_Slave(robot0, robot1, robot2, ball, robotEnemy0, robotEnemy1, robotEn
                 slave(robot2,robot1, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
 
             else:
-                shoot2(robot1,ball,leftSide= not robot1.teamYellow, friend1 = robot0, friend2 = robot2, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
-                if robot2.dist(ball) < 8:
-                    if robot2.yPos > 65:
-                        robot1.simSetVel(0,-30)
-                    else:
-                        robot2.simSetVel(0,30)
-                elif robot2.dist(ball) < 20:
-                    shoot2(robot2,ball,leftSide= not robot2.teamYellow, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
+                defenderSpin(robot1,ball,leftSide= not robot1.teamYellow, friend1 = robot0, friend2 = robot2, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
+                if robot2.dist(ball) < 20:
+                    defenderSpin(robot2,ball,leftSide= not robot2.teamYellow, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
                 else:                    
                     slave(robot2,robot1, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
         else:
@@ -550,13 +535,8 @@ def Master_Slave(robot0, robot1, robot2, ball, robotEnemy0, robotEnemy1, robotEn
                 slave(robot2,robot1, robot0, robotEnemy0, robotEnemy1, robotEnemy2)
 
             else:
-                shoot2(robot1,ball,leftSide= not robot1.teamYellow, friend1 = robot0, friend2 = robot2, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
-                if robot2.dist(ball) < 8:
-                    if robot2.yPos > 65:
-                        robot1.simSetVel(0,-30)
-                    else:
-                        robot2.simSetVel(0,30)
-                elif robot2.dist(ball) < 20:
-                    shoot2(robot2,ball,leftSide= not robot2.teamYellow, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
+                defenderSpin(robot1,ball,leftSide= not robot1.teamYellow, friend1 = robot0, friend2 = robot2, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
+                if robot2.dist(ball) < 20:
+                    defenderSpin(robot2,ball,leftSide= not robot2.teamYellow, friend1 = robot0, friend2 = robot1, enemy1=robotEnemy0,  enemy2=robotEnemy1, enemy3=robotEnemy2)
                 else:                    
                     slave(robot2,robot1, robot0, robotEnemy0, robotEnemy1, robotEnemy2)      

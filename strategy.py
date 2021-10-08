@@ -24,14 +24,14 @@ class Strategy:
         else:
             if self.mray:
                 if self.ball.xPos > 85:
-                    self.basicStgDef2()
+                    self.StgDef_V2()
                 else:
-                    self.basicStgAtt()
+                    self.StgAtt_V2()
             else:
                 if self.ball.xPos > 85:
-                    self.basicStgAtt()
+                    self.StgAtt_V2()
                 else:
-                    self.basicStgDef2()
+                    self.StgDef_V2()
 
     def basicStgDef(self):
         """Basic original strategy with goalkeeper advance"""
@@ -90,19 +90,19 @@ class Strategy:
                 self.twoAttackers()
             else:
                 self.twoAttackers()
-                action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray, upperLim=81, lowerLim=42)
+                action.screenOutBall(self.robot0, self.ball, 14, leftSide=not self.mray, upperLim=84, lowerLim=42)
         else:
             if self.ball.xPos > 130 and self.ball.yPos > 30 and self.ball.yPos < 110:
                 action.defenderPenalty(self.robot0, self.ball, leftSide=not self.mray)
                 self.twoAttackers()
             else:
                 self.twoAttackers()
-                action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray, upperLim=81, lowerLim=42)
+                action.screenOutBall(self.robot0, self.ball, 14, leftSide=not self.mray, upperLim=84, lowerLim=42)
 
     def StgAtt_V2(self):
         """Strategy with 2 robots moving with Master-Slave in offensive side"""
         self.twoAttackers()
-        action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray, upperLim=81, lowerLim=42)
+        action.screenOutBall(self.robot0, self.ball, 14, leftSide=not self.mray, upperLim=84, lowerLim=42)
 
     def stgFullAtt(self):
         """Crazy test attack strategy"""

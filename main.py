@@ -14,7 +14,7 @@ from strategy import *
 if __name__ == "__main__":
 
     # Choose team (my robots are yellow)
-    mray = False
+    mray = True
 
     # Initialize all clients
     actuator = Actuator(mray, "127.0.0.1", 20011)
@@ -61,8 +61,8 @@ if __name__ == "__main__":
 
         if ref_data["game_on"]:
             # Se o modo de jogo estiver em "Game on"
-            strategy.twoAttackers()
-            #strategy.coach()
+            #strategy.twoAttackers()
+            strategy.coach()
 
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (not mray):
             #Detectando penalti defensivo
