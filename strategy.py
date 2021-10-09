@@ -2,7 +2,7 @@ import action
 from numpy import *
 
 class Strategy:
-    def __init__(self, robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray):
+    def __init__(self, robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray, strategy):
         self.robot0 = robot0
         self.robot1 = robot1
         self.robot2 = robot2
@@ -13,6 +13,34 @@ class Strategy:
         self.mray = mray
         self.penaltyDefensive = False
         self.penaltyOffensive = False
+        self.strategy = strategy
+
+    def decider(self):
+        if self.strategy == 'default':
+            self.coach()
+        elif self.strategy == 'twoAttackers':
+            self.coach2()
+        else:
+            print("Algo deu errado na seleção de estratégias")
+
+    def coach2(self):
+        """Picks a strategy depending on the status of the field"""
+        # For the time being, the only statuses considered are which side of the field the ball is in
+        if self.penaltyDefensive == True:
+            self.penaltyModeDefensive()
+        elif self.penaltyOffensive == True:
+            self.penaltyModeOffensiveSpin()
+        else:
+            if self.mray:
+                if self.ball.xPos > 85:
+                    self.StgDef_V2()
+                else:
+                    self.StgAtt_V2()
+            else:
+                if self.ball.xPos > 85:
+                    self.StgAtt_V2()
+                else:
+                    self.StgDef_V2()
 
     def coach(self):
         """Picks a strategy depending on the status of the field"""
@@ -55,7 +83,7 @@ class Strategy:
 
     def basicStgAtt(self):
         """Basic alternative strategy"""
-        action.shoot(self.robot2, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot1,
+        action.defenderSpin(self.robot2, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot1,
                      enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
         action.screenOutBall(self.robot1, self.ball, 60, leftSide=not self.mray, upperLim=120, lowerLim=10)
         action.screenOutBall(self.robot0, self.ball, 14, leftSide=not self.mray, upperLim=81, lowerLim=42)
@@ -64,7 +92,6 @@ class Strategy:
         """Basic original strategy with goalkeeper advance and spin"""
         if not self.mray:
             if self.ball.xPos < 40 and self.ball.yPos > 30 and self.ball.yPos < 110:
-                #action.goalkeeperDefender(self.robot0, self.ball, leftSide=not self.mray)
                 action.defenderPenalty(self.robot0, self.ball, leftSide=not self.mray)
                 action.screenOutBall(self.robot1, self.ball, 55, leftSide=not self.mray)
             else:
@@ -73,7 +100,6 @@ class Strategy:
                 action.screenOutBall(self.robot0, self.ball, 14, leftSide=not self.mray, upperLim=81, lowerLim=42)
         else:
             if self.ball.xPos > 130 and self.ball.yPos > 30 and self.ball.yPos < 110:
-                #action.goalkeeperDefender(self.robot0, self.ball, leftSide=not self.mray)
                 action.defenderPenalty(self.robot0, self.ball, leftSide=not self.mray)
                 action.screenOutBall(self.robot1, self.ball, 55, leftSide=not self.mray)
             else:
@@ -81,6 +107,11 @@ class Strategy:
                              enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
                 action.screenOutBall(self.robot0, self.ball, 14, leftSide=not self.mray, upperLim=81, lowerLim=42)
         action.screenOutBall(self.robot2, self.ball, 110, leftSide=not self.mray, upperLim=120, lowerLim=10)
+        if ((abs(self.robot0.theta) < deg2rad(10)) or (abs(self.robot0.theta) > deg2rad(170))) and (self.robot0.xPos < 20 or self.robot0.xPos > 150):
+            self.robot0.contStopped += 1
+        else:
+            self.robot0.contStopped = 0
+        print(self.robot0.contStopped)
 
     def StgDef_V2(self):
         """Strategy with 2 robots moving with Master-Slave in defensive side"""
@@ -90,19 +121,25 @@ class Strategy:
                 self.twoAttackers()
             else:
                 self.twoAttackers()
-                action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray, upperLim=81, lowerLim=42)
+                action.screenOutBall(self.robot0, self.ball, 16, leftSide=not self.mray, upperLim=84, lowerLim=42)
         else:
             if self.ball.xPos > 130 and self.ball.yPos > 30 and self.ball.yPos < 110:
                 action.defenderPenalty(self.robot0, self.ball, leftSide=not self.mray)
                 self.twoAttackers()
             else:
                 self.twoAttackers()
-                action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray, upperLim=81, lowerLim=42)
+                action.screenOutBall(self.robot0, self.ball, 16, leftSide=not self.mray, upperLim=84, lowerLim=42)
+
+        if ((abs(self.robot0.theta) < deg2rad(10)) or (abs(self.robot0.theta) > deg2rad(170))) and (self.robot0.xPos < 20 or self.robot0.xPos > 150):
+            self.robot0.contStopped += 1
+        else:
+            self.robot0.contStopped = 0
+        print(self.robot0.contStopped)
 
     def StgAtt_V2(self):
         """Strategy with 2 robots moving with Master-Slave in offensive side"""
         self.twoAttackers()
-        action.screenOutBall(self.robot0, self.ball, 10, leftSide=not self.mray, upperLim=81, lowerLim=42)
+        action.screenOutBall(self.robot0, self.ball,16, leftSide=not self.mray, upperLim=84, lowerLim=42)
 
     def stgFullAtt(self):
         """Crazy test attack strategy"""

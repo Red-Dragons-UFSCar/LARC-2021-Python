@@ -3,6 +3,8 @@ from bridge import (Actuator, Replacer, Vision, Referee,
 
 from math import pi, fmod, atan2, fabs
 
+import sys
+
 from simClasses import *
 import action
 import fouls
@@ -13,8 +15,28 @@ from strategy import *
 
 if __name__ == "__main__":
 
+    team = sys.argv[1]
+    strategySelected = sys.argv[2]
+
+    if team != "blue" and team != "yellow":
+        print("Selecione um time válido! ")
+        print("Para jogar com o azul, o primeiro argumento deve ser 'blue'")
+        print("Para jogar com o amarelo, o primeiro argumento deve ser 'yellow'")
+        sys.exit()
+
+    if strategySelected != "default" and strategySelected != "twoAttackers":
+        print("Selecione uma estratégia válida! ")
+        print("Para jogar com a estratégia default, o segundo argumento deve ser 'default'")
+        print("Para jogar com a estratégia dois Atacantes, o segundo argumento deve ser 'twoAttackers'")
+        sys.exit()
+
     # Choose team (my robots are yellow)
-    mray = True
+    if team == "yellow":
+        mray = True
+    else:
+        mray = False
+
+    #mray = True
 
     # Initialize all clients
     actuator = Actuator(mray, "127.0.0.1", 20011)
@@ -33,7 +55,7 @@ if __name__ == "__main__":
 
     ball = Ball()
 
-    strategy = Strategy(robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray)
+    strategy = Strategy(robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray, strategySelected)
 
     # Main infinite loop
     while True:
@@ -62,7 +84,8 @@ if __name__ == "__main__":
         if ref_data["game_on"]:
             # Se o modo de jogo estiver em "Game on"
             #strategy.twoAttackers()
-            strategy.coach()
+            #strategy.coach()
+            strategy.decider()
 
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (not mray):
             #Detectando penalti defensivo
