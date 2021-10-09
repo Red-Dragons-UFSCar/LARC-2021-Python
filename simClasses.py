@@ -169,6 +169,7 @@ class Robot:
         self.flagTrocaFace=False
         self.teamYellow=mray
         self.spin=False
+        self.contStopped=0
         self.index=int32(index)
         self.actuator=actuator
         self.face=1                          #? Defines the current face of the robot

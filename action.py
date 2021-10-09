@@ -186,11 +186,27 @@ def screenOutBall(robot,ball,staticPoint,leftSide=True,upperLim=200,lowerLim=0,f
             arrivalTheta=-pi/2
         robot.target.update(170 - staticPoint,yPoint,arrivalTheta)
 
-    if friend1 is None and friend2 is None: #? No friends to avoid
-        v,w=univecController(robot,robot.target,avoidObst=False,stopWhenArrive=True)
-    else: #? Both friends to avoid
-        robot.obst.update(robot,friend1,friend2)
-        v,w=univecController(robot,robot.target,True,robot.obst,stopWhenArrive=True)
+    if robot.contStopped > 60:
+        if robot.teamYellow:
+            if abs(robot.theta) < 10:
+                v = -30
+                w = 5
+            else:
+                v = 30
+                w = -5
+        else:
+            if abs(robot.theta) < 10:
+                v = -30
+                w = 0
+            else:
+                v = 30
+                w = 0
+    else:
+        if friend1 is None and friend2 is None: #? No friends to avoid
+            v,w=univecController(robot,robot.target,avoidObst=False,stopWhenArrive=True)
+        else: #? Both friends to avoid
+            robot.obst.update(robot,friend1,friend2)
+            v,w=univecController(robot,robot.target,True,robot.obst,stopWhenArrive=True)
 
     robot.simSetVel(v,w)
 
@@ -477,10 +493,10 @@ def Master_Slave(robot0, robot1, robot2, ball, robotEnemy0, robotEnemy1, robotEn
     dist2 = sqrt((robot2.xPos - ball.xPos)**2 + (robot2.yPos - ball.yPos)**2)
     ang2  = 0 #= arctan2(ball.yPos - robot2.yPos,ball.xPos - robot2.xPos )
 
-    w1 = 0.20*(1-cos(ang1 - robot1.theta)) + 0.80*dist1/(dist1+dist2)
-    w2 = 0.20*(1-cos(ang2 - robot2.theta)) + 0.80*dist2/(dist1+dist2)
+    #w1 = 0.20*(1-cos(ang1 - robot1.theta)) + 0.80*dist1/(dist1+dist2)
+    #w2 = 0.20*(1-cos(ang2 - robot2.theta)) + 0.80*dist2/(dist1+dist2)
 
-    if w1 > w2:
+    if dist1 > dist2:
         # linhas 352 e 353 condicionais para não entrar no gol, o mesmo para 365 e 366
         if not robot1.teamYellow:
             if ball.xPos < 30 and (ball.yPos < 110 and ball.yPos > 30):
