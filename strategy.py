@@ -2,7 +2,7 @@ import action
 from numpy import *
 
 class Strategy:
-    def __init__(self, robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray):
+    def __init__(self, robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray, strategy):
         self.robot0 = robot0
         self.robot1 = robot1
         self.robot2 = robot2
@@ -13,8 +13,17 @@ class Strategy:
         self.mray = mray
         self.penaltyDefensive = False
         self.penaltyOffensive = False
+        self.strategy = strategy
 
-    def coach(self):
+    def decider(self):
+        if self.strategy == 'default':
+            self.coach()
+        elif self.strategy == 'twoAttackers':
+            self.coach2()
+        else:
+            print("Algo deu errado na seleção de estratégias")
+
+    def coach2(self):
         """Picks a strategy depending on the status of the field"""
         # For the time being, the only statuses considered are which side of the field the ball is in
         if self.penaltyDefensive == True:
@@ -32,6 +41,25 @@ class Strategy:
                     self.StgAtt_V2()
                 else:
                     self.StgDef_V2()
+
+    def coach(self):
+        """Picks a strategy depending on the status of the field"""
+        # For the time being, the only statuses considered are which side of the field the ball is in
+        if self.penaltyDefensive == True:
+            self.penaltyModeDefensive()
+        elif self.penaltyOffensive == True:
+            self.penaltyModeOffensiveSpin()
+        else:
+            if self.mray:
+                if self.ball.xPos > 85:
+                    self.basicStgDef2()
+                else:
+                    self.basicStgAtt()
+            else:
+                if self.ball.xPos > 85:
+                    self.basicStgAtt()
+                else:
+                    self.basicStgDef2()
 
     def basicStgDef(self):
         """Basic original strategy with goalkeeper advance"""
