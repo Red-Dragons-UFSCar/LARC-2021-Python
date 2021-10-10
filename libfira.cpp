@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "../FIRAClient/clients/vision/visionclient.h"
-#include "../FIRAClient/clients/referee/refereeclient.h"
-#include "../FIRAClient/clients/actuator/actuatorclient.h"
-#include "../FIRAClient/clients/replacer/replacerclient.h"
+#include "clients/vision/visionclient.h"
+#include "clients/referee/refereeclient.h"
+#include "clients/actuator/actuatorclient.h"
+#include "clients/replacer/replacerclient.h"
 
 #define NUM_BOTS 5
 #define CONECTION_TRIES 100
@@ -33,7 +33,7 @@ extern "C"
     // name_init for constructor
     // name_term for deconstructor
 
-    ////////////////////// Vision //////////////////////// 
+    ////////////////////// Vision ////////////////////////
 
     // constructor for client
     // initializes both vision client and environment
@@ -49,7 +49,7 @@ extern "C"
     int vision_has_frame()
     {
         vision->run();
-        environment = vision->getLastEnvironment();            
+        environment = vision->getLastEnvironment();
         return environment.has_frame();
     }
 
@@ -99,7 +99,7 @@ extern "C"
         // get both teams position and speed data
         for (int i = 0; i < NUM_BOTS; i++) {
             fira_message::Robot bot = frame.robots_blue(i);
-            
+
             // blue team data
             // positions
             field.blue_bots[i].x = bot.x();
@@ -129,15 +129,15 @@ extern "C"
     // returns team color and indexed bot x position
     double vision_robot_x(int index, bool get_yellow_bots)
     {
-        return get_yellow_bots 
-                ? field.yellow_bots[index].x 
+        return get_yellow_bots
+                ? field.yellow_bots[index].x
                 : field.blue_bots[index].x;
     }
 
     // returns team color and indexed bot y position
     double vision_robot_y(int index, bool get_yellow_bots)
     {
-        return get_yellow_bots 
+        return get_yellow_bots
                 ? field.yellow_bots[index].y
                 : field.blue_bots[index].y;
     }
@@ -145,7 +145,7 @@ extern "C"
     // returns team color and indexed bot angle
     double vision_robot_angle(int index, bool get_yellow_bots)
     {
-        return get_yellow_bots 
+        return get_yellow_bots
                 ? field.yellow_bots[index].angle
                 : field.blue_bots[index].angle;
     }
@@ -153,15 +153,15 @@ extern "C"
     // returns team color and indexed bot x speed
     double vision_robot_vx(int index, bool get_yellow_bots)
     {
-        return get_yellow_bots 
-                ? field.yellow_bots[index].vx 
+        return get_yellow_bots
+                ? field.yellow_bots[index].vx
                 : field.blue_bots[index].vx;
     }
 
     // returns team color and indexed bot y speed
     double vision_robot_vy(int index, bool get_yellow_bots)
     {
-        return get_yellow_bots 
+        return get_yellow_bots
                 ? field.yellow_bots[index].vy
                 : field.blue_bots[index].vy;
     }
@@ -169,7 +169,7 @@ extern "C"
     // returns team color and indexed bot angle speed
     double vision_robot_vangle(int index, bool get_yellow_bots)
     {
-        return get_yellow_bots 
+        return get_yellow_bots
                 ? field.yellow_bots[index].vangle
                 : field.blue_bots[index].vangle;
     }
@@ -204,7 +204,7 @@ extern "C"
         vision->close();
     }
 
-    ////////////////////// Referee //////////////////////// 
+    ////////////////////// Referee ////////////////////////
 
     // intializes and runs referee client
     void referee_init(char *addr, uint16_t port)
@@ -219,7 +219,7 @@ extern "C"
     {
         referee->run();
     }
-    
+
     // return referee info from:
     // enum Foul : int {
     //     FREE_KICK = 0,
@@ -266,7 +266,7 @@ extern "C"
         referee->close();
     }
 
-    ////////////////////// Actuator //////////////////////// 
+    ////////////////////// Actuator ////////////////////////
 
     // initialize and run constructor
     // init with string address and integer port
@@ -277,7 +277,7 @@ extern "C"
         std::cout << "Actuator initialized on " << addr << ":" << port << "\n";
         actuator = new ActuatorClient(addr, port);
         actuator->setTeamColor(mray
-                                ? VSSRef::Color::YELLOW 
+                                ? VSSRef::Color::YELLOW
                                 : VSSRef::Color::BLUE );
     }
 
@@ -294,22 +294,22 @@ extern "C"
         actuator->close();
     }
 
-    ////////////////////// Replacer //////////////////////// 
-    
-    // initialize class with address, port number and color 
+    ////////////////////// Replacer ////////////////////////
+
+    // initialize class with address, port number and color
     void replacer_init(char *addr, uint16_t port, bool mray)
     {
         std::cout << "Replacer initialized on " << addr << ":" << port << "\n";
         replacer = new ReplacerClient(addr, port);
         replacer->setTeamColor(mray
-                                ? VSSRef::Color::YELLOW 
+                                ? VSSRef::Color::YELLOW
                                 : VSSRef::Color::BLUE );
     }
 
     // place our team robot with index to x and y position and angle
-    void replacer_place_robot(int index, 
-                                double pos_x, 
-                                double pos_y, 
+    void replacer_place_robot(int index,
+                                double pos_x,
+                                double pos_y,
                                 double angle )
     {
         replacer->placeRobot(index, pos_x, pos_y, angle);
