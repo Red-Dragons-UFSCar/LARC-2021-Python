@@ -1,4 +1,4 @@
-from numpy import pi,cos,sin,tan,arctan2,sqrt ,matmul,array
+from numpy import pi,cos,sin,tan,arctan2,sqrt ,matmul,array, deg2rad
 from execution import univecController, whichFace
 from behaviours import Univector
 
@@ -83,11 +83,27 @@ def screenOutBall(robot,ball,staticPoint,leftSide=True,upperLim=200,lowerLim=0,f
             arrivalTheta=-pi/2
         robot.target.update(250 - staticPoint,yPoint,arrivalTheta)
 
-    if friend1 is None and friend2 is None: #? No friends to avoid
-        v,w=univecController(robot,robot.target,avoidObst=False,stopWhenArrive=True)
-    else: #? Both friends to avoid
-        robot.obst.update(robot,friend1,friend2)
-        v,w=univecController(robot,robot.target,True,robot.obst,stopWhenArrive=True)
+    if robot.contStopped > 60:
+        if robot.teamYellow:
+            if abs(robot.theta) < 10:
+                v = -30
+                w = 5
+            else:
+                v = 30
+                w = -5
+        else:
+            if abs(robot.theta) < 10:
+                v = -30
+                w = 0
+            else:
+                v = 30
+                w = 0
+    else:
+        if friend1 is None and friend2 is None: #? No friends to avoid
+            v,w=univecController(robot,robot.target,avoidObst=False,stopWhenArrive=True)
+        else: #? Both friends to avoid
+            robot.obst.update(robot,friend1,friend2)
+            v,w=univecController(robot,robot.target,True,robot.obst,stopWhenArrive=True)
 
     robot.simSetVel(v,w)
 

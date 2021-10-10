@@ -160,6 +160,7 @@ class Robot:
         self.teamYellow=mray
         self.index=int32(index)
         self.spin=False
+        self.contStopped=0
         self.actuator=actuator
         self.face=1                          #? Defines the current face of the robot
         self.xPos=0                          #? X position

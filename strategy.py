@@ -1,5 +1,5 @@
 import action
-
+from numpy import *
 
 class Strategy:
     def __init__(self, robot0, robot1, robot2, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4, ball, mray):
@@ -56,6 +56,10 @@ class Strategy:
                 enemys = [self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
                 action.Master_Slave(self.robot1,self.robot2, friends, enemys, self.ball)
                 action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
+        if ((abs(self.robot0.theta) < deg2rad(10)) or (abs(self.robot0.theta) > deg2rad(170))) and (self.robot0.xPos < 25 or self.robot0.xPos > 225):
+            self.robot0.contStopped += 1
+        else:
+            self.robot0.contStopped = 0
 
     def basicStgAtt(self):
         """Basic alternative strategy"""
