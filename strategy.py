@@ -40,8 +40,10 @@ class Strategy:
                 action.screenOutBall(self.robot1, self.ball, 55, leftSide=not self.mray, upperLim=85, lowerLim=5)
                 action.screenOutBall(self.robot2, self.ball, 55, leftSide=not self.mray, upperLim=175, lowerLim=95)
             else:
-                listRobots = [self.robot0, self.robot3, self.robot4, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
-                action.Master_Slave(self.robot1,self.robot2, listRobots, self.ball)
+                #listRobots = [self.robot0, self.robot3, self.robot4, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
+                friends = [self.robot0, self.robot3, self.robot4]
+                enemys = [self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
+                action.Master_Slave(self.robot1,self.robot2, friends, enemys, self.ball)
                 action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
         else:
             if self.ball.xPos > 195 and self.ball.yPos > 50 and self.ball.yPos < 130:
@@ -49,14 +51,18 @@ class Strategy:
                 action.screenOutBall(self.robot1, self.ball, 55, leftSide=not self.mray, upperLim=85, lowerLim=5)
                 action.screenOutBall(self.robot2, self.ball, 55, leftSide=not self.mray, upperLim=175, lowerLim=95)
             else:
-                listRobots = [self.robot0, self.robot3, self.robot4, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
-                action.Master_Slave(self.robot1,self.robot2, listRobots, self.ball)
+                #listRobots = [self.robot0, self.robot3, self.robot4, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
+                friends = [self.robot0, self.robot3, self.robot4]
+                enemys = [self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
+                action.Master_Slave(self.robot1,self.robot2, friends, enemys, self.ball)
                 action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
 
     def basicStgAtt(self):
         """Basic alternative strategy"""
-        listRobots = [self.robot0, self.robot1, self.robot2, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
-        action.Master_Slave(self.robot3,self.robot4, listRobots, self.ball)
+        #listRobots = [self.robot0, self.robot1, self.robot2, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
+        friends = [self.robot0, self.robot1, self.robot2]
+        enemys = [self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
+        action.Master_Slave(self.robot3,self.robot4, friends, enemys, self.ball)
 
         action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
         action.screenOutBall(self.robot1, self.ball, 90, leftSide=not self.mray, upperLim=85, lowerLim=5)

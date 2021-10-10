@@ -1,4 +1,4 @@
-from numpy import arctan2,pi,sqrt,cos,sin,array,matmul,amin,where,zeros,delete,append,int32
+from numpy import arctan2,pi,sqrt,cos,sin,array,matmul,amin,where,zeros,delete,append,int32, argmin
 
 #! Units: cm, rad, s
 
@@ -46,6 +46,73 @@ class Obstacle:
             if minima==dist[i]:
                 index = i
         self.setObst(obstacles[index].xPos,obstacles[index].yPos,obstacles[index].v,obstacles[index].theta)
+
+    def update2(self,robot,ball,friends,enemys):
+        enemys = array(enemys)
+        d_ball=array([[enemys[0].dist(ball)],
+                      [enemys[1].dist(ball)],
+                      [enemys[2].dist(ball)],
+                      [enemys[3].dist(ball)],
+                      [enemys[4].dist(ball)]])
+        index=argmin(d_ball)
+        if d_ball[index] < 15:
+            enemys = delete(enemys, [index])
+
+        if not robot.teamYellow:
+            xGol = 235
+            yGol = 90
+        else:
+            xGol = 15
+            yGol = 90
+
+        if len(enemys)==5:
+            d1 = sqrt( (xGol-enemys[0].xPos)**2 + (yGol-enemys[0].yPos)**2 )
+            d2 = sqrt( (xGol-enemys[1].xPos)**2 + (yGol-enemys[1].yPos)**2 )
+            d3 = sqrt( (xGol-enemys[2].xPos)**2 + (yGol-enemys[2].yPos)**2 )
+            d4 = sqrt( (xGol-enemys[3].xPos)**2 + (yGol-enemys[3].yPos)**2 )
+            d5 = sqrt( (xGol-enemys[4].xPos)**2 + (yGol-enemys[4].yPos)**2 )
+            d_gol=array([[d1],
+                         [d2],
+                         [d3],
+                         [d4],
+                         [d5]])
+            index=argmin(d_gol)
+            dballgol = sqrt( (xGol-ball.xPos)**2 + (yGol-ball.yPos)**2 )
+            if d_gol[index] < 30 and dballgol < 30:
+                enemys = delete(enemys, index)
+        else:
+            d1 = sqrt( (xGol-enemys[0].xPos)**2 + (yGol-enemys[0].yPos)**2 )
+            d2 = sqrt( (xGol-enemys[1].xPos)**2 + (yGol-enemys[1].yPos)**2 )
+            d3 = sqrt( (xGol-enemys[2].xPos)**2 + (yGol-enemys[2].yPos)**2 )
+            d4 = sqrt( (xGol-enemys[3].xPos)**2 + (yGol-enemys[3].yPos)**2 )
+            d_gol=array([[d1],
+                         [d2],
+                         [d3],
+                         [d4]])
+            index=argmin(d_gol)
+            dballgol = sqrt( (xGol-ball.xPos)**2 + (yGol-ball.yPos)**2 )
+            if d_gol[index] < 30 and dballgol < 30:
+                enemys = delete(enemys, index)
+
+        enemys = append(enemys, friends[0])
+        enemys = append(enemys, friends[1])
+        enemys = append(enemys, friends[2])
+        enemys = append(enemys, friends[3])
+
+        d_robot = zeros(len(enemys))
+        # for i in range(len(enemys)):
+        #     print("Index: ", enemys[i].index)
+        for i in range(len(enemys)):
+           d_robot[i] = robot.dist(enemys[i])
+
+        index=argmin(d_robot)
+        self.setObst(enemys[index].xPos,enemys[index].yPos,0,0)
+        # if robot.index == 4:
+        #     if enemys[index].teamYellow:
+        #         print("Obstaculo: Amarelo " + str(enemys[index].index))
+        #     else:
+        #         print("Obstaculo: Azul " + str(enemys[index].index))
+        # self.setObst(enemys[index].xPos,enemys[index].yPos,0,0)
 
     #% This method print a little log on console
     def showInfo(self):

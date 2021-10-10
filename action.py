@@ -7,7 +7,7 @@ def stop(robot):
     robot.simSetVel(0,0)
 
 #% Attacker Actions
-def shoot(robot,ball,leftSide=True,obstacles=[]):
+def shoot(robot,ball,leftSide=True,friends=[],enemys=[]):
     if leftSide:
         arrivalTheta=arctan2(90-ball.yPos,235-ball.xPos) #? Angle between the ball and point (150,65)
     else:
@@ -15,10 +15,11 @@ def shoot(robot,ball,leftSide=True,obstacles=[]):
     #robot.target.update(ball.xPos,ball.yPos,0)
     robot.target.update(ball.xPos,ball.yPos,arrivalTheta)
 
-    if not obstacles: #? No friends to avoid
+    if not friends: #? No friends to avoid
         v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
     else: #? Both friends to avoid
-        robot.obst.update(robot, obstacles)
+        #robot.obst.update(robot, obstacles)
+        robot.obst.update2(robot, ball, friends, enemys)
         v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
 
     robot.simSetVel(v,w)
@@ -131,7 +132,7 @@ def directGoal(robot, ball, leftSide = True,friend1=None,friend2=None, enemy1=No
 def girar(robot):
     robot.simSetVel(20,0)
 
-def slave(robotSlave, robotMaster, robots=[]):
+def slave(robotSlave, robotMaster, friends, enemys, ball):
 
     if robotMaster.yPos > 90:
         if robotMaster.xPos > 126:
@@ -154,17 +155,19 @@ def slave(robotSlave, robotMaster, robots=[]):
     if dist < 10:
         stop(robotSlave)
     else:
-        if not robots:  #? No friends to avoid
+        if not friends:  #? No friends to avoid
             v,w=univecController(robotSlave,robotSlave.target,avoidObst=False,n=16, d=2)
         else: #? Both friends to avoid
-            obstacles = robots + [robotMaster]
-            robotSlave.obst.update(robotSlave, obstacles)
+            #obstacles = robots + [robotMaster]
+            #robotSlave.obst.update(robotSlave, obstacles)
+            friends = friends + [robotMaster]
+            robotSlave.obst.update2(robotSlave,ball,friends,enemys)
             v,w=univecController(robotSlave,robotSlave.target,True,robotSlave.obst,n=4, d=4)
 
         robotSlave.simSetVel(v,w)
 
 
-def Master_Slave(robot1, robot2, robots, ball):
+def Master_Slave(robot1, robot2, friends, enemys, ball):
 
     dist1 = sqrt((robot1.xPos - ball.xPos)**2 + (robot1.yPos - ball.yPos)**2)
     ang1  = arctan2(ball.yPos - robot1.yPos,ball.xPos - robot1.xPos)
@@ -183,24 +186,24 @@ def Master_Slave(robot1, robot2, robots, ball):
                     screenOutBall(robot2, robot2, 55, leftSide=not robot2.teamYellow, upperLim=170, lowerLim=10)
                 else:
                     screenOutBall(robot2, ball, 55, leftSide=not robot2.teamYellow, upperLim=170, lowerLim=10)
-                slave(robot1,robot2, robots)
+                slave(robot1,robot2, friends, enemys, ball)
 
             else:
-                listObstacles = robots + [robot1]
-                shoot(robot2,ball,leftSide= not robot2.teamYellow, obstacles = listObstacles)
-                slave(robot1,robot2, robots)
+                friends = friends + [friends[0]] #Adequando pro update2 apenas
+                shoot(robot2,ball,not robot2.teamYellow, friends, enemys)
+                slave(robot1,robot2, friends, enemys, ball)
         else:
             if ball.xPos > 195 and (ball.yPos < 130 and ball.yPos > 50):
                 if robot1.xPos > 180:
                     screenOutBall(robot2, robot2, 55, leftSide=not robot2.teamYellow, upperLim=170, lowerLim=10)
                 else:
                     screenOutBall(robot2, ball, 55, leftSide=not robot2.teamYellow, upperLim=170, lowerLim=10)
-                slave(robot1,robot2, robots)
+                slave(robot1,robot2, friends, enemys, ball)
 
             else:
-                listObstacles = robots + [robot1]
-                shoot(robot2,ball,leftSide= not robot2.teamYellow, obstacles = listObstacles)
-                slave(robot1,robot2, robots)
+                friends = friends + [friends[0]] #Adequando pro update2 apenas
+                shoot(robot2,ball,not robot2.teamYellow, friends, enemys)
+                slave(robot1,robot2, friends, enemys, ball)
 
     else:
         if not robot1.teamYellow:
@@ -209,24 +212,24 @@ def Master_Slave(robot1, robot2, robots, ball):
                     screenOutBall(robot1, robot1, 55, leftSide=not robot1.teamYellow, upperLim=170, lowerLim=10)
                 else:
                     screenOutBall(robot1, ball, 55, leftSide=not robot1.teamYellow, upperLim=170, lowerLim=10)
-                slave(robot2,robot1, robots)
+                slave(robot2,robot1, friends, enemys, ball)
 
             else:
-                listObstacles = robots + [robot2]
-                shoot(robot1,ball,leftSide= not robot1.teamYellow, obstacles=listObstacles)
-                slave(robot2,robot1, robots)
+                friends = friends + [friends[0]] #Adequando pro update2 apenas
+                shoot(robot1,ball,not robot1.teamYellow, friends, enemys)
+                slave(robot2,robot1, friends, enemys, ball)
         else:
             if ball.xPos > 195 and (ball.yPos < 130 and ball.yPos > 50):
                 if robot1.xPos > 180:
                     screenOutBall(robot1, robot1, 55, leftSide=not robot1.teamYellow, upperLim=170, lowerLim=10)
                 else:
                     screenOutBall(robot1, ball, 55, leftSide=not robot1.teamYellow, upperLim=170, lowerLim=10)
-                slave(robot2,robot1, robots)
+                slave(robot2,robot1, friends, enemys, ball)
 
             else:
-                listObstacles = robots + [robot2]
-                shoot(robot1,ball,leftSide= not robot1.teamYellow, obstacles=listObstacles)
-                slave(robot2,robot1, robots)
+                friends = friends + [friends[0]] #Adequando pro update2 apenas
+                shoot(robot1,ball,not robot1.teamYellow, friends, enemys)
+                slave(robot2,robot1, friends, enemys, ball)
 
 def defenderPenalty(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
     if leftSide:
