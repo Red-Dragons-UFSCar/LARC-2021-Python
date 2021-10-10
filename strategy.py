@@ -111,7 +111,6 @@ class Strategy:
             self.robot0.contStopped += 1
         else:
             self.robot0.contStopped = 0
-        print(self.robot0.contStopped)
 
     def StgDef_V2(self):
         """Strategy with 2 robots moving with Master-Slave in defensive side"""
@@ -134,7 +133,6 @@ class Strategy:
             self.robot0.contStopped += 1
         else:
             self.robot0.contStopped = 0
-        print(self.robot0.contStopped)
 
     def StgAtt_V2(self):
         """Strategy with 2 robots moving with Master-Slave in offensive side"""
