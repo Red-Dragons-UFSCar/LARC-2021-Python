@@ -24,6 +24,40 @@ def shoot(robot,ball,leftSide=True,friends=[],enemys=[]):
 
     robot.simSetVel(v,w)
 
+def defenderSpin(robot,ball,leftSide=True,friends=[],enemys=[]):
+    if leftSide:
+        arrivalTheta=arctan2(90-ball.yPos,235-ball.xPos) #? Angle between the ball and point (150,65)
+    else:
+        arrivalTheta=arctan2(90-ball.yPos,15-ball.xPos) #? Angle between the ball and point (0,65)
+    #robot.target.update(ball.xPos,ball.yPos,0)
+    robot.target.update(ball.xPos,ball.yPos,arrivalTheta)
+
+    if not friends: #? No friends to avoid
+        v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
+    else: #? Both friends to avoid
+        #robot.obst.update(robot, obstacles)
+        robot.obst.update2(robot, ball, friends, enemys)
+        v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
+
+    d = robot.dist(ball)
+    if robot.spin and d < 10:
+        if not robot.teamYellow:
+            if robot.yPos > 90:
+                v = 0
+                w = -30
+            else:
+                v = 0
+                w = 30
+        else:
+            if robot.yPos > 90:
+                v = 0
+                w = 30
+            else:
+                v = 0
+                w = -30
+
+    robot.simSetVel(v,w)
+
 #TODO #2 Need more speed to reach the ball faster than our enemy
 def screenOutBall(robot,ball,staticPoint,leftSide=True,upperLim=200,lowerLim=0,friend1=None,friend2=None):
     #Check if ball is inside the limits
@@ -190,7 +224,7 @@ def Master_Slave(robot1, robot2, friends, enemys, ball):
 
             else:
                 friends = friends + [friends[0]] #Adequando pro update2 apenas
-                shoot(robot2,ball,not robot2.teamYellow, friends, enemys)
+                defenderSpin(robot2,ball,not robot2.teamYellow, friends, enemys)
                 slave(robot1,robot2, friends, enemys, ball)
         else:
             if ball.xPos > 195 and (ball.yPos < 130 and ball.yPos > 50):
@@ -202,7 +236,7 @@ def Master_Slave(robot1, robot2, friends, enemys, ball):
 
             else:
                 friends = friends + [friends[0]] #Adequando pro update2 apenas
-                shoot(robot2,ball,not robot2.teamYellow, friends, enemys)
+                defenderSpin(robot2,ball,not robot2.teamYellow, friends, enemys)
                 slave(robot1,robot2, friends, enemys, ball)
 
     else:
@@ -216,7 +250,7 @@ def Master_Slave(robot1, robot2, friends, enemys, ball):
 
             else:
                 friends = friends + [friends[0]] #Adequando pro update2 apenas
-                shoot(robot1,ball,not robot1.teamYellow, friends, enemys)
+                defenderSpin(robot1,ball,not robot1.teamYellow, friends, enemys)
                 slave(robot2,robot1, friends, enemys, ball)
         else:
             if ball.xPos > 195 and (ball.yPos < 130 and ball.yPos > 50):
@@ -228,7 +262,7 @@ def Master_Slave(robot1, robot2, friends, enemys, ball):
 
             else:
                 friends = friends + [friends[0]] #Adequando pro update2 apenas
-                shoot(robot1,ball,not robot1.teamYellow, friends, enemys)
+                defenderSpin(robot1,ball,not robot1.teamYellow, friends, enemys)
                 slave(robot2,robot1, friends, enemys, ball)
 
 def defenderPenalty(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
