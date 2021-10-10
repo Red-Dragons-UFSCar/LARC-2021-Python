@@ -178,7 +178,7 @@ def Master_Slave(robot1, robot2, friends, enemys, ball):
     w1 = 0.20*(1-cos(ang1 - robot1.theta)) + 0.80*dist1/(dist1+dist2)
     w2 = 0.20*(1-cos(ang2 - robot2.theta)) + 0.80*dist2/(dist1+dist2)
 
-    if w1 > w2:
+    if dist1 > dist2:
         if not robot1.teamYellow:
             # linhas 352 e 353 condicionais para não entrar no gol, o mesmo para 365 e 366
             if ball.xPos < 40 and (ball.yPos < 130 and ball.yPos > 50):
