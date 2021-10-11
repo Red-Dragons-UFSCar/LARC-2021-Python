@@ -15,8 +15,16 @@ from strategy import *
 
 if __name__ == "__main__":
 
-    team = sys.argv[1]
-    strategySelected = sys.argv[2]
+    try:
+        team = sys.argv[1]
+        strategySelected = sys.argv[2]
+    except:
+        print("[ERRO]")
+        print("Digite por parametros o time e a estratégia utilizada")
+        print("Exemplos:")
+        print("python3 main.py blue default")
+        print("python3 main.py yellow twoAttackers")
+        sys.exit()
 
     if team != "blue" and team != "yellow":
         print("Selecione um time válido! ")
