@@ -7,7 +7,7 @@ def targetInCorner(target, robot):
     corner = 0
     flagCorner = False
     if not robot.teamYellow:
-        if target.xPos < 30:
+        if target.xPos < 30 and (target.yPos > 110 or target.yPos < 70):
 
             flagCorner = True
             corner = 1
@@ -15,7 +15,7 @@ def targetInCorner(target, robot):
                 target.update(target.xPos+3, target.yPos, target.theta)
             else:
                 target.update(target.xPos+1.5, target.yPos, target.theta)
-        elif target.xPos > 220:
+        elif target.xPos > 220 and (target.yPos > 110 or target.yPos < 70):
 
             flagCorner = True
             corner = 3

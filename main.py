@@ -2,6 +2,7 @@ from bridge import (Actuator, Replacer, Vision, Referee,
                         NUM_BOTS, convert_angle, Entity)
 
 from math import pi, fmod, atan2, fabs
+import sys
 
 from simClasses import *
 import action
@@ -13,8 +14,26 @@ from strategy import *
 
 if __name__ == "__main__":
 
+    try:
+        team = sys.argv[1]
+    except:
+        print("[ERRO]")
+        print("Digite como parâmetro o time que você ira jogar!")
+        print("Exemplo: python3 main.py yellow")
+        sys.exit()
+
+    if team != "blue" and team != "yellow":
+        print("[ERRO]")
+        print("Selecione um time válido! ")
+        print("Para jogar com o azul, o primeiro argumento deve ser 'blue'")
+        print("Para jogar com o amarelo, o primeiro argumento deve ser 'yellow'")
+        sys.exit()
+
     # Choose team (my robots are yellow)
-    mray = True
+    if team == "yellow":
+        mray = True
+    else:
+        mray = False
 
     # Initialize all clients
     actuator = Actuator(mray, "127.0.0.1", 20011)
