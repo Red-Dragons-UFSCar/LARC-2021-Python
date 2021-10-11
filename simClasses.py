@@ -214,6 +214,9 @@ class Robot:
             self.vR=-v+0.5*self.L*w
         self.actuator.send(self.index, self.vL, self.vR)
 
+    def simSetVel2(self,v1,v2):
+        self.actuator.send(self.index, v1, v2)
+
     #% This method print a little log on console
     def showInfo(self):
         print('xPos: {:.2f} | yPos: {:.2f} | theta: {:.2f} | velocity: {:.2f}'.format(self.xPos,self.yPos,float(self.theta),float(self.v)))

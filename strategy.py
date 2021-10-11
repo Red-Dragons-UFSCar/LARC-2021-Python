@@ -15,20 +15,27 @@ class Strategy:
         self.robotEnemy4 = robotEnemy4
         self.ball = ball
         self.mray = mray
+        self.penaltyDefensive = False
+        self.penaltyOffensive = False
 
     def coach(self):
-        """Picks a strategy depending on the status of the field"""
+        """"Picks a strategy depending on the status of the field"""
         # For the time being, the only statuses considered are which side of the field the ball is in
-        if self.mray:
-            if self.ball.xPos > 135:
-                self.basicStgDef()
-            else:
-                self.basicStgAtt()
+        if self.penaltyDefensive == True:
+            self.penaltyModeDefensive()
+        elif self.penaltyOffensive == True:
+            self.penaltyModeOffensiveSpin()
         else:
-            if self.ball.xPos > 115:
-                self.basicStgAtt()
+            if self.mray:
+                if self.ball.xPos > 135:
+                    self.basicStgDef()
+                else:
+                    self.basicStgAtt()
             else:
-                self.basicStgDef()
+                if self.ball.xPos > 115:
+                    self.basicStgAtt()
+                else:
+                    self.basicStgDef()
 
     def basicStgDef(self):
         """Basic original strategy"""
@@ -71,3 +78,47 @@ class Strategy:
         action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
         action.screenOutBall(self.robot1, self.ball, 90, leftSide=not self.mray, upperLim=85, lowerLim=5)
         action.screenOutBall(self.robot2, self.ball, 90, leftSide=not self.mray, upperLim=175, lowerLim=95)
+
+    def penaltyModeDefensive(self):
+        '''Strategy to defend penalty situations'''
+        action.defenderPenalty(self.robot0, self.ball, leftSide=not self.mray)
+
+        enemys = [self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
+        friends = [self.robot0, self.robot2, self.robot3, self.robot4]
+        action.shoot(self.robot1,self.ball,not self.mray,friends,enemys)
+
+        friends = [self.robot0, self.robot1, self.robot3, self.robot4]
+        action.shoot(self.robot2,self.ball,not self.mray,friends,enemys)
+
+        if not self.mray:
+            if self.ball.xPos >53 or self.ball.yPos < 60 or self.ball.yPos > 120:
+                self.penaltyDefensive = False
+        else:
+            if self.ball.xPos < 182 or self.ball.yPos < 60 or self.ball.yPos > 100:
+                self.penaltyDefensive = False
+
+    def penaltyModeOffensiveSpin(self):
+        '''Strategy to convert penalty offensive situations'''
+        action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray)
+        action.screenOutBall(self.robot1, self.ball, 90, leftSide=not self.mray, upperLim=85, lowerLim=5)
+
+        enemys = [self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
+        friends = [self.robot0, self.robot1, self.robot2, self.robot4]
+        action.shoot(self.robot3,self.ball,not self.mray,friends,enemys)
+        friends = [self.robot0, self.robot1, self.robot3, self.robot4]
+        action.shoot(self.robot2,self.ball,not self.mray,friends,enemys)
+        if not self.robot4.dist(self.ball) < 9:
+            action.girar(self.robot4, 100, 100)
+        else:
+            if self.robot4.teamYellow:
+                if self.robot4.yPos < 90:
+                    action.girar(self.robot4, 0, 100)
+                else:
+                    action.girar(self.robot4, 100, 0)
+            else:
+                if self.robot4.yPos > 90:
+                    action.girar(self.robot4, 0, 100)
+                else:
+                    action.girar(self.robot4, 100, 0)
+        if sqrt((self.ball.xPos-self.robot4.xPos)**2+(self.ball.yPos-self.robot4.yPos)**2) > 30:
+            self.penaltyOffensive = False

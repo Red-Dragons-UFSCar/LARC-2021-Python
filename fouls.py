@@ -1,6 +1,6 @@
-from numpy import arctan2,pi,sqrt,cos,sin,array,matmul,amin,where,zeros,delete,append,int32
+from numpy import arctan2,pi,sqrt,cos,sin,array,matmul,amin,where,zeros,delete,append,int32,deg2rad
 from bridge import (Actuator, Replacer, Vision, Referee,NUM_BOTS, convert_angle, Entity)
-
+import random
 
 def replacement_fouls(replacement, ref_data, mray):
     '''
@@ -26,7 +26,12 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade1 = Entity(x=95, y=45,a=0, index=1)
                 entidade2 = Entity(x=95, y=145,a=0, index=2)
                 entidade3 = Entity(x=110, y=95,a=0, index=3)
-                entidade4 = Entity(x=185, y=90,a=0, index=4)
+                #entidade4 = Entity(x=185, y=90,a=0, index=4)
+                r = random.uniform(0,1)
+                if r <0.5:
+                    entidade4 = Entity(x=180, y=70,a=50, index=4)
+                else:
+                    entidade4 = Entity(x=180, y=110,a=-50, index=4)
             replacement.place_all([entidade0, entidade1, entidade2, entidade3, entidade4])
 
         #TODO FOULS: Revisar as posições futuramente do goalKick
@@ -86,7 +91,12 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade1 = Entity(x=155, y=45,a=180, index=1)
                 entidade2 = Entity(x=155, y=145,a=180, index=2)
                 entidade3 = Entity(x=135, y=95,a=180, index=3)
-                entidade4 = Entity(x=65, y=90,a=180, index=4)
+                #entidade4 = Entity(x=65, y=90,a=180, index=4)
+                r = random.uniform(0,1)
+                if r <0.5:
+                    entidade4 = Entity(x=70, y=70,a=130, index=4)
+                else:
+                    entidade4 = Entity(x=70, y=110,a=-130, index=4)
             else: # Defensivo
                 entidade0 = Entity(x=231, y=90,a=180, index=0)
                 entidade1 = Entity(x=120, y=65,a=0, index=1)

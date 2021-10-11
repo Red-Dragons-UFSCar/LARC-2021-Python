@@ -179,8 +179,8 @@ def directGoal(robot, ball, leftSide = True,friend1=None,friend2=None, enemy1=No
         v,w=univecController(robot,robot.target,True,robot.obst)
     robot.simSetVel(v,w)
 
-def girar(robot):
-    robot.simSetVel(20,0)
+def girar(robot, v1, v2):
+    robot.simSetVel2(v1,v2)
 
 def slave(robotSlave, robotMaster, friends, enemys, ball):
 
@@ -288,6 +288,28 @@ def defenderPenalty(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=N
         arrivalTheta=arctan2(ball.yPos-90,ball.xPos-235) #? Angle between the ball and point (0,65)
     #robot.target.update(ball.xPos,ball.yPos,0)
     robot.target.update(ball.xPos,ball.yPos,arrivalTheta)
+
+    if friend1 is None and friend2 is None: #? No friends to avoid
+        v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
+    else: #? Both friends to avoid
+        robot.obst.update(robot,friend1,friend2,enemy1,enemy2,enemy3)
+        v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
+
+    robot.simSetVel(v,w)
+
+def attackPenalty(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
+    if leftSide:
+        if robot.yPos > 65:
+            arrivalTheta = -deg2rad(15)
+        else:
+            arrivalTheta = deg2rad(15)
+    else:
+        if robot.yPos > 65:
+            arrivalTheta = -deg2rad(165)
+        else:
+            arrivalTheta = deg2rad(165)
+
+    robot.target.update(ball.xPos, ball.yPos, arrivalTheta)
 
     if friend1 is None and friend2 is None: #? No friends to avoid
         v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
