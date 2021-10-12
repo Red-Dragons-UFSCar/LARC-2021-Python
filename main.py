@@ -89,11 +89,16 @@ if __name__ == "__main__":
         robotEnemy2.simGetPose(data_their_bots[2])
         ball.simGetPose(data_ball)
 
+        #if ref_data["game_on"] or ref_data['foul'] == 5:
         if ref_data["game_on"]:
             # Se o modo de jogo estiver em "Game on"
             #strategy.twoAttackers()
             #strategy.coach()
             strategy.decider()
+            #action.defenderSpin(robot2, ball, leftSide=not mray, friend1=robot0, friend2=robot1,
+                         #enemy1=robotEnemy0, enemy2=robotEnemy1, enemy3=robotEnemy2)
+            #action.screenOutBall(robot0, ball, 14, not mray, upperLim=81, lowerLim=42)
+            #action.screenOutBall(self.robot0, self.ball, 14, leftSide=not self.mray, upperLim=81, lowerLim=42)
 
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (not mray):
             #Detectando penalti defensivo

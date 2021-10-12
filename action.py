@@ -109,7 +109,7 @@ def shoot2(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  ene
     robot.simSetVel(v,w)
 
 #% Defender Actions
-def defenderSpin(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
+def defenderSpin2(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
     if leftSide:
         arrivalTheta=arctan2(65-ball.yPos,160-ball.xPos) #? Angle between the ball and point (150,65)
     else:
@@ -143,6 +143,50 @@ def defenderSpin(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None
 
     robot.simSetVel(v,w)
 
+def defenderSpin(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
+    if leftSide:
+        arrivalTheta=arctan2(65-ball.yPos,160-ball.xPos) #? Angle between the ball and point (150,65)
+    else:
+        arrivalTheta=arctan2(65-ball.yPos,10-ball.xPos) #? Angle between the ball and point (0,65)
+    #robot.target.update(ball.xPos,ball.yPos,0)
+    robot.target.update(ball.xPos,ball.yPos,arrivalTheta)
+
+    if friend1 is None and friend2 is None: #? No friends to avoid
+        v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
+    else: #? Both friends to avoid
+        #robot.obst.update(robot,friend1,friend2,enemy1,enemy2,enemy3)
+        robot.obst.update2(robot,ball,friend1,friend2,enemy1,enemy2,enemy3)
+        v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
+
+    d = robot.dist(ball)
+    if robot.spin and d < 10:
+        if not robot.teamYellow:
+            if robot.yPos > 65:
+                v = 0
+                w = -30
+            else:
+                v = 0
+                w = 30
+        else:
+            if robot.yPos > 65:
+                v = 0
+                w = 30
+            else:
+                v = 0
+                w = -30
+    if d < 30 and ball.xPos > robot.xPos:
+        dx = 160 - robot.xPos
+        dy = tan(robot.theta)*dx + robot.yPos
+        if dy > 45 and dy < 85:
+            if robot.index == 2 or robot.index == 1:
+                robot.simSetVel2(50*robot.face, 50*robot.face)
+            else:
+                robot.simSetVel(v,w)
+        else:
+            robot.simSetVel(v,w)
+    else:
+        robot.simSetVel(v,w)
+
 def pushBall(robot,ball,friend1=None,friend2=None):
     dSup=sqrt((75-ball.xPos)**2+(130-ball.yPos)**2) #? Distance between the ball and point (75,130)
     dInf=sqrt((75-ball.xPos)**2+(0-ball.yPos)**2)   #? Distance between the ball and point (75,0)
@@ -162,16 +206,75 @@ def pushBall(robot,ball,friend1=None,friend2=None):
     robot.simSetVel(v,w)
 
 #TODO #2 Need more speed to reach the ball faster than our enemy
-def screenOutBall(robot,ball,staticPoint,leftSide=True,upperLim=200,lowerLim=0,friend1=None,friend2=None):
+def screenOutBall(robot,ball,staticPoint,leftSide=True,upperLim=200,lowerLim=0,friend1=None,friend2=None): # Original
+    xPos = ball.xPos + ball.vx*100*22/60
+    yPos = ball.yPos + ball.vy*100*22/60
     #Check if ball is inside the limits
-    if ball.yPos >= upperLim:
+    if yPos >= upperLim:
         yPoint = upperLim
 
-    elif ball.yPos <= lowerLim:
+    elif yPos <= lowerLim:
         yPoint = lowerLim
 
     else:
-        yPoint = ball.yPos
+        yPoint = yPos
+    #Check the field side
+    if leftSide:
+        if robot.yPos <= yPos:
+            arrivalTheta=pi/2
+        else:
+            arrivalTheta=-pi/2
+        robot.target.update(staticPoint,yPoint,arrivalTheta)
+    else:
+        if robot.yPos <= yPos:
+            arrivalTheta=pi/2
+        else:
+            arrivalTheta=-pi/2
+        robot.target.update(170 - staticPoint,yPoint,arrivalTheta)
+
+    if robot.contStopped > 60:
+        if robot.teamYellow:
+            if abs(robot.theta) < 10:
+                v = -30
+                w = 5
+            else:
+                v = 30
+                w = -5
+        else:
+            if abs(robot.theta) < 10:
+                v = -30
+                w = 0
+            else:
+                v = 30
+                w = 0
+    else:
+        if friend1 is None and friend2 is None: #? No friends to avoid
+            v,w=univecController(robot,robot.target,avoidObst=False,stopWhenArrive=True)
+        else: #? Both friends to avoid
+            robot.obst.update(robot,friend1,friend2)
+            v,w=univecController(robot,robot.target,True,robot.obst,stopWhenArrive=True)
+
+    robot.simSetVel(v,w)
+
+def screenOutBall(robot,ball,staticPoint,leftSide=True,upperLim=200,lowerLim=0,friend1=None,friend2=None): # Com previsão de bola
+    #Check if ball is inside the limits
+
+    dx = ball.xPos - 15
+    theta = arctan2(ball.vy,(ball.vx + 0.001))
+
+    if cos(theta) < 0 and sqrt(ball.vx**2 + ball.vy**2) > 0.5:
+        dy = (-1)*tan(theta) * dx + ball.yPos
+    else:
+        dy = ball.yPos
+
+    if dy >= upperLim:
+        yPoint = upperLim
+
+    elif dy <= lowerLim:
+        yPoint = lowerLim
+    else:
+        yPoint = dy
+
     #Check the field side
     if leftSide:
         if robot.yPos <= ball.yPos:
@@ -207,8 +310,24 @@ def screenOutBall(robot,ball,staticPoint,leftSide=True,upperLim=200,lowerLim=0,f
         else: #? Both friends to avoid
             robot.obst.update(robot,friend1,friend2)
             v,w=univecController(robot,robot.target,True,robot.obst,stopWhenArrive=True)
+        '''
+        KP = 10
+        if ball.yPos > robot.yPos:
+            desTheta = pi/2
+        else:
+            desTheta = -pi/2
 
-    robot.simSetVel(v,w)
+        theta_e2 = arctan2(sin(desTheta-robot.theta),cos(desTheta-robot.theta))
+        theta_e2 = 0
+        theta_e_aux = arctan2(robot.yPos-ball.yPos,robot.xPos-ball.xPos)
+        theta_e = arctan2(sin(theta_e_aux-robot.theta),cos(theta_e_aux-robot.theta))
+
+        VL = robot.vMax*0.6 - KP*(theta_e+theta_e2)
+        VR = robot.vMax*0.6 + KP*(theta_e+theta_e2)     MALUQUICES DA MADRUGA
+
+    robot.simSetVel2(VL,VR)
+    '''
+    robot.simSetVel(v, w)
 
 
 #% Goalkeeper Actions

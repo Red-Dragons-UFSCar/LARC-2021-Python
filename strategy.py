@@ -138,6 +138,7 @@ class Strategy:
         """Strategy with 2 robots moving with Master-Slave in offensive side"""
         self.twoAttackers()
         action.screenOutBall(self.robot0, self.ball,16, leftSide=not self.mray, upperLim=84, lowerLim=42)
+        self.robot0.contStopped = 0
 
     def stgFullAtt(self):
         """Crazy test attack strategy"""
