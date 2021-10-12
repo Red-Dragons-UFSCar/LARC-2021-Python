@@ -175,7 +175,10 @@ def defenderSpin(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None
                 v = 0
                 w = -30
     if d < 30 and ball.xPos > robot.xPos:
-        dx = 160 - robot.xPos
+        if robot.teamYellow:
+            dx = 15-robot.xPos
+        else:
+            dx = 160 - robot.xPos
         dy = tan(robot.theta)*dx + robot.yPos
         if dy > 45 and dy < 85:
             if robot.index == 2 or robot.index == 1:
@@ -256,7 +259,7 @@ def screenOutBall(robot,ball,staticPoint,leftSide=True,upperLim=200,lowerLim=0,f
 
     robot.simSetVel(v,w)
 
-def screenOutBall(robot,ball,staticPoint,leftSide=True,upperLim=200,lowerLim=0,friend1=None,friend2=None): # Com previsão de bola
+def screenOutBall2(robot,ball,staticPoint,leftSide=True,upperLim=200,lowerLim=0,friend1=None,friend2=None): # Com previsão de bola
     #Check if ball is inside the limits
 
     dx = ball.xPos - 15
