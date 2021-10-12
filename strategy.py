@@ -29,7 +29,7 @@ class Strategy:
         if self.penaltyDefensive == True:
             self.penaltyModeDefensive()
         elif self.penaltyOffensive == True:
-            self.penaltyModeOffensive() # Trocar aqui
+            self.penaltyModeOffensiveSpin() # Trocar aqui
         else:
             if self.mray:
                 if self.ball.xPos > 85:
@@ -48,7 +48,7 @@ class Strategy:
         if self.penaltyDefensive == True:
             self.penaltyModeDefensive()
         elif self.penaltyOffensive == True:
-            self.penaltyModeOffensive() # Trocar se a gente voltar pro jorginho
+            self.penaltyModeOffensiveSpin()
         else:
             if self.mray:
                 if self.ball.xPos > 85:
