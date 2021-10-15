@@ -185,7 +185,7 @@ class Robot:
         self.vL=0                            #? Left wheel velocity (cm/s) => updated on simClasses.py -> simSetVel()
         self.vR=0                            #? Right wheel velocity (cm/s) =>  updated on simClasses.py -> simSetVel()
         if self.index == 0:
-            self.vMax=35                             #! Robot max velocity (cm/s)
+            self.vMax=40#35                             #! Robot max velocity (cm/s)
         else:
             self.vMax=50
         self.rMax=3*self.vMax                #! Robot max rotation velocity (rad*cm/s)

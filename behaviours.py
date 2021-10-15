@@ -8,9 +8,9 @@ class Univector:
         #? Constants learned from EP
         self.d_e=6                                      # Constante relacionada ao tamanho das espirais
         self.k_r=3                                    # Constante de suavização do campo
-        self.delta=5                                  # Variancia da gaussiana de obstaculo
+        self.delta=3.5#5                                  # Variancia da gaussiana de obstaculo
         self.k_o=0.5                                   # Constante de proporcionalidade velocidade do obstaculo
-        self.d_min=5 #* => modified: EP = 3.48          # Distancia mínima em que o campo se torna puro repulsivo
+        self.d_min=3.5#5 #* => modified: EP = 3.48          # Distancia mínima em que o campo se torna puro repulsivo
 
 
     def rotMatrix(self,alpha):                                                  # Função que retorna uma matriz de rotação

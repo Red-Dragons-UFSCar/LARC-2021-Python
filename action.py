@@ -583,14 +583,14 @@ def slave(robotSlave, robotMaster, robot0=None, robotEnemy0=None, robotEnemy1=No
             projY = robotMaster.yPos - 30
         else:
             projX = robotMaster.xPos + 15
-            projY = robotMaster.yPos - 30 #
+            projY = robotMaster.yPos - 15 #30
     else:
         if robotMaster.xPos > 75:
             projX = robotMaster.xPos - 15
             projY = robotMaster.yPos + 30
         else:
             projX = robotMaster.xPos + 15
-            projY = robotMaster.yPos + 30 #
+            projY = robotMaster.yPos + 15 #30
 
     dist = sqrt((robotSlave.xPos - projX)**2 + (robotSlave.yPos - projY)**2)
     robotSlave.target.update(projX,projY,0)
