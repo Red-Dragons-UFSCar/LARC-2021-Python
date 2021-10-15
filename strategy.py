@@ -79,7 +79,7 @@ class Strategy:
         action.screenOutBall(self.robot1, self.ball, 90, leftSide=not self.mray, upperLim=85, lowerLim=5)
         action.screenOutBall(self.robot2, self.ball, 90, leftSide=not self.mray, upperLim=175, lowerLim=95)
 
-     def penaltyModeDefensive(self):
+    def penaltyModeDefensive(self):
         '''Strategy to defend penalty situations'''
         action.defenderPenalty(self.robot0, self.ball, leftSide=not self.mray)
 
