@@ -39,8 +39,8 @@ class Strategy:
 
     def basicStgDef(self):
         """Basic original strategy"""
-        action.screenOutBall(self.robot3, self.ball, 135, leftSide=not self.mray, upperLim=85, lowerLim=5)
-        action.screenOutBall(self.robot4, self.ball, 135, leftSide=not self.mray, upperLim=175, lowerLim=95)
+        action.screenOutBall(self.robot3, self.ball, 150, leftSide=not self.mray, upperLim=85, lowerLim=5)
+        action.screenOutBall(self.robot4, self.ball, 150, leftSide=not self.mray, upperLim=175, lowerLim=95)
         if not self.mray:
             if self.ball.xPos < 40 and self.ball.yPos > 50 and self.ball.yPos < 130:
                 action.defenderPenalty(self.robot0, self.ball, leftSide=not self.mray)
@@ -79,7 +79,7 @@ class Strategy:
         action.screenOutBall(self.robot1, self.ball, 90, leftSide=not self.mray, upperLim=85, lowerLim=5)
         action.screenOutBall(self.robot2, self.ball, 90, leftSide=not self.mray, upperLim=175, lowerLim=95)
 
-    def penaltyModeDefensive(self):
+     def penaltyModeDefensive(self):
         '''Strategy to defend penalty situations'''
         action.defenderPenalty(self.robot0, self.ball, leftSide=not self.mray)
 
