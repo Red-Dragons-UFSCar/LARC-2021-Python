@@ -286,54 +286,79 @@ def blockBall(robot,ball,leftSide=True):
 def protectGoal(robot,ball,r,leftSide=True,friend1=None,friend2=None):
 
     if leftSide:
-        theta = arctan2((ball.yPos-65),(ball.xPos-15))
+        theta = arctan2((ball.yPos - 65), (ball.xPos - 15))
+        if pi/2 >= theta >= (-pi / 2):
+            #calculando a projecao
+            projX = 15 + r * cos(theta)
+            if ball.yPos >= 65:
+                projY = r * sin(theta) + 65
+            else:
+                projY = 65 - r * sin(theta)
+            #calculando o angulo de chegada
+            if robot.yPos < projY:
+                arrivalTheta = theta + pi/2
+            else:
+                arrivalTheta = theta - pi/2
+        else:  # "extremidades"
+            #calculando a projecao
+            projX = 15 - r * cos(theta)
+            if ball.yPos >= 65:
+                projY = r * sin(theta) + 65
+            else:
+                projY = 65 - r * sin(theta)
+            # calculando o angulo de chegada nas extremidades
+            if theta > pi/2:
+                if robot.xPos > projX:
+                    arrivalTheta = theta - 3*pi/2  # valor negativo
+                else:  # robo a esquerda
+                    arrivalTheta = theta - pi/2  # valor positivo
+            else:  # theta < -pi/2  (theta é negativo)
+                if robot.xPos > projX:
+                    arrivalTheta = 3*pi/2 + theta  # valor positivo
+                else:  # robo a esquerda na extremidade baixa
+                    arrivalTheta = theta + pi/2  # valor negativo
+    else:  # se no lado direito agora
+        theta = arctan2((ball.yPos - 65), (155 - ball.xPos))
+        if pi/2 >= theta >= (-pi / 2):
+            #calculando a projecao
+            projX = 155 - r * cos(theta)
+            if ball.yPos >= 65:
+                projY = r * sin(theta) + 65
+            else:
+                projY = 65 - r * sin(theta)
+            #calculando o angulo de chegada
+            if robot.yPos < projY:
+                arrivalTheta = pi/2 - theta  # valor positivo
+            else:
+                arrivalTheta = -(theta + pi/2)  # valor negativo
+        else:  # "extremidades"
+            #calculando a projecao
+            projX = 155 + r * cos(theta)
+            if ball.yPos >= 65:
+                projY = r * sin(theta) + 65
+            else:
+                projY = 65 - r * sin(theta)
+            # calculando o angulo de chegada das extremidades
+            if theta > pi/2:
+                if robot.xPos > projX:
+                    arrivalTheta = 3*pi/2 - theta  # valor positivo
+                else:  # robo a esquerda
+                    arrivalTheta = pi/2 - theta
+            else:  # theta < -pi/2   (lado direito baixo)
+                if robot.xPos > projX:
+                    arrivalTheta = theta - 90  # valor negativo
+                else:  # robo a esquerda na extremidade baixa
+                    arrivalTheta = pi/2 + theta  # valor positivo
 
-        if (theta <= pi/2 and theta >= (-pi/2)):
+    robot.target.update(projX, projY, arrivalTheta)
 
-            projX = r*cos(theta) + 15
-            projY = r*sin(theta) + 65
+    if friend1 is None and friend2 is None:  # ? No friends to avoid
+        v, w = univecController(robot, robot.target, avoidObst=False, stopWhenArrive=True)
+    else:  # ? Both friends to avoid
+        robot.obst.update(robot, friend1, friend2)
+        v, w = univecController(robot, robot.target, True, robot.obst, stopWhenArrive=True)
 
-        else:
-
-            projX = -r*cos(theta) + 15
-            projY = r*sin(theta) + 65
-
-        if robot.yPos > 100:
-            if robot.xPos < ball.xPos:
-                arrivalTheta = -(pi/2 - theta)
-
-            if robot.xPos >= ball.xPos:
-                arrivalTheta = (pi/2 + theta)
-
-        if (robot.yPos <= 100 and robot.yPos > 65):
-            if robot.yPos < ball.yPos:
-                arrivalTheta = (pi/2 + theta)
-            if robot.yPos >= ball.yPos:
-                arrivalTheta = -(pi/2 - theta)
-
-        if (robot.yPos <= 65 and robot.yPos > 30):
-            if robot.yPos < ball.yPos:
-                arrivalTheta = pi/2 + theta
-            if robot.yPos >= ball.yPos:
-                arrivalTheta = -(pi/2 - theta)
-
-        if robot.yPos <= 30:
-            if robot.xPos < ball.xPos:
-                arrivalTheta = pi/2 + theta
-
-            if robot.xPos >= ball.xPos:
-                arrivalTheta = -(pi/2 - theta)
-
-    arrivalTheta = arctan2(sin(arrivalTheta), cos(arrivalTheta))
-    robot.target.update(projX,projY,arrivalTheta)
-
-    if friend1 is None and friend2 is None: #? No friends to avoid
-        v,w=univecController(robot,robot.target,avoidObst=False,stopWhenArrive=True)
-    else: #? Both friends to avoid
-        robot.obst.update(robot,friend1,friend2)
-        v,w=univecController(robot,robot.target,True,robot.obst,stopWhenArrive=True)
-
-    robot.simSetVel(v,w)
+    robot.simSetVel(v, w)
 
 #%Crossing functions
 def directGoal(robot, ball, leftSide = True,friend1=None,friend2=None, enemy1=None, enemy2=None, enemy3=None):
