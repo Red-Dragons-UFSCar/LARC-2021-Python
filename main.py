@@ -1,4 +1,5 @@
 import time
+import sys
 
 import fouls
 from bridge import (Actuator, Replacer, Vision, Referee)

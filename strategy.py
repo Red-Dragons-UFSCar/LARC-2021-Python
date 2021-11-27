@@ -154,7 +154,7 @@ class Strategy:
 
     def penalty_mode_defensive(self):
         """Strategy to defend penalty situations"""
-        action.defender_penalty(self.robot0, self.ball, leftSide=not self.mray, friend1=self.robot1,
+        action.defender_penalty(self.robot0, self.ball, left_side=not self.mray, friend1=self.robot1,
                                 friend2=self.robot2,
                                 enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
         action.shoot(self.robot1, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot2,
