@@ -1,16 +1,9 @@
-from bridge import (Actuator, Replacer, Vision, Referee,
-                        NUM_BOTS, convert_angle, Entity)
-
-from math import pi, fmod, atan2, fabs
-
+import time
 import sys
 
-from simClasses import *
-import action
 import fouls
-
-import time
-
+from bridge import (Actuator, Replacer, Vision, Referee)
+from simClasses import *
 from strategy import *
 
 if __name__ == "__main__":
@@ -44,7 +37,7 @@ if __name__ == "__main__":
     else:
         mray = False
 
-    #mray = True
+    # mray = True
 
     # Initialize all clients
     actuator = Actuator(mray, "127.0.0.1", 20011)
@@ -76,47 +69,47 @@ if __name__ == "__main__":
         vision.update()
         field = vision.get_field_data()
 
-        data_our_bot = field["our_bots"]        #Salva os dados dos robôs aliados
-        data_their_bots = field["their_bots"]   #Salva os dados dos robôs inimigos
-        data_ball = field["ball"]               #Salva os dados da bola
+        data_our_bot = field["our_bots"]  # Salva os dados dos robôs aliados
+        data_their_bots = field["their_bots"]  # Salva os dados dos robôs inimigos
+        data_ball = field["ball"]  # Salva os dados da bola
 
         # Atualiza em cada objeto do campo os dados da visão
-        robot0.simGetPose(data_our_bot[0])
-        robot1.simGetPose(data_our_bot[1])
-        robot2.simGetPose(data_our_bot[2])
-        robotEnemy0.simGetPose(data_their_bots[0])
-        robotEnemy1.simGetPose(data_their_bots[1])
-        robotEnemy2.simGetPose(data_their_bots[2])
-        ball.simGetPose(data_ball)
+        robot0.sim_get_pose(data_our_bot[0])
+        robot1.sim_get_pose(data_our_bot[1])
+        robot2.sim_get_pose(data_our_bot[2])
+        robotEnemy0.sim_get_pose(data_their_bots[0])
+        robotEnemy1.sim_get_pose(data_their_bots[1])
+        robotEnemy2.sim_get_pose(data_their_bots[2])
+        ball.sim_get_pose(data_ball)
 
         if ref_data["game_on"]:
             # Se o modo de jogo estiver em "Game on"
-            #strategy.twoAttackers()
-            #strategy.coach()
+            # strategy.twoAttackers()
+            # strategy.coach()
             strategy.decider()
 
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (not mray):
-            #Detectando penalti defensivo
+            # Detectando penalti defensivo
             strategy.penaltyDefensive = True
             actuator.stop()
-            fouls.replacement_fouls(replacement,ref_data,mray)
+            fouls.replacement_fouls(replacement, ref_data, mray)
 
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (mray):
-            #Detectando penalti ofensivo
+            # Detectando penalti ofensivo
             strategy.penaltyOffensive = True
             actuator.stop()
-            fouls.replacement_fouls(replacement,ref_data,mray)
+            fouls.replacement_fouls(replacement, ref_data, mray)
 
         elif ref_data["foul"] != 7:
-            if ref_data["foul"] != 5: # Mudando a flag exceto em caso de Stop
+            if ref_data["foul"] != 5:  # Mudando a flag exceto em caso de Stop
                 strategy.penaltyOffensive = False
                 strategy.penaltyDefensive = False
-            fouls.replacement_fouls(replacement,ref_data,mray)
+            fouls.replacement_fouls(replacement, ref_data, mray)
             actuator.stop()
 
         else:
             actuator.stop()
 
         t2 = time.time()
-        if t2-t1<1/60:
-            time.sleep(1/60 - (t2-t1))
+        if t2 - t1 < 1 / 60:
+            time.sleep(1 / 60 - (t2 - t1))
