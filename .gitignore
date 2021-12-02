@@ -1,8 +1,1 @@
-*build/
-*__pycache__/
-*.so
-*include/
-*.pyc
-*.stash
-Makefile
-*.o
+# Por enquanto deixar vazio para nao quebrar nada
