@@ -35,7 +35,7 @@ def univecController(robot,target,avoidObst=True,obst=None,n=8,d=2,stopWhenArriv
         #robotLockedCorner(target, robot)
     navigate=Univector() #? Defines the navigation algorithm
     dl=0.000001          #? Constant to approximate phi_v
-    k_w=1.9                #? Feedback constant (k_w=1 means no gain)
+    k_w=1.8                #? Feedback constant (k_w=1 means no gain)
     k_p=1                #? Feedback constant (k_p=1 means no gain)
 
     #% Correção de ângulo caso o robô esteja jogando com a face de trás

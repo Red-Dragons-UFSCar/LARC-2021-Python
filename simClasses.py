@@ -129,8 +129,8 @@ class Ball:
 
     #% This method gets position of the ball in FIRASim
     def simGetPose(self, data_ball):
-        self.xPos = data_ball.x + data_ball.vx*100*12/60
-        self.yPos = data_ball.y + data_ball.vy*100*12/60
+        self.xPos = data_ball.x + data_ball.vx*100*8/60
+        self.yPos = data_ball.y + data_ball.vy*100*8/60
 
         # check if prev is out of field, in this case reflect ball moviment to reproduce the collision
         if self.xPos > 235:
@@ -174,7 +174,10 @@ class Robot:
         self.vTheta=0
         self.vL=0                            #? Left wheel velocity (cm/s) => updated on simClasses.py -> simSetVel()
         self.vR=0                            #? Right wheel velocity (cm/s) =>  updated on simClasses.py -> simSetVel()
-        self.vMax=35                             #! Robot max velocity (cm/s)
+        if self.index == 0:
+            self.vMax=35                             #! Robot max velocity (cm/s)
+        else:
+            self.vMax=50
         self.rMax=3*self.vMax                #! Robot max rotation velocity (rad*cm/s)
         self.L=7.5                           #? Base length of the robot (cm)
         self.LSimulador=6.11                 #? Base length of the robot on coppelia (cm)

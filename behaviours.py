@@ -7,7 +7,7 @@ class Univector:
     def __init__(self):
         #? Constants learned from EP
         self.d_e=6                                      # Constante relacionada ao tamanho das espirais
-        self.k_r=7                                    # Constante de suavização do campo
+        self.k_r=3                                    # Constante de suavização do campo
         self.delta=5                                  # Variancia da gaussiana de obstaculo
         self.k_o=0.5                                   # Constante de proporcionalidade velocidade do obstaculo
         self.d_min=5 #* => modified: EP = 3.48          # Distancia mínima em que o campo se torna puro repulsivo
