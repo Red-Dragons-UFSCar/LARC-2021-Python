@@ -4,62 +4,88 @@ from execution import univec_controller
 
 
 # % Basic Actions
+
+'''
+Input: Robot object
+Description: Stops the robot.
+Output: None
+'''
 def stop(robot):
     robot.sim_set_vel(0, 0)
 
-
+'''
+Input: Robot object, Side of field (True = Left, False = Right)
+Description: The robot spin around your own axis (This function is not used).
+Output: None
+'''
 def sweep_ball(robot, left_side=True):
     if left_side:
-        w = -0.5 * robot.vMax * robot.R / robot.L
+        w = -0.5 * robot.vMax * robot.R / robot.L # Angular velocity
     else:
         w = 0.5 * robot.vMax * robot.R / robot.L
 
     if robot.yPos > 65:
-        robot.sim_set_vel(0, w)
+        robot.sim_set_vel(0, w) # Send the linear and angular velocity to the robot
     else:
         robot.sim_set_vel(0, -w)
 
-
+'''
+Input: Robot object, Ball object,Side of field (True = Left, False = Right), other robots objects (friend 1 and 2)
+Description: The robot follows the ball always pushing to the opponent's side of the field 
+             (This function is not used).
+Output: None
+'''
 def position_to_sweep(robot, ball, left_side=True, friend1=None, friend2=None):
     if left_side:
-        robot.target.update(ball.xPos, ball.yPos, 0)
+        robot.target.update(ball.xPos, ball.yPos, 0) # Uptade the robot target with: position x,y and arrive angle
     else:
         robot.target.update(ball.xPos, ball.yPos, pi)
 
-    if friend1 is None and friend2 is None:  # ? No friends to avoid
-        v, w = univec_controller(robot, robot.target, avoid_obst=False)
-    else:  # ? Both friends to avoid
-        robot.obst.update(robot, friend1, friend2)
+    if friend1 is None and friend2 is None:  # No friends to avoid
+        v, w = univec_controller(robot, robot.target, avoid_obst=False) # Calculate linear and angular velocity
+    else:  # Both friends to avoid
+        robot.obst.update(robot, friend1, friend2) # Insert the robot obstacles
         v, w = univec_controller(robot, robot.target, True, robot.obst)
 
-    robot.sim_set_vel(v, w)
+    robot.sim_set_vel(v, w) # Send the linear and angular velocity to the robot
 
-
+'''
+Input: Robot object, other robots objects (friend 1 and 2)
+Description: The robot moves to one off the goals based on the robot orientation and right goal,
+             if positive goes to the right goal, if negative goes to the left goal (This function is not used).
+Output: None
+'''
 def avoid_bound(robot, friend1=None, friend2=None):
-    # % Verify if the dot product between the robot and the point (135,65) is positive
-    # % It means the angle resides in ]-pi/2,pi/2[
+    '''
+    Verify if the dot product between the robot and the point (135,65) is positive
+    It means the angle resides in ]-pi/2,pi/2[
+    '''
     dot_prod = (cos(robot.theta)) * (135 - robot.xPos) + (sin(robot.theta)) * (65 - robot.yPos)
 
     if dot_prod >= 0:
         arrival_theta = arctan2(65 - robot.yPos, 135 - robot.xPos)
-        robot.target.update(135, 65, arrival_theta)
+        robot.target.update(135, 65, arrival_theta) # Go to the right goal
     else:
         arrival_theta = arctan2(65 - robot.yPos, 15 - robot.xPos)
-        robot.target.update(15, 65, arrival_theta)
+        robot.target.update(15, 65, arrival_theta) # Go to the left goal
 
-    if friend1 is None and friend2 is None:  # ? No friends to avoid
-        v, w = univec_controller(robot, robot.target, avoid_obst=False)
-    else:  # ? Both friends to avoid
+    if friend1 is None and friend2 is None:  # No friends to avoid
+        v, w = univec_controller(robot, robot.target, avoid_obst=False) # Calculate linear and angular velocity
+    else:  # Both friends to avoid
         robot.obst.update(robot, friend1, friend2)
         v, w = univec_controller(robot, robot.target, True, robot.obst)
 
     robot.sim_set_vel(v, w)
 
-
+'''
+Input: Robot object, desired possition and angle (xg,yg and des_theta), other robots objects (friend 1 and 2)
+Description: The robot moves to the desired position and orientation (This function is not used).
+Output: None
+'''
 def hold_position(robot, xg, yg, des_theta, friend1=None, friend2=None):
     robot.target.update(xg, yg, des_theta)
 
-    if friend1 is None and friend2 is None:  # ? No friends to avoid
+    if friend1 is None and friend2 is None:  # No friends to avoid
         v, w = univec_controller(robot, robot.target, avoid_obst=False, stop_when_arrive=True)
     else:  # ? Both friends to avoid
         robot.obst.update(robot, friend1, friend2)
