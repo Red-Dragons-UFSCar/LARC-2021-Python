@@ -69,7 +69,7 @@ def replacement_fouls(replacement, ref_data, mray):
     if mray:
         if ref_data["foul"] == 1:  # Defensivo
             if not ref_data["yellow"]:
-                entidade0 = Entity(x=152.5, y=65, a=180, index=0)
+                entidade0 = Entity(x=156, y=65, a=180, index=0)
                 entidade1 = Entity(x=65, y=80, a=180, index=1)
                 entidade2 = Entity(x=62.5, y=65, a=180, index=2)
             else:  # Ofensivo

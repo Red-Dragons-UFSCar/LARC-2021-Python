@@ -149,8 +149,56 @@ def defender_spin(robot, ball, left_side=True, friend1=None, friend2=None, enemy
                 v = 0
                 w = -30
 
-    robot.sim_set_vel(v, w)
+    if d < 30 and ball.xPos > robot.xPos:
+        if robot.teamYellow:
+            dx = 15 - robot.xPos
+        else:
+            dx = 160 - robot.xPos
+        dy = tan(robot.theta)*dx + robot.yPos
+        if dy > 45 and dy < 85:
+            if robot.index == 2 or robot.index == 1:
+                robot.sim_set_vel2(50*robot.face, 50*robot.face)
+            else:
+                robot.sim_set_vel(v,w)
+        else:
+            robot.sim_set_vel(v,w)
+    else:
+        robot.sim_set_vel(v,w)
 
+
+def defender_spin_2(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None):
+    if left_side:
+        arrival_theta=arctan2(65-ball.yPos,160-ball.xPos) # ? Angle between the ball and point (150,65)
+    else:
+        arrival_theta=arctan2(65-ball.yPos,10-ball.xPos) # ? Angle between the ball and point (0,65)
+    #robot.target.update(ball.xPos,ball.yPos,0)
+    robot.target.update(ball.xPos,ball.yPos,arrival_theta)
+
+    if friend1 is None and friend2 is None: #? No friends to avoid
+        v,w=univec_controller(robot,robot.target,avoid_obst=False,n=16, d=2)
+    else: # ? Both friends to avoid
+        #robot.obst.update(robot,friend1,friend2,enemy1,enemy2,enemy3)
+        robot.obst.update2(robot,ball,friend1,friend2,enemy1,enemy2,enemy3)
+        v,w=univec_controller(robot,robot.target,True,robot.obst,n=4, d=4)
+
+    d = robot.dist(ball)
+    if robot.spin and d < 10:
+        if not robot.teamYellow:
+            if robot.yPos > 65:
+                v = 0
+                w = -30
+            else:
+                v = 0
+                w = 30
+        else:
+            if robot.yPos > 65:
+                v = 0
+                w = 30
+            else:
+                v = 0
+                w = -30
+
+    robot.sim_set_vel(v,w)
 
 def push_ball(robot, ball, friend1=None, friend2=None):
     d_sup = sqrt((75 - ball.xPos) ** 2 + (130 - ball.yPos) ** 2)  # ? Distance between the ball and point (75,130)
@@ -174,23 +222,26 @@ def push_ball(robot, ball, friend1=None, friend2=None):
 # TODO #2 Need more speed to reach the ball faster than our enemy
 def screen_out_ball(robot, ball, static_point, left_side=True, upper_lim=200, lower_lim=0, friend1=None, friend2=None):
     # Check if ball is inside the limits
-    if ball.yPos >= upper_lim:
+    xPos = ball.xPos + ball.vx*100*22/60
+    yPos = ball.yPos + ball.vy*100*22/60
+
+    if yPos >= upper_lim:
         y_point = upper_lim
 
-    elif ball.yPos <= lower_lim:
+    elif yPos <= lower_lim:
         y_point = lower_lim
 
     else:
-        y_point = ball.yPos
+        y_point = yPos
     # Check the field side
     if left_side:
-        if robot.yPos <= ball.yPos:
+        if robot.yPos <= yPos:
             arrival_theta = pi / 2
         else:
             arrival_theta = -pi / 2
         robot.target.update(static_point, y_point, arrival_theta)
     else:
-        if robot.yPos <= ball.yPos:
+        if robot.yPos <= yPos:
             arrival_theta = pi / 2
         else:
             arrival_theta = -pi / 2
@@ -218,6 +269,76 @@ def screen_out_ball(robot, ball, static_point, left_side=True, upper_lim=200, lo
             robot.obst.update(robot, friend1, friend2)
             v, w = univec_controller(robot, robot.target, True, robot.obst, stop_when_arrive=True)
 
+    robot.sim_set_vel(v, w)
+
+
+def screen_out_ball_2(robot, ball, static_point, left_side=True, upper_lim=200, lower_lim=0, friend1=None, friend2=None): # Com previsão de bola
+    # Check if ball is inside the limits
+    dx = ball.xPos - 15
+    theta = arctan2(ball.vy,(ball.vx + 0.001))
+
+    if cos(theta) < 0 and sqrt(ball.vx**2 + ball.vy**2) > 0.5:
+        dy = (-1)*tan(theta) * dx + ball.yPos
+    else:
+        dy = ball.yPos
+
+    if dy >= upper_lim:
+        y_point = upper_lim
+
+    elif dy <= lower_lim:
+        y_point = lower_lim
+    else:
+        y_point = dy
+
+    # Check the field side
+    if left_side:
+        if robot.yPos <= ball.yPos:
+            arrival_theta=pi/2
+        else:
+            arrival_theta=-pi/2
+        robot.target.update(static_point,y_point,arrival_theta)
+    else:
+        if robot.yPos <= ball.yPos:
+            arrival_theta=pi/2
+        else:
+            arrival_theta=-pi/2
+        robot.target.update(170 - static_point,y_point,arrival_theta)
+
+    if robot.contStopped > 60:
+        if robot.teamYellow:
+            if abs(robot.theta) < 10:
+                v = -30
+                w = 5
+            else:
+                v = 30
+                w = -5
+        else:
+            if abs(robot.theta) < 10:
+                v = -30
+                w = 0
+            else:
+                v = 30
+                w = 0
+    else:
+        if friend1 is None and friend2 is None: #? No friends to avoid
+            v, w = univec_controller(robot,robot.target,avoid_obst=False,stop_when_arrive=True)
+        else: #? Both friends to avoid
+            robot.obst.update(robot,friend1,friend2)
+            v, w = univec_controller(robot,robot.target,True,robot.obst,stop_when_arrive=True)
+        '''
+        KP = 10
+        if ball.yPos > robot.yPos:
+            desTheta = pi/2
+        else:
+            desTheta = -pi/2
+        theta_e2 = arctan2(sin(desTheta-robot.theta),cos(desTheta-robot.theta))
+        theta_e2 = 0
+        theta_e_aux = arctan2(robot.yPos-ball.yPos,robot.xPos-ball.xPos)
+        theta_e = arctan2(sin(theta_e_aux-robot.theta),cos(theta_e_aux-robot.theta))
+        VL = robot.vMax*0.6 - KP*(theta_e+theta_e2)
+        VR = robot.vMax*0.6 + KP*(theta_e+theta_e2)     MALUQUICES DA MADRUGA
+    robot.simSetVel2(VL,VR)
+    '''
     robot.sim_set_vel(v, w)
 
 
@@ -483,14 +604,14 @@ def slave(robot_slave, robot_master, robot0=None, robot_enemy_0=None, robot_enem
             proj_y = robot_master.yPos - 30
         else:
             proj_x = robot_master.xPos + 15
-            proj_y = robot_master.yPos - 30  #
+            proj_y = robot_master.yPos - 15
     else:
         if robot_master.xPos > 75:
             proj_x = robot_master.xPos - 15
             proj_y = robot_master.yPos + 30
         else:
             proj_x = robot_master.xPos + 15
-            proj_y = robot_master.yPos + 30  #
+            proj_y = robot_master.yPos + 15
 
     dist = sqrt((robot_slave.xPos - proj_x) ** 2 + (robot_slave.yPos - proj_y) ** 2)
     robot_slave.target.update(proj_x, proj_y, 0)

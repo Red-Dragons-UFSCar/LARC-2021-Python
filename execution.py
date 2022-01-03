@@ -40,7 +40,7 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
     # robotLockedCorner(target, robot)
     navigate = Univector()  # ? Defines the navigation algorithm
     dl = 0.000001  # ? Constant to approximate phi_v
-    k_w = 1.9  # ? Feedback constant (k_w=1 means no gain)
+    k_w = 1.8  # ? Feedback constant (k_w=1 means no gain)
     k_p = 1  # ? Feedback constant (k_p=1 means no gain)
 
     # % Correção de ângulo caso o robô esteja jogando com a face de trás
@@ -100,4 +100,3 @@ def which_face(robot, target, des_theta, double_face):
         theta_e = arctan2(sin(des_theta - robot.theta), cos(des_theta - robot.theta))  # Recalcula o erro
 
     return theta_e
-
