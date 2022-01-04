@@ -202,5 +202,5 @@ class Strategy:
 
     def two_attackers(self):
         """Strategy to move 2 robots at same time with Master-Slave"""
-        action.master_slave(self.robot0, self.robot1, self.robot2, self.ball, self.robotEnemy0, self.robotEnemy1,
+        action.followLeader(self.robot0, self.robot1, self.robot2, self.ball, self.robotEnemy0, self.robotEnemy1,
                             self.robotEnemy2)
