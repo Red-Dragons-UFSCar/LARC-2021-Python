@@ -1,69 +1,43 @@
+# LARC 2021 - Red Dragons UFSCar
+## _Very Small Size Soccer (VSSS)_
 
-# FIRAClient
-> Client base code for the VSSS FiraSim simulator based on RoboCin FIRAClient and ported to Python 
+Neste repositório encontra-se o código fonte utilizado na LARC 2021, na categoria Very Small Size Soccer (VSSS) em ambiente simulado online.
 
-This repo was forked from https://github.com/VSSSLeague/FIRAClient
+# Reconhecimento e créditos
 
-## Description
-This repository was created for the purpose of using the protobuf comunication protocol on Pytohn.
+A utilização do código em Python foi possível graças a API desenvolvida pela Equipe Yapira, disponível [neste repositório](https://github.com/YapiraUFPR/FIRAClient). 
 
-This project is capable of:
-- Receive field, referee and robot information from FiraSim on Python
-- Send commands to FiraSim Simulator, such as robot controls and positions from Python.
+# Instalação
 
-## Dependencies
-- This set of clients were made to run on Linux
-- The FIRASim simulator and the VSSReferee (see SETUP.md)
-- The build-essential package (`$ sudo apt install build-essential`)
-- [protobuf](https://github.com/google/protobuf)
-- Python3
-- Qt5
+Primeiramente, para a instalação correta do nosso repositório, é necessário realizar a instalação do [FIRASim](https://github.com/IEEEVSS/FIRASim) e do [VSSReferee](https://github.com/IEEEVSS/VSSReferee), se atentando a todos os seus requisitos.
 
-    You can install this dependencies with:
-    ```sh
-    $ sudo apt install -qq build-essential qtdeclarative5-dev libeigen3-dev protobuf-compiler libprotobuf-dev libdc1394-22 libdc1394-22-dev cmake libv4l-0 libopencv-dev freeglut3-dev python3
-    ```
-- FIRASim and VSSSReferee. See [SETUP.md]() to install instructions 
+Você pode conferir o passo-a-passo da instalação [aqui](SETUP.md)
 
-*Tested with: Qt 5.12.8, protoc 3.x, Ubuntu 20.04 LTS. and Ubuntu based Linux (Mint 20.01, Pop!_OS 20.04 LTS)*
+Por seguinte, ao clonar esse repositório, instale nossas dependências do python utilizando:
 
-## Compile
+```sh
+pip3 install -r requirements.txt
+```
 
- 1. Compile the protobuf files
+Para gerar os arquivos de comunicação entre o código em Python e o simulador em C++, execute no repositório local os seguintes comandos:
 
- - Run the command bellow to generate and compile the clients and the shared object that will be used on the bridge:
+```sh
+mkdir build
+cd build
+qmake ..
+make
+```
 
-    ```sh
-    mkdir build
-    cd build/
-    qmake ..
-    make
-    ```
-    
-    This will generate the `libfira.so` file that the bridge file uses to comunicate withe the C++ FIRAClient base
+*LEMBRETE:* Todas as vezes que realizar o clone ou gerar uma branch nova a partir da main, realizar esse procedimento de build do repositório.
 
-    And then you can test run:
+# Execução
 
-    ```sh
-    python3 bridge.py
-    ```
+Para executar nosso código, no terminal, você deverá executar o código main.py, passando os parâmetros de time escolhido (*blue* ou *yellow*) e de estratégia a ser executada (*default* ou *twoAttackers*). Por exemplo:
 
-    This sould play a message testing the lib.
+```sh
+python3 main.py blue twoAttackers
+```
 
-    Use `python3 bridge.py --help` to see documentation
-
-    This bridge file will be used on the rest of the pytohn program. main.
-
-    Now you can run the code
-
-    ```sh
-    ./main.py
-    ```
-## Usage
-
-You can run the code by looking at the main.py example and the bridge.py docstrings
-
-### Contributors: 
-- [Artur Coelho](https://github.com/arturtcoelho) 
-- Gabriel Hishida
-- Allan Cedric
+```sh
+python3 main.py yellow default
+```
