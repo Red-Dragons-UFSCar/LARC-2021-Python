@@ -1,6 +1,6 @@
 # FIRASim
 
-The simulator [repository](https://github.com/robocin/FIRASim) constains some install instructions, you can follow them here as well for the simplified version
+The simulator [repository](https://github.com/IEEEVSS/FIRASim) constains some install instructions, you can follow them here as well for the simplified version
 
  Install the dependencies:
  ```sh
@@ -9,7 +9,7 @@ The simulator [repository](https://github.com/robocin/FIRASim) constains some in
 
  Clone into FIRASim:
  ```sh
- $ git clone https://github.com/robocin/FIRASim.git
+ $ git clone https://github.com/IEEEVSS/FIRASim
  $ cd FIRASim
  ```
 
@@ -54,10 +54,13 @@ The referee repository can be found [here](https://github.com/VSSSLeague/VSSRefe
  $ make
  ```
 
- Now you can run the referee program:
+ Now you can run the referee program for 3v3 category:
  ```
  $ cd ..
- $ ./bin/VSSReferee
+ $ ./bin/VSSReferee --3v3
  ```
 
-*You will need to run the simulator and the referee to use the FIRAClient clients*
+ However, if the desired category is 5v5, you should run:
+ ```
+ $ ./bin/VSSReferee --5v5
+ ```
