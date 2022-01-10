@@ -9,7 +9,7 @@ A utilização do código em Python foi possível graças a API desenvolvida pel
 
 # Instalação
 
-Primeiramente, para a instalação correta do nosso repositório, é necessário realizar a instalação do [FIRASim](https://github.com/IEEEVSS/FIRASim) e do [VSSReferee](https://github.com/IEEEVSS/VSSReferee), se atentando a todos os seus requisitos.
+Primeiramente, para a instalação correta do nosso repositório, é necessário realizar a instalação do [FIRASim](https://github.com/IEEEVSS/FIRASim) e do [VSSReferee](https://github.com/VSSSLeague/VSSReferee), se atentando a todos os seus requisitos.
 
 Você pode conferir o passo-a-passo da instalação [aqui](SETUP.md)
 
