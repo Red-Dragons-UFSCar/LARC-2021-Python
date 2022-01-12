@@ -651,27 +651,27 @@ who receives the ball attacker and the opposite also (This is not fished - Only 
 Output: bol vector: array_functions
 '''
 
-def position_change(array_functions, ball, array_side_crossing, left_side=True):
-    '''
-    Performs the exchange only when the ball is in a specific area on the opponents field  
-    '''
-    if array_functions[2].flagCruzamento and (not array_side_crossing[0]) and (not array_side_crossing[1]):
-        if (30 < ball.yPos < 100) and (92.5 < ball.xPos < 132.5):
-            array_functions[1], array_functions[2] = array_functions[2], array_functions[1]  # Switching positions
-            array_functions[2].flagCruzamento = False
-    '''
-    Cancel the ball crossing
-    '''
-        elif array_functions[2].dist(ball) > 30:
-            array_functions[2].flagCruzamento = False
-        elif (45 < ball.yPos < 85) and (132.5 < ball.xPos < 150):
-            array_functions[2].flagCruzamento = False
-        elif (ball.yPos > 105) and (75 < ball.xPos < 112.5):
-            array_functions[2].flagCruzamento = False
-        elif (ball.yPos < 25) and (75 < ball.xPos < 112.5):
-            array_functions[2].flagCruzamento = False
-    return array_functions
-
+# def position_change(array_functions, ball, array_side_crossing, left_side=True):
+#     '''
+#     Performs the exchange only when the ball is in a specific area on the opponents field
+#     '''
+#     if array_functions[2].flagCruzamento and (not array_side_crossing[0]) and (not array_side_crossing[1]):
+#         if (30 < ball.yPos < 100) and (92.5 < ball.xPos < 132.5):
+#             array_functions[1], array_functions[2] = array_functions[2], array_functions[1]  # Switching positions
+#             array_functions[2].flagCruzamento = False
+#     '''
+#     Cancel the ball crossing
+#     '''
+#         elif array_functions[2].dist(ball) > 30:
+#             array_functions[2].flagCruzamento = False
+#         elif (45 < ball.yPos < 85) and (132.5 < ball.xPos < 150):
+#             array_functions[2].flagCruzamento = False
+#         elif (ball.yPos > 105) and (75 < ball.xPos < 112.5):
+#             array_functions[2].flagCruzamento = False
+#         elif (ball.yPos < 25) and (75 < ball.xPos < 112.5):
+#             array_functions[2].flagCruzamento = False
+#     return array_functions
+#
 
 '''
 Input: Robot object, ball object, Velocity of Right and Left wheel
@@ -737,7 +737,7 @@ Input: Robot object (All team members), ball object, other robots objects (3 opp
 Description: Defines the position of follower robot based on the leader position.
 Output: None
 '''
-def follower(robot_follower, robot_leader, robot0=None, ball, robot_enemy_0=None, robot_enemy_1=None, robot_enemy_2=None):
+def follower(robot_follower, robot_leader, ball, robot0=None, robot_enemy_0=None, robot_enemy_1=None, robot_enemy_2=None):
     
     '''
     Defines the position of the follower based on the leader position, the position is a diagonal
@@ -797,7 +797,7 @@ def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, rob
                     screen_out_ball(robot2, robot2, 55, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
                 else:
                     screen_out_ball(robot2, ball, 55, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
-                follower(robot1, robot2, robot0, ball, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
 
             else:  # If ball is in attack side the robot 2 do the defender spin, and the robot 1 follow his moves
                 defender_spin(robot2, ball, left_side=not robot2.teamYellow, friend1=robot0, friend2=robot0,
@@ -807,38 +807,38 @@ def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, rob
                 '''
                 if robot1.dist(ball) < 20: 
                     if robot2.xPos > 140 and (100 > robot2.yPos > 40):
-                        follower(robot1, robot2, robot0, ball, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                        follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
                     else:
                         defender_spin(robot1, ball, left_side=not robot1.teamYellow, friend1=robot0, friend2=robot2,
                                       enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
                 else:
-                    follower(robot1, robot2, robot0, ball, robot_enemy_0, robot_enemy_1, robot_enemy_2)
-        '''
-        Same Idea but for the other side of de field
-        '''
+                    follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+
+        #Same Idea but for the other side of de field
+
         else:
             if ball.xPos > 130 and (110 > ball.yPos > 30):
                 if robot1.xPos > 130:
                     screen_out_ball(robot2, robot2, 55, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
                 else:
                     screen_out_ball(robot2, ball, 55, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
-                follower(robot1, robot2, robot0, ball, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
 
             else:
                 defender_spin(robot2, ball, left_side=not robot2.teamYellow, friend1=robot0, friend2=robot0,
                               enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
                 if robot1.dist(ball) < 20:
                     if robot2.xPos < 35 and (100 > robot2.yPos > 40):
-                        follower(robot1, robot2, robot0, ball, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                        follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
                     else:
                         defender_spin(robot1, ball, left_side=not robot1.teamYellow, friend1=robot0, friend2=robot2,
                                       enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
                 else:
-                    follower(robot1, robot2, robot0, ball, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                    follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
 
-    '''
-    Same idea, but robot 1 is closer to the ball
-    '''
+
+    #Same idea, but robot 1 is closer to the ball
+
     else:
         if not robot1.teamYellow:
             if ball.xPos < 35 and (110 > ball.yPos > 30):
@@ -846,35 +846,35 @@ def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, rob
                     screen_out_ball(robot1, robot1, 55, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
                 else:
                     screen_out_ball(robot1, ball, 55, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
-                follower(robot2, robot1, robot0, ball, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
 
             else:
                 defender_spin(robot1, ball, left_side=not robot1.teamYellow, friend1=robot0, friend2=robot0,
                               enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
                 if robot2.dist(ball) < 20:
                     if robot1.xPos > 140 and (100 > robot1.yPos > 40):
-                        follower(robot2, robot1, robot0, ball, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                        follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
                     else:
                         defender_spin(robot2, ball, left_side=not robot2.teamYellow, friend1=robot0, friend2=robot1,
                                       enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
                 else:
-                    follower(robot2, robot1, robot0, ball, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                    follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
         else:
             if ball.xPos > 130 and (110 > ball.yPos > 30):
                 if robot1.xPos > 130:
                     screen_out_ball(robot1, robot1, 55, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
                 else:
                     screen_out_ball(robot1, ball, 55, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
-                follower(robot2, robot1, robot0, ball, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
 
             else:
                 defender_spin(robot1, ball, left_side=not robot1.teamYellow, friend1=robot0, friend2=robot0,
                               enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
                 if robot2.dist(ball) < 20:
                     if robot1.xPos < 35 and (100 > robot1.yPos > 40):
-                        follower(robot2, robot1, robot0, ball, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                        follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
                     else:
                         defender_spin(robot2, ball, left_side=not robot2.teamYellow, friend1=robot0, friend2=robot1,
                                       enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
                 else:
-                    follower(robot2, robot1, robot0, ball, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                    follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
