@@ -210,7 +210,11 @@ class Ball:
         print('xPos: {:.2f} | yPos: {:.2f}'.format(self.xPos, self.yPos))
 
 
-# % Class to create the robots in game
+"""
+Input: Robot data.
+Description: Stores data about robots in the game.
+Output: Robot data.
+"""
 class Robot:
     def __init__(self, index, actuator, mray):
         self.flagDirectGoal = False
@@ -247,18 +251,30 @@ class Robot:
         self.pastPose = zeros(12).reshape(4,
                                           3)
 
-    # % This method calculates the distance between the robot and an object
+    """
+    Input: Object data.
+    Description: Calculates distance between robot and another object.
+    Output: Distance between robot and object.
+    """
     def dist(self, obj):
         return sqrt((self.xPos - obj.xPos) ** 2 + (self.yPos - obj.yPos) ** 2)
-
-    # % This method returns True if the distance between the target and the robot is less than 5cm - False otherwise
+    
+    """
+    Input: None.
+    Description: Returns True if the distance between the target and the robot is less than 5cm - False otherwise
+    Output: True or False.
+    """
     def arrive(self):
         if self.dist(self.target) <= 3:
             return True
         else:
             return False
-
-    # % This method gets both position and orientation of the robot in FIRASim
+    
+    """
+    Input: Simulator robot data.
+    Description: Gets both position and orientation of the robot in FIRASim
+    Output: None.
+    """
     def sim_get_pose(self, data_robot):
         self.xPos = data_robot.x
         self.yPos = data_robot.y
@@ -267,7 +283,12 @@ class Robot:
         self.theta = data_robot.a
         self.vTheta = data_robot.va
         self.v = sqrt(self.vx ** 2 + self.vy ** 2)
-
+    
+    """
+    Input: Velocity data.
+    Description: Sends velocity data to simulator to move the robots.
+    Output: Velocity data.
+    """
     def sim_set_vel(self, v, w):
         if self.face == 1:
             self.vR = v + 0.5 * self.L * w
@@ -276,11 +297,19 @@ class Robot:
             self.vL = -v - 0.5 * self.L * w
             self.vR = -v + 0.5 * self.L * w
         self.actuator.send(self.index, self.vL, self.vR)
-
+    """
+    Input: Velocity data.
+    Description: Sends velocity data to simulator to move the robots. TODO: Descobrir pq tem duas dessas funções
+    Output: Velocity data.
+    """
     def sim_set_vel2(self, v1, v2):
         self.actuator.send(self.index, v1, v2)
 
-    # % This method print a little log on console
+    """
+    Input: None.
+    Description: Logs robot data to the console.
+    Output: Robot data.
+    """
     def show_info(self):
         print('xPos: {:.2f} | yPos: {:.2f} | theta: {:.2f} | velocity: {:.2f}'.format(self.xPos, self.yPos,
                                                                                       float(self.theta), float(self.v)))
