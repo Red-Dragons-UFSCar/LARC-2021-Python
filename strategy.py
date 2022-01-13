@@ -1,6 +1,11 @@
 import action
 from numpy import *
 
+"""
+Input: Friendly robots, enemy robots, ball, side of field, strategy object.
+Description: This class contains all functions and objects related to selecting a game strategy.
+Output: None
+"""
 
 class Strategy:
     def __init__(self, robot0, robot1, robot2, robot_enemy_0, robot_enemy_1, robot_enemy_2, ball, mray, strategy):
@@ -15,7 +20,12 @@ class Strategy:
         self.penaltyDefensive = False
         self.penaltyOffensive = False
         self.strategy = strategy
-
+        
+    """
+    Input: None
+    Description: Calls the function that initiates the selected strategy.
+    Output: Prints a warning in case of error.
+    """
     def decider(self):
         if self.strategy == 'default':
             self.coach()
@@ -23,7 +33,11 @@ class Strategy:
             self.coach2()
         else:
             print("Algo deu errado na seleção de estratégias")
-
+    """
+    Input: None
+    Description: Advanced strategy, one goalkeeper defends while two robots chase the ball, with one leading and the other in support.
+    Output: None.
+    """
     def coach2(self):
         """Picks a strategy depending on the status of the field"""
         # For the time being, the only statuses considered are which side of the field the ball is in
@@ -42,7 +56,11 @@ class Strategy:
                     self.stg_att_v2()
                 else:
                     self.stg_def_v2()
-
+    """
+    Input: None
+    Description: The standard strategy, one robot as attacker, another as defender and another as goalkeeper.
+    Output: None.
+    """
     def coach(self):
         """Picks a strategy depending on the status of the field"""
         # For the time being, the only statuses considered are which side of the field the ball is in
@@ -62,6 +80,11 @@ class Strategy:
                 else:
                     self.basic_stg_def_2()
 
+    """
+    Input: None
+    Description: Basic defence strategy, goalkeeper blocks goal, defender chases ball, attacker holds in midfield.
+    Output: None.
+    """               
     def basic_stg_def(self):
         """Basic original strategy with goalkeeper advance"""
         if not self.mray:
@@ -81,14 +104,24 @@ class Strategy:
                              enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
                 action.screen_out_ball(self.robot0, self.ball, 14, left_side=not self.mray, upper_lim=81, lower_lim=42)
         action.screen_out_ball(self.robot2, self.ball, 110, left_side=not self.mray, upper_lim=120, lower_lim=10)
-
+    
+    """
+    Input: None
+    Description: Basic attack strategy, goalkeeper blocks goal, defender screens midfield, attacker chases ball.
+    Output: None.
+    """
     def basic_stg_att(self):
         """Basic alternative strategy"""
         action.defender_spin(self.robot2, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot1,
                              enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
         action.screen_out_ball(self.robot1, self.ball, 60, left_side=not self.mray, upper_lim=120, lower_lim=10)
         action.screen_out_ball(self.robot0, self.ball, 14, left_side=not self.mray, upper_lim=81, lower_lim=42)
-
+    
+    """
+    Input: None
+    Description: Basic attack strategy, goalkeeper blocks goal and advances towards ball to defend, defender screens midfield, attacker chases ball.
+    Output: None.
+    """
     def basic_stg_def_2(self):
         """Basic original strategy with goalkeeper advance and spin"""
         if not self.mray:
@@ -115,7 +148,13 @@ class Strategy:
             self.robot0.contStopped += 1
         else:
             self.robot0.contStopped = 0
-
+    
+    
+    """
+    Input: None
+    Description: Defence part of master-slave method, one robot leads chasing ball, another supports, goalkeeper blocks goal.
+    Output: None.
+    """
     def stg_def_v2(self):
         """Strategy with 2 robots moving with Master-Slave in defensive side"""
         if not self.mray:
