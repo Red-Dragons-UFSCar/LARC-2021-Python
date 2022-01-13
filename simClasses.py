@@ -5,40 +5,65 @@ from numpy import sqrt, array, amin, where, zeros, delete, append, int32, argmin
 
 # ! Units: cm, rad, s
 
-# % Class to set the targets of each robot in game
+"""
+Input: Current target coordinates.
+Description: Stores coordinates for the robots' current target.
+Output: Current target coordinates.
+"""
 class Target:
     def __init__(self):
         self.xPos = 0  # ? Desired x position
         self.yPos = 0  # ? Desired y position
         self.theta = 0  # ? Orientation at the desired point (x,y)
-
-    # % Setter
+    
+    """
+    Input: Current target coordinates.
+    Description: Sets current target coordinates from vision data.
+    Output: None
+    """    
     def update(self, x, y, theta):
         self.xPos = x
         self.yPos = y
         self.theta = theta
-
-    # % This method print a little log on console
+    
+    """
+    Input: None
+    Description: Logs target coordinates to the console.
+    Output: Current target coordinates.
+    """
     def show_info(self):
         print('xPos: {:.2f} | yPos: {:.2f} | theta: {:.2f}'.format(self.xPos, self.yPos, float(self.theta)))
 
 
-# % Class to set the obstacle of each robot
+"""
+Input: Coordinates and velocity of object.
+Description: Stores coordinates and velocity of an obstacle to a robot.
+Output: Coordinates and velocity of object.
+"""
+
 class Obstacle:
     def __init__(self):
         self.xPos = 0  # ? Obstacle x position
         self.yPos = 0  # ? Obstacle y position
         self.v = 0  # ? Obstacle velocity (cm/s)
         self.theta = 0  # ? Obstacle orientation
-
-    # % Setter
+    
+    """
+    Input: Coordinates of obstacle.
+    Description: Sets obstacle coordinates with data from vision.
+    Output: None
+    """
     def set_obst(self, x, y, v, theta):
         self.xPos = x
         self.yPos = y
         self.v = v
         self.theta = theta
-
-    # % This method verify which is the closest obstacle and sets it as the current obstacle to avoid
+    
+    """
+    Input: Object lists.
+    Description: Detects nearest object and sets it as the current obstacle to avoid.
+    Output: Current obstacle.
+    """
     def update(self, robot, friend1, friend2, enemy1=None, enemy2=None, enemy3=None):
         if (enemy1 is None) and (enemy2 is None) and (enemy3 is None):
             d = array([[robot.dist(friend1)],
@@ -70,7 +95,11 @@ class Obstacle:
             self.set_obst(enemy2.xPos, enemy2.yPos, 0, 0)
         else:
             self.set_obst(enemy3.xPos, enemy3.yPos, 0, 0)
-
+    """
+    Input: 
+    Description: #TODO descobrir o que isso faz
+    Output: 
+    """
     def update2(self, robot, ball, friend1, friend2, enemy1, enemy2, enemy3):
         enemys = array([enemy1, enemy2, enemy3])
         d_ball = array([[enemy1.dist(ball)],
@@ -126,13 +155,21 @@ class Obstacle:
         #     print("Obstaculo: Azul " + str(enemys[index].index))
         self.set_obst(enemys[index].xPos, enemys[index].yPos, 0, 0)
 
-    # % This method print a little log on console
+    """
+    Input: None
+    Description: Logs obstacle info on the console. 
+    Output: Obstacle data.
+    """
     def show_info(self):
         print('xPos: {:.2f} | yPos: {:.2f} | theta: {:.2f} | velocity: {:.2f}'.format(self.xPos, self.yPos,
                                                                                       float(self.theta), self.v))
 
 
-# % Class to create the ball in game
+"""
+Input: Ball coordinates.
+Description: Stores data on the game ball.
+Output: Ball data.
+"""
 class Ball:
     def __init__(self):
         self.xPos = 0
@@ -141,7 +178,11 @@ class Ball:
         self.vy = 0
         self.pastPose = zeros(4).reshape(2, 2)  # ? Stores the last 3 positions (x,y) => updated on self.simGetPose()
 
-    # % This method gets position of the ball in FIRASim
+    """
+    Input: FIRASim ball location data.
+    Description: Gets position of the ball from the simulator.
+    Output: None
+    """
     def sim_get_pose(self, data_ball):
         self.xPos = data_ball.x + data_ball.vx * 100 * 8 / 60
         self.yPos = data_ball.y + data_ball.vy * 100 * 8 / 60
@@ -160,7 +201,11 @@ class Ball:
         self.vx = data_ball.vx
         self.vy = data_ball.vy
 
-    # % This method print a little log on console
+    """
+    Input: Ball data.
+    Description: Logs ball data into console.
+    Output: None.
+    """
     def show_info(self):
         print('xPos: {:.2f} | yPos: {:.2f}'.format(self.xPos, self.yPos))
 
