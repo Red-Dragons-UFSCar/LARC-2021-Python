@@ -177,21 +177,23 @@ class Strategy:
             self.robot0.contStopped += 1
         else:
             self.robot0.contStopped = 0
-
+    
+    """
+    Input: None
+    Description: Offence part of master-slave method, one robot leads chasing ball, another supports, goalkeeper blocks goal.
+    Output: None.
+    """
     def stg_att_v2(self):
         """Strategy with 2 robots moving with Master-Slave in offensive side"""
         self.two_attackers()
         action.screen_out_ball(self.robot0, self.ball, 16, left_side=not self.mray, upper_lim=84, lower_lim=42)
         self.robot0.contStopped = 0
-
-    def stg_full_att(self):
-        """Crazy test attack strategy"""
-        action.shoot(self.robot2, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot1,
-                     enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
-        action.shoot(self.robot1, self.ball, left_side=not self.mray, friend1=self.robot1, friend2=self.robot2,
-                     enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
-        action.screen_out_ball(self.robot0, self.ball, 10, left_side=not self.mray)
-
+    
+    """
+    Input: None
+    Description: Penalty kick defence strategy, goalkeeper defends goal, other robots chase ball.
+    Output: None.
+    """
     def penalty_mode_defensive(self):
         """Strategy to defend penalty situations"""
         action.defender_penalty(self.robot0, self.ball, left_side=not self.mray, friend1=self.robot1,
@@ -207,7 +209,12 @@ class Strategy:
         else:
             if self.ball.xPos < 112 or self.ball.yPos < 30 or self.ball.yPos > 100:
                 self.penaltyDefensive = False
-
+    """
+    Input: None
+    Description: Penalty kick offence strategy.
+    Output: None.
+    # TODO: perguntar uma descrição dessa bagaça 
+    """
     def penalty_mode_offensive(self):
         """Strategy to convert penalty offensive situations"""
         action.screen_out_ball(self.robot0, self.ball, 10, left_side=not self.mray)
@@ -217,7 +224,12 @@ class Strategy:
                               enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2)
         if sqrt((self.ball.xPos - self.robot2.xPos) ** 2 + (self.ball.yPos - self.robot2.yPos) ** 2) > 20:
             self.penaltyOffensive = False
-
+    """
+    Input: None
+    Description: Penalty kick offence strategy.
+    Output: None.
+    # TODO: perguntar uma descrição dessa bagaça 
+    """
     def penalty_mode_offensive_spin(self):
         """Strategy to convert penalty offensive situations"""
         action.screen_out_ball(self.robot0, self.ball, 10, left_side=not self.mray)
@@ -238,7 +250,12 @@ class Strategy:
                     action.girar(self.robot2, 100, 0)
         if sqrt((self.ball.xPos - self.robot2.xPos) ** 2 + (self.ball.yPos - self.robot2.yPos) ** 2) > 30:
             self.penaltyOffensive = False
-
+    """
+    Input: None
+    Description: Calls leader and follower technique for use in strategies.
+    Output: None.
+    # TODO: perguntar uma descrição dessa bagaça 
+    """
     def two_attackers(self):
         """Strategy to move 2 robots at same time with Master-Slave"""
         action.followLeader(self.robot0, self.robot1, self.robot2, self.ball, self.robotEnemy0, self.robotEnemy1,
