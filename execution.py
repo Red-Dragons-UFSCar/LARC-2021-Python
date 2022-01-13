@@ -5,7 +5,7 @@ from corners import target_in_corner
 
 
 '''
-Input: Robot object, Target object, Flag to activate Obstacle Avoidance, Robot obstacle list,
+Input: Robot object, Target object, Flag to activate Obstacle Avoidance, Obstacle object,
        Constants n and d of Univector, Flag to activate Hiperbolic Field
 Description: Estimate of robot desired angle in projection ( x + dl, y + dl )
 Output: stp_theta -> Angle referring to robot projection (float)
@@ -37,7 +37,7 @@ def approx(robot, target, avoid_obst=True, obst=None, n=8, d=2, field_is_hiperbo
 
 
 '''
-Input: Robot object, Target object, Flag to activate Obstacle Avoidance, Robot obstacle list, Constants n and d of Univector,
+Input: Robot object, Target object, Flag to activate Obstacle Avoidance, Obstacle object, Constants n and d of Univector,
        Flag to activate deceleration when approaching target, Flag to activate face swap, Flag to activate Hiperbolic Field
 Description: Function to control the robot with or without obstacle avoidance
 Output: v -> Linear Velocity (float)
