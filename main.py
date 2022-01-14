@@ -8,27 +8,28 @@ from strategy import *
 
 if __name__ == "__main__":
 
+    # checking possible errors about the writing of commands
     try:
         team = sys.argv[1]
         strategySelected = sys.argv[2]
     except:
-        print("[ERRO]")
-        print("Digite por parametros o time e a estratégia utilizada")
-        print("Exemplos:")
+        print("[ERROR]")
+        print("Please enter as parameters the team and the strategy that will be used")
+        print("Exemples:")
         print("python3 main.py blue default")
         print("python3 main.py yellow twoAttackers")
         sys.exit()
 
     if team != "blue" and team != "yellow":
-        print("Selecione um time válido! ")
-        print("Para jogar com o azul, o primeiro argumento deve ser 'blue'")
-        print("Para jogar com o amarelo, o primeiro argumento deve ser 'yellow'")
+        print("Select a valid team! ")
+        print("To play as blue, the first argument must be 'blue")
+        print("To play as yellow, the first argument must be 'yellow'")
         sys.exit()
 
     if strategySelected != "default" and strategySelected != "twoAttackers":
-        print("Selecione uma estratégia válida! ")
-        print("Para jogar com a estratégia default, o segundo argumento deve ser 'default'")
-        print("Para jogar com a estratégia dois Atacantes, o segundo argumento deve ser 'twoAttackers'")
+        print("Select a valid strategy")
+        print("To play with the default strategy, the second argument must be 'default'")
+        print("To play with the two attackers strategy, the second argument must be 'twoAttackers'")
         sys.exit()
 
     # Choose team (my robots are yellow)
@@ -37,7 +38,6 @@ if __name__ == "__main__":
     else:
         mray = False
 
-    # mray = True
 
     # Initialize all clients
     actuator = Actuator(mray, "127.0.0.1", 20011)
@@ -61,19 +61,19 @@ if __name__ == "__main__":
     # Main infinite loop
     while True:
         t1 = time.time()
-        # Atualiza a situação das faltas
+        # Update the foul status
         referee.update()
         ref_data = referee.get_data()
 
-        # Atualiza os dados da visão
+        # Update the vision data
         vision.update()
         field = vision.get_field_data()
 
-        data_our_bot = field["our_bots"]  # Salva os dados dos robôs aliados
-        data_their_bots = field["their_bots"]  # Salva os dados dos robôs inimigos
-        data_ball = field["ball"]  # Salva os dados da bola
+        data_our_bot = field["our_bots"]  # Save data from allied robots
+        data_their_bots = field["their_bots"]  # Save data from enemy robots
+        data_ball = field["ball"]  # Save the ball data
 
-        # Atualiza em cada objeto do campo os dados da visão
+        # Updates vision data on each field object
         robot0.sim_get_pose(data_our_bot[0])
         robot1.sim_get_pose(data_our_bot[1])
         robot2.sim_get_pose(data_our_bot[2])
@@ -83,25 +83,23 @@ if __name__ == "__main__":
         ball.sim_get_pose(data_ball)
 
         if ref_data["game_on"]:
-            # Se o modo de jogo estiver em "Game on"
-            # strategy.twoAttackers()
-            # strategy.coach()
+            # If the game mode is set to "Game on"
             strategy.decider()
 
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (not mray):
-            # Detectando penalti defensivo
+            # detecting defensive penalty
             strategy.penaltyDefensive = True
             actuator.stop()
             fouls.replacement_fouls(replacement, ref_data, mray)
 
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (mray):
-            # Detectando penalti ofensivo
+            # detecting offensive penalty
             strategy.penaltyOffensive = True
             actuator.stop()
             fouls.replacement_fouls(replacement, ref_data, mray)
 
         elif ref_data["foul"] != 7:
-            if ref_data["foul"] != 5:  # Mudando a flag exceto em caso de Stop
+            if ref_data["foul"] != 5:  # Changing the flag except in the Stop case
                 strategy.penaltyOffensive = False
                 strategy.penaltyDefensive = False
             fouls.replacement_fouls(replacement, ref_data, mray)
@@ -110,6 +108,7 @@ if __name__ == "__main__":
         else:
             actuator.stop()
 
+        # synchronize code execution based on runtime and the camera FPS
         t2 = time.time()
         if t2 - t1 < 1 / 60:
             time.sleep(1 / 60 - (t2 - t1))
