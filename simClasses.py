@@ -3,7 +3,7 @@ from numpy import sqrt, array, amin, where, zeros, delete, append, int32, argmin
 
 # from scipy.spatial import distance -> Descomentar quando atividade do Grid voltar
 
-# ! Units: cm, rad, s
+# Units: cm, rad, s
 
 """
 Input: Current target coordinates.
@@ -15,17 +15,17 @@ class Target:
         self.xPos = 0  # ? Desired x position
         self.yPos = 0  # ? Desired y position
         self.theta = 0  # ? Orientation at the desired point (x,y)
-    
+
     """
     Input: Current target coordinates.
     Description: Sets current target coordinates from vision data.
     Output: None
-    """    
+    """
     def update(self, x, y, theta):
         self.xPos = x
         self.yPos = y
         self.theta = theta
-    
+
     """
     Input: None
     Description: Logs target coordinates to the console.
@@ -47,7 +47,7 @@ class Obstacle:
         self.yPos = 0  # ? Obstacle y position
         self.v = 0  # ? Obstacle velocity (cm/s)
         self.theta = 0  # ? Obstacle orientation
-    
+
     """
     Input: Coordinates of obstacle.
     Description: Sets obstacle coordinates with data from vision.
@@ -58,7 +58,7 @@ class Obstacle:
         self.yPos = y
         self.v = v
         self.theta = theta
-    
+
     """
     Input: Object lists.
     Description: Detects nearest object and sets it as the current obstacle to avoid.
@@ -96,68 +96,74 @@ class Obstacle:
         else:
             self.set_obst(enemy3.xPos, enemy3.yPos, 0, 0)
     """
-    Input: 
-    Description: #TODO descobrir o que isso faz
-    Output: 
+    Input:
+    Description: Detects nearest object and sets it as the current obstacle to avoid with some exceptions:
+                 1 - The enemy player closest to the goal is not be considered obstacle
+                 2 - If ball is too close to the enemy robot, he is not be considered obstacle
+    Output:
     """
     def update2(self, robot, ball, friend1, friend2, enemy1, enemy2, enemy3):
         enemys = array([enemy1, enemy2, enemy3])
         d_ball = array([[enemy1.dist(ball)],
                         [enemy2.dist(ball)],
-                        [enemy3.dist(ball)]])
-        index = argmin(d_ball)
-        if d_ball[index] < 15:
+                        [enemy3.dist(ball)]]) # Distance to ball of all enemies robots
+        index = argmin(d_ball) # Index of shortest distance
+
+        if d_ball[index] < 15: # If robot is too close, disconsider
             enemys = delete(enemys, [index])
 
-        if not robot.teamYellow:
+        if not robot.teamYellow: # Goal coordinates for each team
             x_gol = 160
             y_gol = 65
         else:
             x_gol = 10
             y_gol = 65
 
-        if len(enemys) == 3:
+        if len(enemys) == 3: # If the first exception did not happen
+            # Distances to goal
             d1 = sqrt((x_gol - enemy1.xPos) ** 2 + (y_gol - enemy1.yPos) ** 2)
             d2 = sqrt((x_gol - enemy2.xPos) ** 2 + (y_gol - enemy2.yPos) ** 2)
             d3 = sqrt((x_gol - enemy3.xPos) ** 2 + (y_gol - enemy3.yPos) ** 2)
             d_gol = array([[d1],
                            [d2],
                            [d3]])
-            index = argmin(d_gol)
-            dballgol = sqrt((x_gol - ball.xPos) ** 2 + (y_gol - ball.yPos) ** 2)
-            if d_gol[index] < 20 and dballgol < 20:
+
+            index = argmin(d_gol) # Index of shortest distance
+
+            dballgol = sqrt((x_gol - ball.xPos) ** 2 + (y_gol - ball.yPos) ** 2) # Ball distance from goal
+
+            if d_gol[index] < 20 and dballgol < 20: # If ball and enemy are close to goal, disconsider
                 enemys = delete(enemys, index)
-        else:
+        else: # If the first exception did happen
+            # Distances to goal
             d1 = sqrt((x_gol - enemys[0].xPos) ** 2 + (y_gol - enemys[0].yPos) ** 2)
             d2 = sqrt((x_gol - enemys[1].xPos) ** 2 + (y_gol - enemys[1].yPos) ** 2)
             d_gol = array([[d1],
                            [d2]])
-            index = argmin(d_gol)
-            if d_gol[index] < 20:
+
+            index = argmin(d_gol) # Index of shortest distance
+
+            dballgol = sqrt((x_gol - ball.xPos) ** 2 + (y_gol - ball.yPos) ** 2) # Ball distance from goal
+
+            if d_gol[index] < 20 and dballgol < 20: # If ball and enemy are close to goal, disconsider
                 enemys = delete(enemys, index)
 
-        # for i in range(len(enemys)):
-        #     print("Index: ", enemys[i].index)
-
+        # Adding the team robots
         enemys = append(enemys, friend1)
         enemys = append(enemys, friend2)
         d_robot = zeros(len(enemys))
-        # for i in range(len(enemys)):
-        #     print("Index: ", enemys[i].index)
+
+        # Detecting nearest object
         for i in range(len(enemys)):
             d_robot[i] = robot.dist(enemys[i])
-
         index = argmin(d_robot)
-        self.set_obst(enemys[index].xPos, enemys[index].yPos, 0, 0)
-        # if enemys[index].teamYellow:
-        #     print("Obstaculo: Amarelo " + str(enemys[index].index))
-        # else:
-        #     print("Obstaculo: Azul " + str(enemys[index].index))
+
+        # Setting current obstacle
         self.set_obst(enemys[index].xPos, enemys[index].yPos, 0, 0)
 
     """
     Input: None
-    Description: Logs obstacle info on the console. 
+    Description: Logs obstacle info on the console.
     Output: Obstacle data.
     """
     def show_info(self):
@@ -176,7 +182,7 @@ class Ball:
         self.yPos = 0
         self.vx = 0
         self.vy = 0
-        self.pastPose = zeros(4).reshape(2, 2)  # ? Stores the last 3 positions (x,y) => updated on self.simGetPose()
+        self.pastPose = zeros(4).reshape(2, 2)  # Stores the last 3 positions (x,y) => updated on self.simGetPose()
 
     """
     Input: FIRASim ball location data.
@@ -187,7 +193,7 @@ class Ball:
         self.xPos = data_ball.x + data_ball.vx * 100 * 8 / 60
         self.yPos = data_ball.y + data_ball.vy * 100 * 8 / 60
 
-        # check if prev is out of field, in this case reflect ball moviment to reproduce the collision
+        # Check if prev is out of field, in this case reflect ball moviment to reproduce the collision
         if self.xPos > 160:
             self.xPos = 160 - (self.yPos - 160)
         elif self.xPos < 10:
@@ -251,6 +257,7 @@ class Robot:
         self.pastPose = zeros(12).reshape(4,
                                           3)
 
+
     """
     Input: Object data.
     Description: Calculates distance between robot and another object.
@@ -258,10 +265,11 @@ class Robot:
     """
     def dist(self, obj):
         return sqrt((self.xPos - obj.xPos) ** 2 + (self.yPos - obj.yPos) ** 2)
-    
+
+
     """
     Input: None.
-    Description: Returns True if the distance between the target and the robot is less than 5cm - False otherwise
+    Description: Returns True if the distance between the target and the robot is less than 3cm - False otherwise
     Output: True or False.
     """
     def arrive(self):
@@ -269,7 +277,8 @@ class Robot:
             return True
         else:
             return False
-    
+
+
     """
     Input: Simulator robot data.
     Description: Gets both position and orientation of the robot in FIRASim
@@ -283,11 +292,12 @@ class Robot:
         self.theta = data_robot.a
         self.vTheta = data_robot.va
         self.v = sqrt(self.vx ** 2 + self.vy ** 2)
-    
+
+
     """
-    Input: Velocity data.
+    Input: Linear and angular velocity data.
     Description: Sends velocity data to simulator to move the robots.
-    Output: Velocity data.
+    Output: None.
     """
     def sim_set_vel(self, v, w):
         if self.face == 1:
@@ -297,13 +307,16 @@ class Robot:
             self.vL = -v - 0.5 * self.L * w
             self.vR = -v + 0.5 * self.L * w
         self.actuator.send(self.index, self.vL, self.vR)
+
+
     """
-    Input: Velocity data.
-    Description: Sends velocity data to simulator to move the robots. TODO: Descobrir pq tem duas dessas funções
-    Output: Velocity data.
+    Input: Wheels velocity data.
+    Description: Sends velocity data to simulator to move the robots.
+    Output: None.
     """
     def sim_set_vel2(self, v1, v2):
         self.actuator.send(self.index, v1, v2)
+
 
     """
     Input: None.

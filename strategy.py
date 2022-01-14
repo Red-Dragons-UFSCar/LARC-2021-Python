@@ -130,7 +130,7 @@ class Strategy:
     def basic_stg_def_2(self):
         if not self.mray:
             if self.ball.xPos < 40 and 30 < self.ball.yPos < 110: # If the ball has inside of defense area
-                action.defender_penalty(self.robot0, self.ball, leftSide=not self.mray) # Goalkeeper move ball away
+                action.defender_penalty(self.robot0, self.ball, left_side=not self.mray) # Goalkeeper move ball away
                 action.screen_out_ball(self.robot1, self.ball, 55, left_side=not self.mray)
             else:
                 action.defender_spin(self.robot1, self.ball, left_side=not self.mray, friend1=self.robot0,
@@ -139,7 +139,7 @@ class Strategy:
                 action.screen_out_ball(self.robot0, self.ball, 14, left_side=not self.mray, upper_lim=81, lower_lim=42) # Goalkeeper keeps in goal
         else: # The same idea for other team
             if self.ball.xPos > 130 and 30 < self.ball.yPos < 110:
-                action.defender_penalty(self.robot0, self.ball, leftSide=not self.mray)
+                action.defender_penalty(self.robot0, self.ball, left_side=not self.mray)
                 action.screen_out_ball(self.robot1, self.ball, 55, left_side=not self.mray)
             else:
                 action.defender_spin(self.robot1, self.ball, left_side=not self.mray, friend1=self.robot0,
