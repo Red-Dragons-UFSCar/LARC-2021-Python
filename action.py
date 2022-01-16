@@ -163,7 +163,7 @@ Output: None
 '''
 def defender_spin(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None):
     if left_side: # Playing in the left side of field
-        arrival_theta = arctan2(65 - ball.yPos, 160 - ball.xPos)  # Angle between the ball and point (150,65)
+        arrival_theta = arctan2(65 - ball.yPos,  160- ball.xPos)  # Angle between the ball and point (150,65)
     else: # Playing in the right side of field
         arrival_theta = arctan2(65 - ball.yPos, 10 - ball.xPos)  # Angle between the ball and point (0,65)
     robot.target.update(ball.xPos, ball.yPos, arrival_theta)
@@ -790,7 +790,43 @@ def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, rob
     dist1 = sqrt((robot1.xPos - ball.xPos) ** 2 + (robot1.yPos - ball.yPos) ** 2)
     dist2 = sqrt((robot2.xPos - ball.xPos) ** 2 + (robot2.yPos - ball.yPos) ** 2)
 
-    if dist1 > dist2: # Strategy if robot 2 is closer to the ball
+    if dist2 < dist1: # Strategy if robot 2 is closer to the ball
+        if robot1.isLeader is None and robot2.isLeader is None:
+            robot2.isLeader = True
+            robot1.isLeader = False
+            robot2.holdLeader += 1
+
+        else:
+            if robot2.isLeader:
+                robot2.holdLeader += 1
+            else:
+                if robot1.holdLeader > 60:
+                    robot2.isLeader = True
+                    robot1.isLeader = False
+                    robot1.holdLeader = 0
+                    robot2.holdLeader += 1
+                else:
+                    robot1.holdLeader += 1
+
+    # Same idea, but robot 1 is closer to the ball
+    else:
+        if robot1.isLeader is None and robot2.isLeader is None:
+            robot1.isLeader = True
+            robot2.isLeader = False
+            robot1.holdLeader += 1
+        else:
+            if robot1.isLeader:
+                robot1.holdLeader += 1
+            else:
+                if robot2.holdLeader > 60:
+                    robot1.isLeader = True
+                    robot2.isLeader = False
+                    robot1.holdLeader += 1
+                    robot2.holdLeader = 0
+                else:
+                    robot2.holdLeader += 1
+
+    if robot2.isLeader:
         if not robot1.teamYellow:
             if ball.xPos < 30 and (110 > ball.yPos > 30): # If ball is in defence side the robot 2 do the screen out, and the robot 1 follow his moves
                 if robot1.xPos < 30:
@@ -815,7 +851,6 @@ def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, rob
                     follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
 
         #Same Idea but for the other side of de field
-
         else:
             if ball.xPos > 130 and (110 > ball.yPos > 30):
                 if robot1.xPos > 130:
@@ -836,10 +871,7 @@ def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, rob
                 else:
                     follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
 
-
-    #Same idea, but robot 1 is closer to the ball
-
-    else:
+    elif robot1.isLeader:
         if not robot1.teamYellow:
             if ball.xPos < 35 and (110 > ball.yPos > 30):
                 if robot1.xPos < 35:

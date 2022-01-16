@@ -226,9 +226,11 @@ class Robot:
         self.flagDirectGoal = False
         self.flagCruzamento = False
         self.flagTrocaFace = False
+        self.isLeader = None
         self.teamYellow = mray
         self.spin = False
         self.contStopped = 0
+        self.holdLeader = 0
         self.index = int32(index)
         self.actuator = actuator
         self.face = 1  # ? Defines the current face of the robot
