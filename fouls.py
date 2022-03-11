@@ -1,6 +1,7 @@
 import random
-
+from simClasses import Ball
 from bridge import (Entity)
+
 
 # % ID of each foul
 
@@ -23,7 +24,7 @@ Output: Entity objects.
 '''
 
 def replacement_fouls(replacement, ref_data, mray):
-    
+    ball = Ball() 
 
     if not mray: # Blue side
         if ref_data["foul"] == 1: # Penalty kick
@@ -46,11 +47,19 @@ def replacement_fouls(replacement, ref_data, mray):
             replacement.place_all([entidade0, entidade1, entidade2]) # Replace each robot
 
         # TODO FOULS: Revisar as posições futuramente do goalKick
-        # elif ref_data["foul"] == 2:
-        # entidade0 = Entity(x=50, y=100,a=0, index=0)
-        # entidade1 = Entity(x=50, y=60,a=0, index=1)
-        # entidade2 = Entity(x=50, y=20,a=0, index=2)
-        # replacement.place_all([entidade0, entidade1, entidade2])
+        elif ref_data["foul"] == 2:
+            if not ref_data["yellow"]:
+                entidade0 = Entity(x=15, y=58,a=0, index=0)
+                entidade1 = Entity(x=15, y=20,a=30, index=1)
+                entidade2 = Entity(x=47.5, y=66,a=0, index=2)
+            else:
+                entidade0 = Entity(x=17.5, y=65, a=0, index=0)
+                entidade1 = Entity(x=105, y=63,a=0, index=1)
+                if ball.yPos < 65:
+                    entidade2 = Entity(x=100, y=20,a=0, index=2)
+                else:
+                    entidade2 = Entity(x=100, y=115,a=0, index=2)
+            replacement.place_all([entidade0, entidade1, entidade2])
 
         elif ref_data["foul"] == 3: # Freeball
             if ref_data["quad"] == 1: # First quadrant
@@ -104,11 +113,20 @@ def replacement_fouls(replacement, ref_data, mray):
                     entidade2 = Entity(x=65, y=45, a=130, index=2)
             replacement.place_all([entidade0, entidade1, entidade2]) # Replace each robot
 
-        # elif ref_data["foul"] == 2:
-        # entidade0 = Entity(x=50, y=100,a=0, index=0)
-        # entidade1 = Entity(x=50, y=60,a=0, index=1)
-        # entidade2 = Entity(x=50, y=20,a=0, index=2)
-        # replacement.place_all([entidade0, entidade1, entidade2])
+        elif ref_data["foul"] == 2:
+            if ref_data["yellow"]:
+                entidade0 = Entity(x=152.5, y=58, a=180, index=0)
+                entidade1 = Entity(x=153, y=22,a=150, index=1)
+                entidade2 = Entity(x=122, y=63,a=0, index=2)
+            else:
+                entidade0 = Entity(x=152.5, y=65, a=180, index=0)
+                entidade1 = Entity(x=62, y=63,a=0, index=1)
+                ball = Ball()
+                if ball.yPos < 65:
+                    entidade2 = Entity(x=70, y=20,a=0, index=2)
+                elif ball.yPos > 65:
+                    entidade2 = Entity(x=70, y=115,a=0, index=2)
+            replacement.place_all([entidade0, entidade1, entidade2])
 
         elif ref_data["foul"] == 3: # Freeball
             if ref_data["quad"] == 1: # First quadrant
