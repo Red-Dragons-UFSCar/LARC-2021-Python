@@ -45,7 +45,7 @@ class Strategy:
         if self.penaltyDefensive:
             self.penalty_mode_defensive()
         elif self.penaltyOffensive:
-            self.penalty_mode_offensive_spin()
+            self.penalty_mode_offensive_mirror()
         else:
             # For the time being, the only statuses considered are which side of the field the ball is in
             if self.mray:
@@ -204,7 +204,7 @@ class Strategy:
     Output: None.
     """
     def penalty_mode_defensive(self):
-        action.defender_penalty(self.robot0, self.ball, left_side=not self.mray, friend1=self.robot1,
+        action.defender_penalty2(self.robot0, self.ball, left_side=not self.mray, friend1=self.robot1,
                                 friend2=self.robot2,
                                 enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Goalkeeper behaviour in defensive penalty
         action.shoot(self.robot1, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot2,
@@ -268,7 +268,32 @@ class Strategy:
         if sqrt((self.ball.xPos - self.robot2.xPos) ** 2 + (self.ball.yPos - self.robot2.yPos) ** 2) > 30:
             self.penaltyOffensive = False
 
+    def penalty_mode_offensive_mirror(self):
+        action.screen_out_ball(self.robot0, self.ball, 10, left_side=not self.mray) # Goalkeeper keeps in defense
+        action.shoot(self.robot1, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot2,
+                     enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Defender going to the rebound
+        action.girar(self.robot2,70,70)
+        if sqrt((self.ball.xPos - self.robot2.xPos) ** 2 + (self.ball.yPos - self.robot2.yPos) ** 2) > 20:
+            self.penaltyOffensive = False
+        '''
+        if not self.robot2.dist(self.ball) < 9: # If the attacker is not closer to the ball
+            action.girar(self.robot2, 100, 100) # Moving forward
+        else:
+            if self.robot2.teamYellow: # Team verification
+                if self.robot2.yPos < 65:
+                    action.girar(self.robot2, 0, 100) # Shoots the ball spinning up
+                else:
+                    action.girar(self.robot2, 100, 0) # Shoots the ball spinning down
+            else:
+                if self.robot2.yPos > 65:
+                    action.girar(self.robot2, 0, 100) # Shoots the ball spinning down
+                else:
+                    action.girar(self.robot2, 100, 0) # Shoots the ball spinning up
 
+        # If the ball gets away from the robot, stop the penalty mode
+        if sqrt((self.ball.xPos - self.robot2.xPos) ** 2 + (self.ball.yPos - self.robot2.yPos) ** 2) > 30:
+            self.penaltyOffensive = False
+        '''
     """
     Input: None
     Description: Calls leader and follower technique for use in strategies.
