@@ -31,7 +31,13 @@ def replacement_fouls(replacement, ref_data, mray):
             if ref_data["yellow"]:  # Defensive
                 entidade0 = Entity(x=14, y=65, a=90, index=0) # Goalkeeper
                 entidade1 = Entity(x=90, y=40, a=180, index=1) # Center back 
-                entidade2 = Entity(x=90, y=90, a=0, index=2) # Striker 
+                entidade2 = Entity(x=90, y=90, a=0, index=2) # Striker
+            else:
+                entidade0 = Entity(x=17.5, y=65, a=0, index=0)
+                entidade1 = Entity(x=80, y=70, a=0, index=1)
+                    # entidade2 = Entity(x=55, y=68,a=-165, index=2) # Uncoment to use default penalty
+                entidade2 = Entity(x=117.5, y=65-1.7-2, a=22, index=2)
+            ''' 
             else:  # Ofensive
                 r = random.uniform(0, 1) # Generate random number between 0 and 1
                 if r < 0.5:
@@ -44,6 +50,7 @@ def replacement_fouls(replacement, ref_data, mray):
                     entidade1 = Entity(x=80, y=70, a=0, index=1)
                     # entidade2 = Entity(x=115, y=62,a=15, index=2) # Uncoment to use default penalty
                     entidade2 = Entity(x=105, y=45, a=50, index=2)
+            '''
             replacement.place_all([entidade0, entidade1, entidade2]) # Replace each robot
 
         # TODO FOULS: Revisar as posições futuramente do goalKick
@@ -102,7 +109,7 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade2 = Entity(x=80, y=40, a=180, index=2)
             else:  # Ofensive
                 entidade0 = Entity(x=152.5, y=65, a=180, index=0)
-                entidade1 = Entity(x=90, y=60, a=0, index=1)
+                entidade1 = Entity(x=90, y=80, a=0, index=1)
                     # entidade2 = Entity(x=55, y=68,a=-165, index=2) # Uncoment to use default penalty
                 entidade2 = Entity(x=47.5+5.75-0.75, y=65-1.7-2, a=165-7, index=2)
                 '''

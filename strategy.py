@@ -272,7 +272,10 @@ class Strategy:
         action.screen_out_ball(self.robot0, self.ball, 10, left_side=not self.mray) # Goalkeeper keeps in defense
         action.shoot(self.robot1, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot2,
                      enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Defender going to the rebound
-        action.girar(self.robot2,70,70)
+        if self.robot2.teamYellow:
+            action.girar(self.robot2,30,40)
+        else:
+            action.girar(self.robot2,40,30)
         if sqrt((self.ball.xPos - self.robot2.xPos) ** 2 + (self.ball.yPos - self.robot2.yPos) ** 2) > 20:
             self.penaltyOffensive = False
         '''

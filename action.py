@@ -700,9 +700,6 @@ def defender_penalty(robot, ball, left_side=True, friend1=None, friend2=None, en
         robot.obst.update(robot, friend1, friend2, enemy1, enemy2, enemy3)
         v, w = univec_controller(robot, robot.target, True, robot.obst, n=4, d=4)
 
-    v = robot.vMax
-    w = 0
-
     robot.sim_set_vel(v, w)
 
 def defender_penalty2(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None):
@@ -736,6 +733,21 @@ def defender_penalty2(robot, ball, left_side=True, friend1=None, friend2=None, e
         else:
             arrival_theta = -pi/2
 
+    else:
+        dx = 156 - kicker.xPos
+        dy = dx*tan(theta)
+
+        proj_y = kicker.yPos + dy
+        proj_x = 156
+        if proj_y > 80:
+            proj_y = 80
+        elif proj_y < 50:
+            proj_y = 50
+        if proj_y > robot.yPos:   
+            arrival_theta = pi/2
+        else:
+            arrival_theta = -pi/2
+
     robot.target.update(proj_x, proj_y, arrival_theta)
 
     if friend1 is None and friend2 is None:  # No friends to avoid
@@ -745,13 +757,19 @@ def defender_penalty2(robot, ball, left_side=True, friend1=None, friend2=None, e
         v, w = univec_controller(robot, robot.target, True, robot.obst, n=4, d=4)
 
     if robot.dist(robot.target) < 6:
-    #if robot.arrive():
-        v = 0
-        if robot.yPos > 65:
-            w = 30
+        if left_side:
+        #if robot.arrive():
+            v = 0
+            if robot.yPos > 65:
+                w = 30
+            else:
+                w = -30
         else:
-            w = -30
-
+            v = 0
+            if robot.yPos > 65:
+                w = -30
+            else:
+                w = 30
 
     robot.sim_set_vel(v, w)
 
