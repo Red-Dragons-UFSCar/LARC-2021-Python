@@ -127,7 +127,7 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
             else:  # Ofensive
                 entidade0 = Entity(x=152.5, y=65, a=180, index=0)
                 if op == "direct":
-                    entidade1 = Entity(x=90, y=80, a=0, index=1)
+                    entidade1 = Entity(x=90, y=70, a=0, index=1)
                     entidade2 = Entity(x=52.5, y=61.3, a=158, index=2)
                 elif op == "spin":
                     if random.uniform(0, 1) < 0.999: # Generate random number between 0 and 1
