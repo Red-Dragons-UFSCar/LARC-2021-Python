@@ -70,3 +70,10 @@ compile_commands.json
 build/
 bin/
 __pycache__
+.idea/workspace.xml
+.idea/vcs.xml
+.idea/modules.xml
+.idea/misc.xml
+.idea/LARC-2021-Python.iml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/inspectionProfiles/profiles_settings.xml
