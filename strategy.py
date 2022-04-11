@@ -1,13 +1,11 @@
 import action
 from numpy import *
 
-"""
-Input: Friendly robots, enemy robots, ball, side of field, strategy object.
-Description: This class contains all functions and objects related to selecting a game strategy.
-Output: None
-"""
 
 class Strategy:
+    """Input: Friendly robots, enemy robots, ball, side of field, strategy object.
+    Description: This class contains all functions and objects related to selecting a game strategy.
+    Output: None"""
     def __init__(self, robot0, robot1, robot2, robot_enemy_0, robot_enemy_1, robot_enemy_2, ball, mray, strategy):
         self.robot0 = robot0
         self.robot1 = robot1
@@ -21,13 +19,10 @@ class Strategy:
         self.penaltyOffensive = False
         self.strategy = strategy
 
-
-    """
-    Input: None
-    Description: Calls the function that initiates the selected strategy.
-    Output: Prints a warning in case of error.
-    """
     def decider(self):
+        """Input: None
+        Description: Calls the function that initiates the selected strategy.
+        Output: Prints a warning in case of error."""
         if self.strategy == 'default':
             self.coach()
         elif self.strategy == 'twoAttackers':
@@ -35,13 +30,10 @@ class Strategy:
         else:
             print("There was an error in strategy selection")
 
-
-    """
-    Input: None
-    Description: Advanced strategy, one goalkeeper defends while two robots chase the ball, with one leading and the other in support.
-    Output: None.
-    """
     def coach2(self):
+        """Input: None
+        Description: Advanced strategy, one goalkeeper defends while two robots chase the ball, with one leading and the other in support.
+        Output: None."""
         if self.penaltyDefensive:
             self.penalty_mode_defensive()
         elif self.penaltyOffensive:
@@ -59,13 +51,10 @@ class Strategy:
                 else:
                     self.stg_def_v2()
 
-
-    """
-    Input: None
-    Description: The standard strategy, one robot as attacker, another as defender and another as goalkeeper.
-    Output: None.
-    """
     def coach(self):
+        """Input: None
+        Description: The standard strategy, one robot as attacker, another as defender and another as goalkeeper.
+        Output: None."""
         if self.penaltyDefensive:
             self.penalty_mode_defensive()
         elif self.penaltyOffensive:
@@ -83,13 +72,11 @@ class Strategy:
                 else:
                     self.basic_stg_def_2()
 
-
-    """
-    Input: None
-    Description: Basic defence strategy, goalkeeper blocks goal and advance in ball, defender chases ball, attacker holds in midfield.
-    Output: None.
-    """
     def basic_stg_def(self):
+        """Input: None
+        Description: Basic defence strategy, goalkeeper blocks goal and advance in ball, defender chases ball, attacker holds in midfield.
+        Output: None.
+        """
         if not self.mray:
             if self.ball.xPos < 30 and 30 < self.ball.yPos < 110: # If the ball has inside of defense area
                 action.defender_penalty(self.robot0, self.ball, left_side=not self.mray) # Goalkeeper move ball away
@@ -109,25 +96,19 @@ class Strategy:
 
         action.screen_out_ball(self.robot2, self.ball, 110, left_side=not self.mray, upper_lim=120, lower_lim=10) # Attacker stays in midfield
 
-
-    """
-    Input: None
-    Description: Basic attack strategy, goalkeeper blocks goal, defender screens midfield, attacker chases ball.
-    Output: None.
-    """
     def basic_stg_att(self):
+        """Input: None
+        Description: Basic attack strategy, goalkeeper blocks goal, defender screens midfield, attacker chases ball.
+        Output: None."""
         action.defender_spin(self.robot2, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot1,
                              enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Attacker behavior
         action.screen_out_ball(self.robot1, self.ball, 60, left_side=not self.mray, upper_lim=120, lower_lim=10) # Defender behavior
         action.screen_out_ball(self.robot0, self.ball, 14, left_side=not self.mray, upper_lim=81, lower_lim=42) # Goalkeeper behavior
 
-
-    """
-    Input: None
-    Description: Basic defense strategy with robot stop detection
-    Output: None.
-    """
     def basic_stg_def_2(self):
+        """Input: None
+        Description: Basic defense strategy with robot stop detection
+        Output: None."""
         if not self.mray:
             if self.ball.xPos < 40 and 30 < self.ball.yPos < 110: # If the ball has inside of defense area
                 action.defender_penalty(self.robot0, self.ball, left_side=not self.mray) # Goalkeeper move ball away
@@ -156,14 +137,11 @@ class Strategy:
         else:
             self.robot0.contStopped = 0
 
-
-    """
-    Input: None
-    Description: Defence part of followleader method, one robot leads chasing ball, another supports,
-                 goalkeeper blocks goal and move ball away when close to the goal
-    Output: None.
-    """
     def stg_def_v2(self):
+        """Input: None
+        Description: Defence part of followleader method, a robot leads chasing ball, other supports, goalie blocks
+             goal and move ball away when close to the goal
+        Output: None."""
         if not self.mray:
             if self.ball.xPos < 40 and 30 < self.ball.yPos < 110: # If the ball has inside of defense area
                 action.defender_penalty(self.robot0, self.ball, left_side=not self.mray) # Goalkeeper move ball away
@@ -186,24 +164,18 @@ class Strategy:
         else:
             self.robot0.contStopped = 0
 
-
-    """
-    Input: None
-    Description: Offence part of followleader method, one robot leads chasing ball, another supports, goalkeeper blocks goal.
-    Output: None.
-    """
     def stg_att_v2(self):
+        """Input: None
+        Description: Offence part of followleader method, one robot leads chasing ball, another supports, goalkeeper blocks goal.
+        Output: None."""
         self.two_attackers()
         action.screen_out_ball(self.robot0, self.ball, 16, left_side=not self.mray, upper_lim=84, lower_lim=42)
         self.robot0.contStopped = 0
 
-
-    """
-    Input: None
-    Description: Penalty kick defence strategy, goalkeeper defends goal, other robots chase ball.
-    Output: None.
-    """
     def penalty_mode_defensive(self):
+        """Input: None
+        Description: Penalty kick defence strategy, goalkeeper defends goal, other robots chase ball.
+        Output: None."""
         action.defender_penalty(self.robot0, self.ball, left_side=not self.mray, friend1=self.robot1,
                                 friend2=self.robot2,
                                 enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Goalkeeper behaviour in defensive penalty
@@ -220,14 +192,10 @@ class Strategy:
             if self.ball.xPos < 112 or self.ball.yPos < 30 or self.ball.yPos > 100:
                 self.penaltyDefensive = False
 
-
-    """
-    Input: None
-    Description: Penalty kick offence strategy.
-    Output: None.
-    # TODO: perguntar uma descrição dessa bagaça
-    """
     def penalty_mode_offensive(self):
+        """Input: None
+        Description: Penalty kick offence strategy.
+        Output: None."""
         action.screen_out_ball(self.robot0, self.ball, 10, left_side=not self.mray) # Goalkeeper keeps in goal
         action.shoot(self.robot1, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot2,
                      enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Defender going to the rebound
@@ -238,14 +206,10 @@ class Strategy:
         if sqrt((self.ball.xPos - self.robot2.xPos) ** 2 + (self.ball.yPos - self.robot2.yPos) ** 2) > 20:
             self.penaltyOffensive = False
 
-
-    """
-    Input: None
-    Description: Penalty kick offence strategy with spin.
-    Output: None.
-    # TODO: perguntar uma descrição dessa bagaça
-    """
     def penalty_mode_offensive_spin(self):
+        """Input: None
+        Description: Penalty kick offence strategy with spin.
+        Output: None."""
         action.screen_out_ball(self.robot0, self.ball, 10, left_side=not self.mray) # Goalkeeper keeps in defense
         action.shoot(self.robot1, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot2,
                      enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Defender going to the rebound
@@ -268,13 +232,9 @@ class Strategy:
         if sqrt((self.ball.xPos - self.robot2.xPos) ** 2 + (self.ball.yPos - self.robot2.yPos) ** 2) > 30:
             self.penaltyOffensive = False
 
-
-    """
-    Input: None
-    Description: Calls leader and follower technique for use in strategies.
-    Output: None.
-    """
     def two_attackers(self):
-        """Strategy to move 2 robots at same time with Master-Slave"""
+        """Input: None
+        Description: Calls leader and follower technique for use in strategies.
+        Output: None."""
         action.followLeader(self.robot0, self.robot1, self.robot2, self.ball, self.robotEnemy0, self.robotEnemy1,
                             self.robotEnemy2)

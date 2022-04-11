@@ -1,70 +1,57 @@
 from numpy import sqrt, array, amin, where, zeros, delete, append, int32, argmin
 
-
 # from scipy.spatial import distance -> Descomentar quando atividade do Grid voltar
 
 # Units: cm, rad, s
 
-"""
-Input: Current target coordinates.
-Description: Stores coordinates for the robots' current target.
-Output: Current target coordinates.
-"""
+
 class Target:
+    """Input: Current target coordinates.
+    Description: Stores coordinates for the robots' current target.
+    Output: Current target coordinates."""
     def __init__(self):
         self.xPos = 0  # ? Desired x position
         self.yPos = 0  # ? Desired y position
         self.theta = 0  # ? Orientation at the desired point (x,y)
 
-    """
-    Input: Current target coordinates.
-    Description: Sets current target coordinates from vision data.
-    Output: None
-    """
     def update(self, x, y, theta):
+        """Input: Current target coordinates.
+        Description: Sets current target coordinates from vision data.
+        Output: None"""
         self.xPos = x
         self.yPos = y
         self.theta = theta
 
-    """
-    Input: None
-    Description: Logs target coordinates to the console.
-    Output: Current target coordinates.
-    """
     def show_info(self):
+        """Input: None
+        Description: Logs target coordinates to the console.
+        Output: Current target coordinates."""
         print('xPos: {:.2f} | yPos: {:.2f} | theta: {:.2f}'.format(self.xPos, self.yPos, float(self.theta)))
 
 
-"""
-Input: Coordinates and velocity of object.
-Description: Stores coordinates and velocity of an obstacle to a robot.
-Output: Coordinates and velocity of object.
-"""
-
 class Obstacle:
+    """Input: Coordinates and velocity of object.
+    Description: Stores coordinates and velocity of an obstacle to a robot.
+    Output: Coordinates and velocity of object."""
     def __init__(self):
         self.xPos = 0  # ? Obstacle x position
         self.yPos = 0  # ? Obstacle y position
         self.v = 0  # ? Obstacle velocity (cm/s)
         self.theta = 0  # ? Obstacle orientation
 
-    """
-    Input: Coordinates of obstacle.
-    Description: Sets obstacle coordinates with data from vision.
-    Output: None
-    """
     def set_obst(self, x, y, v, theta):
+        """Input: Coordinates of obstacle.
+        Description: Sets obstacle coordinates with data from vision.
+        Output: None"""
         self.xPos = x
         self.yPos = y
         self.v = v
         self.theta = theta
 
-    """
-    Input: Object lists.
-    Description: Detects nearest object and sets it as the current obstacle to avoid.
-    Output: Current obstacle.
-    """
     def update(self, robot, friend1, friend2, enemy1=None, enemy2=None, enemy3=None):
+        """Input: Object lists.
+        Description: Detects nearest object and sets it as the current obstacle to avoid.
+        Output: Current obstacle."""
         if (enemy1 is None) and (enemy2 is None) and (enemy3 is None):
             d = array([[robot.dist(friend1)],
                        [robot.dist(friend2)]])
@@ -95,31 +82,30 @@ class Obstacle:
             self.set_obst(enemy2.xPos, enemy2.yPos, 0, 0)
         else:
             self.set_obst(enemy3.xPos, enemy3.yPos, 0, 0)
-    """
-    Input:
-    Description: Detects nearest object and sets it as the current obstacle to avoid with some exceptions:
-                 1 - The enemy player closest to the goal is not be considered obstacle
-                 2 - If ball is too close to the enemy robot, he is not be considered obstacle
-    Output:
-    """
+
     def update2(self, robot, ball, friend1, friend2, enemy1, enemy2, enemy3):
+        """Input:
+        Description: Detects nearest object and sets it as the current obstacle to avoid with some exceptions:
+                         1 - The enemy player closest to the goal is not be considered obstacle
+                         2 - If ball is too close to the enemy robot, he is not be considered obstacle
+        Output:"""
         enemys = array([enemy1, enemy2, enemy3])
         d_ball = array([[enemy1.dist(ball)],
                         [enemy2.dist(ball)],
-                        [enemy3.dist(ball)]]) # Distance to ball of all enemies robots
-        index = argmin(d_ball) # Index of shortest distance
+                        [enemy3.dist(ball)]])  # Distance to ball of all enemies robots
+        index = argmin(d_ball)  # Index of shortest distance
 
-        if d_ball[index] < 15: # If robot is too close, disconsider
+        if d_ball[index] < 15:  # If robot is too close, disconsider
             enemys = delete(enemys, [index])
 
-        if not robot.teamYellow: # Goal coordinates for each team
+        if not robot.teamYellow:  # Goal coordinates for each team
             x_gol = 160
             y_gol = 65
         else:
             x_gol = 10
             y_gol = 65
 
-        if len(enemys) == 3: # If the first exception did not happen
+        if len(enemys) == 3:  # If the first exception did not happen
             # Distances to goal
             d1 = sqrt((x_gol - enemy1.xPos) ** 2 + (y_gol - enemy1.yPos) ** 2)
             d2 = sqrt((x_gol - enemy2.xPos) ** 2 + (y_gol - enemy2.yPos) ** 2)
@@ -128,24 +114,24 @@ class Obstacle:
                            [d2],
                            [d3]])
 
-            index = argmin(d_gol) # Index of shortest distance
+            index = argmin(d_gol)  # Index of shortest distance
 
-            dballgol = sqrt((x_gol - ball.xPos) ** 2 + (y_gol - ball.yPos) ** 2) # Ball distance from goal
+            dballgol = sqrt((x_gol - ball.xPos) ** 2 + (y_gol - ball.yPos) ** 2)  # Ball distance from goal
 
-            if d_gol[index] < 20 and dballgol < 20: # If ball and enemy are close to goal, disconsider
+            if d_gol[index] < 20 and dballgol < 20:  # If ball and enemy are close to goal, disconsider
                 enemys = delete(enemys, index)
-        else: # If the first exception did happen
+        else:  # If the first exception did happen
             # Distances to goal
             d1 = sqrt((x_gol - enemys[0].xPos) ** 2 + (y_gol - enemys[0].yPos) ** 2)
             d2 = sqrt((x_gol - enemys[1].xPos) ** 2 + (y_gol - enemys[1].yPos) ** 2)
             d_gol = array([[d1],
                            [d2]])
 
-            index = argmin(d_gol) # Index of shortest distance
+            index = argmin(d_gol)  # Index of shortest distance
 
-            dballgol = sqrt((x_gol - ball.xPos) ** 2 + (y_gol - ball.yPos) ** 2) # Ball distance from goal
+            dballgol = sqrt((x_gol - ball.xPos) ** 2 + (y_gol - ball.yPos) ** 2)  # Ball distance from goal
 
-            if d_gol[index] < 20 and dballgol < 20: # If ball and enemy are close to goal, disconsider
+            if d_gol[index] < 20 and dballgol < 20:  # If ball and enemy are close to goal, disconsider
                 enemys = delete(enemys, index)
 
         # Adding the team robots
@@ -161,22 +147,18 @@ class Obstacle:
         # Setting current obstacle
         self.set_obst(enemys[index].xPos, enemys[index].yPos, 0, 0)
 
-    """
-    Input: None
-    Description: Logs obstacle info on the console.
-    Output: Obstacle data.
-    """
     def show_info(self):
+        """Input: None
+        Description: Logs obstacle info on the console.
+        Output: Obstacle data."""
         print('xPos: {:.2f} | yPos: {:.2f} | theta: {:.2f} | velocity: {:.2f}'.format(self.xPos, self.yPos,
                                                                                       float(self.theta), self.v))
 
 
-"""
-Input: Ball coordinates.
-Description: Stores data on the game ball.
-Output: Ball data.
-"""
 class Ball:
+    """Input: Ball coordinates.
+    Description: Stores data on the game ball.
+    Output: Ball data."""
     def __init__(self):
         self.xPos = 0
         self.yPos = 0
@@ -184,12 +166,10 @@ class Ball:
         self.vy = 0
         self.pastPose = zeros(4).reshape(2, 2)  # Stores the last 3 positions (x,y) => updated on self.simGetPose()
 
-    """
-    Input: FIRASim ball location data.
-    Description: Gets position of the ball from the simulator.
-    Output: None
-    """
     def sim_get_pose(self, data_ball):
+        """Input: FIRASim ball location data.
+        Description: Gets position of the ball from the simulator.
+        Output: None"""
         self.xPos = data_ball.x + data_ball.vx * 100 * 8 / 60
         self.yPos = data_ball.y + data_ball.vy * 100 * 8 / 60
 
@@ -207,21 +187,17 @@ class Ball:
         self.vx = data_ball.vx
         self.vy = data_ball.vy
 
-    """
-    Input: Ball data.
-    Description: Logs ball data into console.
-    Output: None.
-    """
     def show_info(self):
+        """Input: Ball data.
+        Description: Logs ball data into console.
+        Output: None."""
         print('xPos: {:.2f} | yPos: {:.2f}'.format(self.xPos, self.yPos))
 
 
-"""
-Input: Robot data.
-Description: Stores data about robots in the game.
-Output: Robot data.
-"""
 class Robot:
+    """Input: Robot data.
+    Description: Stores data about robots in the game.
+    Output: Robot data."""
     def __init__(self, index, actuator, mray):
         self.flagDirectGoal = False
         self.flagCruzamento = False
@@ -245,10 +221,10 @@ class Robot:
         self.vTheta = 0
         self.vL = 0  # ? Left wheel velocity (cm/s) => updated on simClasses.py -> simSetVel()
         self.vR = 0  # ? Right wheel velocity (cm/s) =>  updated on simClasses.py -> simSetVel()
-        if self.index == 0: # ! Robot max velocity (cm/s)
-            self.vMax=40#35
+        if self.index == 0:  # ! Robot max velocity (cm/s)
+            self.vMax = 40  # 35
         else:
-            self.vMax=50
+            self.vMax = 50
         self.rMax = 3 * self.vMax  # ! Robot max rotation velocity (rad*cm/s)
         self.L = 7.5  # ? Base length of the robot (cm)
         self.LSimulador = 6.11  # ? Base length of the robot on coppelia (cm)
@@ -259,34 +235,25 @@ class Robot:
         self.pastPose = zeros(12).reshape(4,
                                           3)
 
-
-    """
-    Input: Object data.
-    Description: Calculates distance between robot and another object.
-    Output: Distance between robot and object.
-    """
     def dist(self, obj):
+        """Input: Object data.
+        Description: Calculates distance between robot and another object.
+        Output: Distance between robot and object."""
         return sqrt((self.xPos - obj.xPos) ** 2 + (self.yPos - obj.yPos) ** 2)
 
-
-    """
-    Input: None.
-    Description: Returns True if the distance between the target and the robot is less than 3cm - False otherwise
-    Output: True or False.
-    """
     def arrive(self):
+        """Input: None.
+        Description: Returns True if the distance between the target and the robot is less than 3cm - False otherwise
+        Output: True or False."""
         if self.dist(self.target) <= 3:
             return True
         else:
             return False
 
-
-    """
-    Input: Simulator robot data.
-    Description: Gets both position and orientation of the robot in FIRASim
-    Output: None.
-    """
     def sim_get_pose(self, data_robot):
+        """Input: Simulator robot data.
+        Description: Gets both position and orientation of the robot in FIRASim
+        Output: None."""
         self.xPos = data_robot.x
         self.yPos = data_robot.y
         self.vx = data_robot.vx
@@ -295,13 +262,10 @@ class Robot:
         self.vTheta = data_robot.va
         self.v = sqrt(self.vx ** 2 + self.vy ** 2)
 
-
-    """
-    Input: Linear and angular velocity data.
-    Description: Sends velocity data to simulator to move the robots.
-    Output: None.
-    """
     def sim_set_vel(self, v, w):
+        """Input: Linear and angular velocity data.
+        Description: Sends velocity data to simulator to move the robots.
+        Output: None."""
         if self.face == 1:
             self.vR = v + 0.5 * self.L * w
             self.vL = v - 0.5 * self.L * w
@@ -310,24 +274,20 @@ class Robot:
             self.vR = -v + 0.5 * self.L * w
         self.actuator.send(self.index, self.vL, self.vR)
 
-
-    """
-    Input: Wheels velocity data.
-    Description: Sends velocity data to simulator to move the robots.
-    Output: None.
-    """
     def sim_set_vel2(self, v1, v2):
+        """Input: Wheels velocity data.
+        Description: Sends velocity data to simulator to move the robots.
+        Output: None."""
         self.actuator.send(self.index, v1, v2)
 
-
-    """
-    Input: None.
-    Description: Logs robot data to the console.
-    Output: Robot data.
-    """
     def show_info(self):
+        """Input: None.
+        Description: Logs robot data to the console.
+        Output: Robot data."""
         print('xPos: {:.2f} | yPos: {:.2f} | theta: {:.2f} | velocity: {:.2f}'.format(self.xPos, self.yPos,
                                                                                       float(self.theta), float(self.v)))
+
+# Isso não deveria estar aqui
 
 
 '''
