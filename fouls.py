@@ -175,8 +175,8 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
         elif ref_data["foul"] == 4: # Kickoff
             if not ref_data["yellow"]: # Defensive
                 entidade0 = Entity(x=152, y=65, a=180, index=0)
-                entidade1 = Entity(x=65, y=50, a=240, index=1)
-                entidade2 = Entity(x=65, y=40, a=180, index=2)
+                entidade1 = Entity(x=91, y=89, a=240, index=1)
+                entidade2 = Entity(x=109, y=65, a=180, index=2)
             else: # Ofensive
                 entidade0 = Entity(x=152, y=65, a=180, index=0)
                 entidade1 = Entity(x=93, y=88, a=210, index=1)
