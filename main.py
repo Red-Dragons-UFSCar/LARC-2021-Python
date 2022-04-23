@@ -1,6 +1,5 @@
 import time
 import sys
-import argparse
 
 import fouls
 from bridge import (Actuator, Replacer, Vision, Referee)
@@ -9,19 +8,32 @@ from strategy import *
 
 if __name__ == "__main__":
 
-    # Fazer tratamento de entradas erradas
+    # checking possible errors about the writing of commands
+    try:
+        team = sys.argv[1]
+        strategySelected = sys.argv[2]
+    except:
+        print("[ERROR]")
+        print("Please enter as parameters the team and the strategy that will be used")
+        print("Exemples:")
+        print("python3 main.py blue default")
+        print("python3 main.py yellow twoAttackers")
+        sys.exit()
 
-    parser = argparse.ArgumentParser(description='Argumentos para execução do time no simulador FIRASim')
+    if team != "blue" and team != "yellow":
+        print("Select a valid team! ")
+        print("To play as blue, the first argument must be 'blue")
+        print("To play as yellow, the first argument must be 'yellow'")
+        sys.exit()
 
-    parser.add_argument('-t', '--team', type=str, default="blue", help="Define o time/lado que será executado: blue ou yellow")
-    parser.add_argument('-s', '--strategy', type=str, default="twoAttackers", help="Define a estratégia que será jogada: twoAttackers ou default" )
-    parser.add_argument('-op', '--offensivePenalty', type=str, default='spin', dest='op', help="Define o tipo de cobrança ofensiva de penalti: spin ou direct")
-    parser.add_argument('-dp', '--defensivePenalty', type=str, default='direct', dest='dp', help="Define o tipo de defesa de penalti: spin ou direct")
-
-    args = parser.parse_args()
+    if strategySelected != "default" and strategySelected != "twoAttackers":
+        print("Select a valid strategy")
+        print("To play with the default strategy, the second argument must be 'default'")
+        print("To play with the two attackers strategy, the second argument must be 'twoAttackers'")
+        sys.exit()
 
     # Choose team (my robots are yellow)
-    if args.team == "yellow":
+    if team == "yellow":
         mray = True
     else:
         mray = False
@@ -44,8 +56,7 @@ if __name__ == "__main__":
 
     ball = Ball()
 
-    list_strategies = [ args.strategy, args.op, args.dp ]
-    strategy = Strategy(robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray, list_strategies)
+    strategy = Strategy(robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray, strategySelected)
 
     # Main infinite loop
     while True:
@@ -79,19 +90,19 @@ if __name__ == "__main__":
             # detecting defensive penalty
             strategy.penaltyDefensive = True
             actuator.stop()
-            fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
+            fouls.replacement_fouls(replacement, ref_data, mray)
 
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (mray):
             # detecting offensive penalty
             strategy.penaltyOffensive = True
             actuator.stop()
-            fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
+            fouls.replacement_fouls(replacement, ref_data, mray)
 
         elif ref_data["foul"] != 7:
             if ref_data["foul"] != 5:  # Changing the flag except in the Stop case
                 strategy.penaltyOffensive = False
                 strategy.penaltyDefensive = False
-            fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
+            fouls.replacement_fouls(replacement, ref_data, mray)
             actuator.stop()
 
         else:
