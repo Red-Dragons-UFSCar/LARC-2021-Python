@@ -18,20 +18,39 @@ HALT = 7
 
 '''
 Input: Replacer client, data from referee, team color (True = Yellow, False = Blue) and foul ID.
-Description: Our robots are replaced in diferents places of the field according to the fouls 
+Description: Our robots are replaced in diferents places of the field according to the fouls
 (using position on X, Y, angle and index of each robot).
-Output: Entity objects. 
+Output: Entity objects.
 '''
 
-def replacement_fouls(replacement, ref_data, mray):
-    ball = Ball() 
+def replacement_fouls(replacement, ref_data, mray, op, dp):
+    ball = Ball()
 
     if not mray: # Blue side
         if ref_data["foul"] == 1: # Penalty kick
             if ref_data["yellow"]:  # Defensive
-                entidade0 = Entity(x=13.75, y=65, a=0, index=0) # Goalkeeper
-                entidade1 = Entity(x=90, y=40, a=180, index=1) # Center back 
-                entidade2 = Entity(x=90, y=90, a=0, index=2) # Striker 
+                if dp == "direct":
+                    angle = 0
+                elif dp == "spin":
+                    angle = 90
+                entidade0 = Entity(x=14, y=65, a=angle, index=0) # Goalkeeper
+                entidade1 = Entity(x=90, y=40, a=180, index=1) # Center back
+                entidade2 = Entity(x=90, y=90, a=0, index=2) # Striker
+
+            else:  # Ofensive
+                entidade0 = Entity(x=17.5, y=65, a=0, index=0)
+                if op == "direct":
+                    entidade1 = Entity(x=80, y=70, a=0, index=1)
+                    entidade2 = Entity(x=117.5, y=65-1.7-2, a=22, index=2)
+                elif op == "spin":
+                    r = random.uniform(0, 1) # Generate random number between 0 and 1
+                    if r < 0.001: # 0.5 is default value
+                        entidade1 = Entity(x=80, y=60, a=0, index=1)
+                        entidade2 = Entity(x=105, y=85, a=-50, index=2)
+                    else:
+                        entidade1 = Entity(x=80, y=70, a=0, index=1)
+                        entidade2 = Entity(x=105, y=45, a=50, index=2)
+            '''
             else:  # Ofensive
                 r = random.uniform(0, 1) # Generate random number between 0 and 1
                 if r < 0.5:
@@ -44,6 +63,7 @@ def replacement_fouls(replacement, ref_data, mray):
                     entidade1 = Entity(x=80, y=70, a=0, index=1)
                     # entidade2 = Entity(x=115, y=62,a=15, index=2) # Uncoment to use default penalty
                     entidade2 = Entity(x=105, y=45, a=50, index=2)
+            '''
             replacement.place_all([entidade0, entidade1, entidade2]) # Replace each robot
 
         # TODO FOULS: Revisar as posições futuramente do goalKick
@@ -95,22 +115,27 @@ def replacement_fouls(replacement, ref_data, mray):
             replacement.place_all([entidade0, entidade1, entidade2]) # Replace each robot
 
     if mray: # Yellow side
-        if ref_data["foul"] == 1:  
+        if ref_data["foul"] == 1:
             if not ref_data["yellow"]: # Defensive
-                entidade0 = Entity(x=156, y=65, a=180, index=0)
+                if dp == "direct":
+                    angle = 0
+                elif dp == "spin":
+                    angle = 90
+                entidade0 = Entity(x=156, y=65, a=angle, index=0)
                 entidade1 = Entity(x=80, y=90, a=180, index=1)
                 entidade2 = Entity(x=80, y=40, a=180, index=2)
             else:  # Ofensive
-                if random.uniform(0, 1) < 0.5: # Generate random number between 0 and 1
-                    entidade0 = Entity(x=152.5, y=65, a=180, index=0)
-                    entidade1 = Entity(x=90, y=60, a=0, index=1)
-                    # entidade2 = Entity(x=55, y=68,a=-165, index=2) # Uncoment to use default penalty
-                    entidade2 = Entity(x=65, y=85, a=-130, index=2)
-                else:
-                    entidade0 = Entity(x=152.5, y=65, a=180, index=0)
+                entidade0 = Entity(x=152.5, y=65, a=180, index=0)
+                if op == "direct":
                     entidade1 = Entity(x=90, y=70, a=0, index=1)
-                    # entidade2 = Entity(x=55, y=62,a=165, index=2) # Uncoment to use default penalty
-                    entidade2 = Entity(x=65, y=45, a=130, index=2)
+                    entidade2 = Entity(x=52.5, y=61.3, a=158, index=2)
+                elif op == "spin":
+                    if random.uniform(0, 1) < 0.999: # Generate random number between 0 and 1
+                        entidade1 = Entity(x=90, y=60, a=0, index=1)
+                        entidade2 = Entity(x=65, y=85, a=-130, index=2)
+                    else:
+                        entidade1 = Entity(x=90, y=70, a=0, index=1)
+                        entidade2 = Entity(x=65, y=45, a=130, index=2)
             replacement.place_all([entidade0, entidade1, entidade2]) # Replace each robot
 
         elif ref_data["foul"] == 2:
