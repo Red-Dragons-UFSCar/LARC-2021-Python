@@ -8,7 +8,7 @@ Output: None
 """
 
 class Strategy:
-    def __init__(self, robot0, robot1, robot2, robot_enemy_0, robot_enemy_1, robot_enemy_2, ball, mray, strategies):
+    def __init__(self, robot0, robot1, robot2, robot_enemy_0, robot_enemy_1, robot_enemy_2, ball, mray, strategy):
         self.robot0 = robot0
         self.robot1 = robot1
         self.robot2 = robot2
@@ -19,9 +19,7 @@ class Strategy:
         self.mray = mray
         self.penaltyDefensive = False
         self.penaltyOffensive = False
-        self.strategy = strategies[0]
-        self.stOfensePenalty = strategies[1]
-        self.stDefensePenalty = strategies[2]
+        self.strategy = strategy
 
 
     """
@@ -47,7 +45,7 @@ class Strategy:
         if self.penaltyDefensive:
             self.penalty_mode_defensive()
         elif self.penaltyOffensive:
-            self.penalty_mode_offensive()
+            self.penalty_mode_offensive_spin()
         else:
             # For the time being, the only statuses considered are which side of the field the ball is in
             if self.mray:
@@ -94,7 +92,7 @@ class Strategy:
     def basic_stg_def(self):
         if not self.mray:
             if self.ball.xPos < 30 and 30 < self.ball.yPos < 110: # If the ball has inside of defense area
-                action.defender_penalty_direct(self.robot0, self.ball, left_side=not self.mray) # Goalkeeper move ball away
+                action.defender_penalty(self.robot0, self.ball, left_side=not self.mray) # Goalkeeper move ball away
                 action.screen_out_ball(self.robot1, self.ball, 55, left_side=not self.mray)
             else:
                 action.shoot(self.robot1, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot2,
@@ -102,7 +100,7 @@ class Strategy:
                 action.screen_out_ball(self.robot0, self.ball, 14, left_side=not self.mray, upper_lim=81, lower_lim=42) # Goalkeeper keeps in goal
         else: # The same idea for other team
             if self.ball.xPos > 130 and 30 < self.ball.yPos < 110:
-                action.defender_penalty_direct(self.robot0, self.ball, left_side=not self.mray)
+                action.defender_penalty(self.robot0, self.ball, left_side=not self.mray)
                 action.screen_out_ball(self.robot1, self.ball, 55, left_side=not self.mray)
             else:
                 action.shoot(self.robot1, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot2,
@@ -132,7 +130,7 @@ class Strategy:
     def basic_stg_def_2(self):
         if not self.mray:
             if self.ball.xPos < 40 and 30 < self.ball.yPos < 110: # If the ball has inside of defense area
-                action.defender_penalty_direct(self.robot0, self.ball, left_side=not self.mray) # Goalkeeper move ball away
+                action.defender_penalty(self.robot0, self.ball, left_side=not self.mray) # Goalkeeper move ball away
                 action.screen_out_ball(self.robot1, self.ball, 55, left_side=not self.mray)
             else:
                 action.defender_spin(self.robot1, self.ball, left_side=not self.mray, friend1=self.robot0,
@@ -141,7 +139,7 @@ class Strategy:
                 action.screen_out_ball(self.robot0, self.ball, 14, left_side=not self.mray, upper_lim=81, lower_lim=42) # Goalkeeper keeps in goal
         else: # The same idea for other team
             if self.ball.xPos > 130 and 30 < self.ball.yPos < 110:
-                action.defender_penalty_direct(self.robot0, self.ball, left_side=not self.mray)
+                action.defender_penalty(self.robot0, self.ball, left_side=not self.mray)
                 action.screen_out_ball(self.robot1, self.ball, 55, left_side=not self.mray)
             else:
                 action.defender_spin(self.robot1, self.ball, left_side=not self.mray, friend1=self.robot0,
@@ -168,14 +166,14 @@ class Strategy:
     def stg_def_v2(self):
         if not self.mray:
             if self.ball.xPos < 40 and 30 < self.ball.yPos < 110: # If the ball has inside of defense area
-                action.defender_penalty_direct(self.robot0, self.ball, left_side=not self.mray) # Goalkeeper move ball away
+                action.defender_penalty(self.robot0, self.ball, left_side=not self.mray) # Goalkeeper move ball away
                 self.two_attackers()
             else:
                 self.two_attackers()
                 action.screen_out_ball(self.robot0, self.ball, 16, left_side=not self.mray, upper_lim=84, lower_lim=42) # Goalkeeper keeps in goal
         else: # The same ideia, but for other team
             if self.ball.xPos > 130 and 30 < self.ball.yPos < 110:
-                action.defender_penalty_direct(self.robot0, self.ball, left_side=not self.mray)
+                action.defender_penalty(self.robot0, self.ball, left_side=not self.mray)
                 self.two_attackers()
             else:
                 self.two_attackers()
@@ -206,15 +204,9 @@ class Strategy:
     Output: None.
     """
     def penalty_mode_defensive(self):
-        if self.stDefensePenalty == 'spin':
-            action.defender_penalty_spin(self.robot0, self.ball, left_side=not self.mray, friend1=self.robot1,
-                                    friend2=self.robot2,
-                                    enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Goalkeeper behaviour in defensive penalty
-        elif self.stDefensePenalty == 'direct':
-            action.defender_penalty_direct(self.robot0, self.ball, left_side=not self.mray, friend1=self.robot1,
-                                    friend2=self.robot2,
-                                    enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Goalkeeper behaviour in defensive penalty
-
+        action.defender_penalty(self.robot0, self.ball, left_side=not self.mray, friend1=self.robot1,
+                                friend2=self.robot2,
+                                enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Goalkeeper behaviour in defensive penalty
         action.shoot(self.robot1, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot2,
                      enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Robot 1 chasing ball
         action.shoot(self.robot2, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot1,
@@ -239,18 +231,11 @@ class Strategy:
         action.screen_out_ball(self.robot0, self.ball, 10, left_side=not self.mray) # Goalkeeper keeps in goal
         action.shoot(self.robot1, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot2,
                      enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Defender going to the rebound
-        #action.attack_penalty(self.robot2, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot1,
-        #                      enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Attacker behaviour in penalty
-
-        if self.stOfensePenalty == 'spin':
-            action.attacker_penalty_spin(self.robot2, self.ball)
-        elif self.stOfensePenalty == 'direct':
-            action.attacker_penalty_direct(self.robot2)
-
-
+        action.attack_penalty(self.robot2, self.ball, leftSide=not self.mray, friend1=self.robot0, friend2=self.robot1,
+                              enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Attacker behaviour in penalty
 
         # If the ball gets away from the robot, stop the penalty mode
-        if sqrt((self.ball.xPos - self.robot2.xPos) ** 2 + (self.ball.yPos - self.robot2.yPos) ** 2) > 30:
+        if sqrt((self.ball.xPos - self.robot2.xPos) ** 2 + (self.ball.yPos - self.robot2.yPos) ** 2) > 20:
             self.penaltyOffensive = False
 
 
@@ -283,16 +268,6 @@ class Strategy:
         if sqrt((self.ball.xPos - self.robot2.xPos) ** 2 + (self.ball.yPos - self.robot2.yPos) ** 2) > 30:
             self.penaltyOffensive = False
 
-    def penalty_mode_offensive_mirror(self):
-        action.screen_out_ball(self.robot0, self.ball, 10, left_side=not self.mray) # Goalkeeper keeps in defense
-        action.shoot(self.robot1, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot2,
-                     enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Defender going to the rebound
-        if self.robot2.teamYellow:
-            action.girar(self.robot2,30,40)
-        else:
-            action.girar(self.robot2,40,30)
-        if sqrt((self.ball.xPos - self.robot2.xPos) ** 2 + (self.ball.yPos - self.robot2.yPos) ** 2) > 20:
-            self.penaltyOffensive = False
 
     """
     Input: None
