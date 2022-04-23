@@ -2,6 +2,8 @@ from numpy import pi, cos, sin, tan, arctan2, sqrt, deg2rad
 
 from execution import univec_controller
 
+import time
+
 
 # % Basic Actions
 
@@ -197,18 +199,29 @@ def defender_spin(robot, ball, left_side=True, friend1=None, friend2=None, enemy
                 w = -30
 
     #TODO: CHECK IF THIS IS RIGHT - MAKE IT WORK FOR BOUTH SIDES
-    if d < 30 and ball.xPos > robot.xPos: # Check if the distance is lower than a threshold and
-                                          # if the ball is on the right of robot
+    flagVelocity = False
+    if d < 30 :                           # Check if the distance is lower than a threshold and # if the ball is on the right of robot
         if robot.teamYellow:
-            dx = 15 - robot.xPos
+            if ball.xPos < robot.xPos:
+                dx = 15 - robot.xPos
+                flagVelocity = True
         else:
-            dx = 160 - robot.xPos
-        dy = tan(robot.theta)*dx + robot.yPos # Calculate the height of the goal arrival
-        if dy > 45 and dy < 85:
-            if robot.index == 2 or robot.index == 1:
-                robot.sim_set_vel2(50*robot.face, 50*robot.face) # Send the velocity of right and left wheel
+            if ball.xPos > robot.xPos:
+                dx = 160 - robot.xPos
+                flagVelocity = True
+        if flagVelocity:
+            dy = tan(robot.theta)*dx + robot.yPos # Calculate the height of the goal arrival
+            if dy > 45 and dy < 85:
+                x_p = robot.xPos + d*cos(robot.theta)
+                y_p = robot.yPos + d*sin(robot.theta)
+                distBall_p = sqrt((ball.xPos - x_p)**2 + (ball.yPos - y_p)**2)
+                if (robot.index == 2 or robot.index == 1) and (distBall_p < 10):
+                    #print("aaa ", time.time())
+                    robot.sim_set_vel2(50*robot.face, 50*robot.face) # Send the velocity of right and left wheel
+                else:
+                    robot.sim_set_vel(v,w) # Calculate linear and angular velocity
             else:
-                robot.sim_set_vel(v,w) # Calculate linear and angular velocity
+                robot.sim_set_vel(v,w)
         else:
             robot.sim_set_vel(v,w)
     else:
