@@ -41,3 +41,33 @@ python3 main.py blue twoAttackers
 ```sh
 python3 main.py yellow default
 ```
+# Executando todos os arquivos
+
+É possível executar todos os arquivos (FIRASim, Referee e códigos) ao mesmo tempo. Para isso é necessário criar um arquivo .py ao lado das pastas instaladas anteriormente com o seguinte código:
+
+```python
+import os
+
+def fira():
+	cmd_fira = 'gnome-terminal -x sh -c "./FIRASim/bin/FIRASim; bash"'
+	print("Abrindo o FIRASim...")
+	os.system(cmd_fira)
+
+def referee():
+	cmd_ref = 'gnome-terminal -x sh -c "./VSSReferee/bin/VSSReferee --3v3; bash"'
+	print("Abrindo o Referee...")
+	os.system(cmd_ref)
+
+def codigo(time, estrategia):
+	cmd_ref = 'gnome-terminal -x sh -c "cd LARC-2021-Python; python3 main.py'+ ' ' + time + ' ' + estrategia + '; bash"'
+	print("Abrindo o CÃ³digo...")
+	os.system(cmd_ref)
+
+
+
+if __name__ == "__main__":
+	codigo('blue','twoAttackers')	
+	codigo('yellow','twoAttackers')	
+	referee()
+	fira()
+```
