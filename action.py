@@ -10,7 +10,7 @@ def stop(robot):
     robot.sim_set_vel(0, 0)
 
 
-def sweep_ball(robot, left_side=True):
+def sweep_ball(robot, left_side=True): ##Lixo
     """Input: Robot object, side of field (True = Left, False = Right)
     Description: The robot spin around your own axis (This function is not used).
     Output: None"""
@@ -25,7 +25,7 @@ def sweep_ball(robot, left_side=True):
         robot.sim_set_vel(0, -w)
 
 
-def position_to_sweep(robot, ball, left_side=True, friend1=None, friend2=None):
+def position_to_sweep(robot, ball, left_side=True, friend1=None, friend2=None): ##Lixo
     """Input: Robot object, Ball object,Side of field (True = Left, False = Right), other robots objects (friend 1 and 2)
     Description: The robot follows the ball always pushing to the opponent's side of the field
                  (This function is not used).
@@ -44,7 +44,7 @@ def position_to_sweep(robot, ball, left_side=True, friend1=None, friend2=None):
     robot.sim_set_vel(v, w) # Send the linear and angular velocity to the robot
 
 
-def avoid_bound(robot, friend1=None, friend2=None):
+def avoid_bound(robot, friend1=None, friend2=None): ##Lixo
     """Input: Robot object, other robots objects (friend 1 and 2)
     Description: The robot moves to one off the goals based on the robot orientation and right goal,
                  if positive goes to the right goal, if negative goes to the left goal (This function is not used).
@@ -67,7 +67,7 @@ def avoid_bound(robot, friend1=None, friend2=None):
     robot.sim_set_vel(v, w)
 
 
-def hold_position(robot, xg, yg, des_theta, friend1=None, friend2=None):
+def hold_position(robot, xg, yg, des_theta, friend1=None, friend2=None): ##Lixo
     """Input: Robot object, desired possition and angle (xg,yg and des_theta), other robots objects (friend 1 and 2)
     Description: The robot moves to the desired position and orientation (This function is not used).
     Output: None"""
@@ -193,7 +193,7 @@ def defender_spin(robot, ball, left_side=True, friend1=None, friend2=None, enemy
         robot.sim_set_vel(v,w)
 
 
-def defender_spin_2(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None):
+def defender_spin_2(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None): ##Lixo
     """Input: Robot object, ball object, side of field (True = Left, False = Right), other robots objects (2 friend , 3 opponents)
     Description: The robot moves to the ball at an angle to move it away from the friendly goal (This function is not used).
     Output: None"""
@@ -234,7 +234,7 @@ def defender_spin_2(robot, ball, left_side=True, friend1=None, friend2=None, ene
     robot.sim_set_vel(v,w)
 
 
-def push_ball(robot, ball, friend1=None, friend2=None):
+def push_ball(robot, ball, friend1=None, friend2=None): ##Lixo
     """Input: Robot object, ball object, other robots objects (2 friend)
     Description: The robot moves to the ball at an angle to move it away from the friendly goal (This function is not used).
     Output: None"""
@@ -311,7 +311,7 @@ def screen_out_ball(robot, ball, static_point, left_side=True, upper_lim=200, lo
     robot.sim_set_vel(v, w)
 
 
-def screen_out_ball_2(robot, ball, static_point, left_side=True, upper_lim=200, lower_lim=0, friend1=None, friend2=None):
+def screen_out_ball_2(robot, ball, static_point, left_side=True, upper_lim=200, lower_lim=0, friend1=None, friend2=None): ##Lixo
     """Input: Robot object, ball object, point to project the ball, side of field (True = Left, False = Right) ,moviment limits(upper and lower), other robots objects (2 friend)
     Description: Project ball Y position to the selected X point (This is not fished - Only works on left side).
     Output: None"""
@@ -410,7 +410,7 @@ def goal_keeper_defender(robot, ball, left_side=True, friend1=None, friend2=None
     robot.sim_set_vel(v, w)
 
 
-def block_ball(robot, ball, left_side=True):
+def block_ball(robot, ball, left_side=True): ##Lixo
     """
     Input: Robot object, ball object, side of field (True = Left, False = Right)
     Description: I really don't know what that function does (This function is not used).
@@ -515,7 +515,7 @@ def protect_goal(robot, ball, r, left_side=True, friend1=None, friend2=None):
     robot.sim_set_vel(v, w)
 
 
-def direct_goal(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None):
+def direct_goal(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None): ##Lixo
     """Input: Robot object, ball object, side of field (True = Left, False = Right), other robots objects (2 friend, 3 opponents)
     Description: Makes the robot go straight to the center of the goal with arrive angle 0 (This is not fished - Only works on left side).
     Output: None"""
@@ -548,7 +548,7 @@ def direct_goal(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=
     robot.sim_set_vel(v, w)
 
 
-def ball_crossing(robot_attacker, ball, array_side_crossing, left_side=True, robot_defender=None, robot_goalkeeper=None):
+def ball_crossing(robot_attacker, ball, array_side_crossing, left_side=True, robot_defender=None, robot_goalkeeper=None):##Lixo
     """Input: Robot object, ball object, - ,side of field (True = Left, False = Right), other robots objects (2 friend, 3 opponents)
     Description: Executes the crossing (This is not fished - Only works on left side).
     Output: None"""
@@ -578,7 +578,7 @@ def ball_crossing(robot_attacker, ball, array_side_crossing, left_side=True, rob
     robot_attacker.sim_set_vel(va, wa)
 
 
-def verify_crossing(robot_attacker, ball, left_side=True, robot_defender=None, robot_goalkeeper=None):
+def verify_crossing(robot_attacker, ball, left_side=True, robot_defender=None, robot_goalkeeper=None):##Lixo
     """Input: Robot object (All team members), ball object, side of field (True = Left, False = Right)
     Description: Is responsible for triggering the crossing and detect which side is the crossing. This function triggers when the robot is in
     the triangular area in the corner of the opponents field (This is not fished - Only works on left side).
@@ -602,7 +602,7 @@ def verify_crossing(robot_attacker, ball, left_side=True, robot_defender=None, r
 
 #TODO perguntar que porra é essa
 
-# def position_change(array_functions, ball, array_side_crossing, left_side=True):
+# def position_change(array_functions, ball, array_side_crossing, left_side=True): ##Lixo
 #     """
 #   Input: - , ball object, - ,side of field (True = Left, False = Right)
 #   Description: Is responsible for finalizing the process of crossing the ball, making the defender
