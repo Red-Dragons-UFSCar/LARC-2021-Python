@@ -31,7 +31,7 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
             if ref_data["yellow"]:  # Defensive
                 if dp == "direct":
                     angle = 0
-                elif dp == "spin":
+                elif dp == "spin" or dp == "spin-v":
                     angle = 90
                 entidade0 = Entity(x=14, y=65, a=angle, index=0) # Goalkeeper
                 entidade1 = Entity(x=90, y=40, a=180, index=1) # Center back
@@ -119,7 +119,7 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
             if not ref_data["yellow"]: # Defensive
                 if dp == "direct":
                     angle = 0
-                elif dp == "spin":
+                elif dp == "spin" or dp == "spin-v":
                     angle = 90
                 entidade0 = Entity(x=156, y=65, a=angle, index=0)
                 entidade1 = Entity(x=80, y=90, a=180, index=1)

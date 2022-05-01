@@ -210,6 +210,9 @@ class Strategy:
             action.defender_penalty_spin(self.robot0, self.ball, left_side=not self.mray, friend1=self.robot1,
                                     friend2=self.robot2,
                                     enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Goalkeeper behaviour in defensive penalty
+        elif self.stDefensePenalty == 'spin-v':
+            action.defender_penalty_spin_proj_vel(self.robot0, self.ball, left_side=not self.mray, friend1=self.robot1,
+                        friend2=self.robot2, enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Goalkeeper behaviour in defensive penalty
         elif self.stDefensePenalty == 'direct':
             action.defender_penalty_direct(self.robot0, self.ball, left_side=not self.mray, friend1=self.robot1,
                                     friend2=self.robot2,
