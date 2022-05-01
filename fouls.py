@@ -39,7 +39,7 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
 
             else:  # Ofensive
                 entidade0 = Entity(x=17.5, y=65, a=0, index=0)
-                if op == "direct":
+                if op == "direct" or op == "switch":
                     entidade1 = Entity(x=80, y=70, a=0, index=1)
                     entidade2 = Entity(x=117.5, y=65-1.7-2, a=22, index=2)
                 elif op == "spin":
@@ -126,7 +126,7 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
                 entidade2 = Entity(x=80, y=40, a=180, index=2)
             else:  # Ofensive
                 entidade0 = Entity(x=152.5, y=65, a=180, index=0)
-                if op == "direct":
+                if op == "direct" or op == "switch":
                     entidade1 = Entity(x=90, y=70, a=0, index=1)
                     entidade2 = Entity(x=52.5, y=61.3, a=158, index=2)
                 elif op == "spin":

@@ -218,10 +218,11 @@ class Strategy:
                                     friend2=self.robot2,
                                     enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Goalkeeper behaviour in defensive penalty
 
-        action.shoot(self.robot1, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot2,
-                     enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Robot 1 chasing ball
-        action.shoot(self.robot2, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot1,
-                     enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Robot 2 chasing ball
+        self.two_attackers()
+        # action.shoot(self.robot1, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot2,
+        #              enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Robot 1 chasing ball
+        # action.shoot(self.robot2, self.ball, left_side=not self.mray, friend1=self.robot0, friend2=self.robot1,
+        #              enemy1=self.robotEnemy0, enemy2=self.robotEnemy1, enemy3=self.robotEnemy2) # Robot 2 chasing ball
 
         # If the ball gets away from the defensive area, stops the penalty mode
         if not self.mray:
@@ -249,6 +250,8 @@ class Strategy:
             action.attacker_penalty_spin(self.robot2, self.ball)
         elif self.stOfensePenalty == 'direct':
             action.attacker_penalty_direct(self.robot2)
+        elif self.stOfensePenalty == 'switch':
+            action.attacker_penalty_switch(self.robot2)
 
 
 

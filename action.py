@@ -713,19 +713,20 @@ def defender_penalty_direct(robot, ball, left_side=True, friend1=None, friend2=N
         robot.obst.update(robot, friend1, friend2, enemy1, enemy2, enemy3)
         v, w = univec_controller(robot, robot.target, True, robot.obst, n=4, d=4)
 
-    if robot.dist(ball) < 6:
-        if left_side:
-            v = 0
-            if robot.yPos > 65:
-                w = 30
-            else:
-                w = -30
-        else:
-            v = 0
-            if robot.yPos > 65:
-                w = -30
-            else:
-                w = 30
+    # Testar melhor o funcionamento de girar na saída
+    # if robot.dist(ball) < 6:
+    #     if left_side:
+    #         v = 0
+    #         if robot.yPos > 65:
+    #             w = 30
+    #         else:
+    #             w = -30
+    #     else:
+    #         v = 0
+    #         if robot.yPos > 65:
+    #             w = -30
+    #         else:
+    #             w = 30
 
     robot.sim_set_vel(v, w)
 
@@ -850,7 +851,7 @@ def defender_penalty_spin_proj_vel(robot, ball, left_side=True, friend1=None, fr
             robot.obst.update(robot, friend1, friend2, enemy1, enemy2, enemy3)
             v, w = univec_controller(robot, robot.target, True, robot.obst, n=4, d=4)
 
-        if robot.dist(ball) < 10:
+        if robot.dist(robot.target) < 7:
             if left_side:
                 v = 0
                 if robot.yPos > 65:
@@ -886,6 +887,9 @@ def attacker_penalty_direct(robot):
         girar(robot,40,30)
     else:
         girar(robot,40,30)
+
+def attacker_penalty_switch(robot):
+        girar(robot,-10,-10)
 
 '''
 Input: Robot object, ball object, side of field (True = Left, False = Right), other robots objects (2 friend, 3 opponents)
