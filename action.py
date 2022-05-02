@@ -10,27 +10,37 @@ def stop(robot):
     robot.sim_set_vel(0, 0)
 
 
-
-
-
 def shoot(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None):
-    """Input: Robot object, ball object, side of field (True = Left, False = Right), other robots objects (2 friend , 3 opponents)
+    """Input: Robot object, ball object, side of field (True = Left, False = Right),
+     other robots objects (2 friend , 3 opponents)
     Description: The robot moves to the middle of the desired goal, the orientation is based on line
                  between the position of the ball and the goal.
     Output: None"""
-    if left_side: # Playing in the left side of field
-        arrival_theta = arctan2(65 - ball.yPos, 160 - ball.xPos)  # Angle between the ball and point (150,65)
-    else: # Playing in the right side of field
-        arrival_theta = arctan2(65 - ball.yPos, 10 - ball.xPos)  # Angle between the ball and point (0,65)
-    robot.target.update(ball.xPos, ball.yPos, arrival_theta)
+    arrival_theta = calculate_arrival_theta(ball, left_side)
+    linear_velocity, angular_velocity = calculate_velocities(ball, enemy1, enemy2, enemy3, friend1, friend2, robot)
 
+    robot.target.update(ball.xPos, ball.yPos, arrival_theta)
+    robot.sim_set_vel(linear_velocity, angular_velocity)
+
+
+def calculate_velocities(ball, enemy1, enemy2, enemy3, friend1, friend2, robot):
+    """Calculates the angular and linear velocities with the univec_controller function"""
     if friend1 is None and friend2 is None:  # No friends to avoid
-        v, w = univec_controller(robot, robot.target, avoid_obst=False, n=16, d=2) # Calculate linear and angular velocity
+        v, w = univec_controller(robot, robot.target, avoid_obst=False, n=16,
+                                 d=2)  # Calculate linear and angular velocity
+
     else:  # Both friends to avoid
         robot.obst.update2(robot, ball, friend1, friend2, enemy1, enemy2, enemy3)
         v, w = univec_controller(robot, robot.target, True, robot.obst, n=4, d=4)
+    return v, w
 
-    robot.sim_set_vel(v, w)
+
+def calculate_arrival_theta(ball, left_side):
+    if left_side:  # Playing in the left side of field
+        arrival_theta = arctan2(65 - ball.yPos, 160 - ball.xPos)  # Angle between the ball and point (150,65)
+    else:  # Playing in the right side of field
+        arrival_theta = arctan2(65 - ball.yPos, 10 - ball.xPos)  # Angle between the ball and point (0,65)
+    return arrival_theta
 
 
 '''

@@ -13,10 +13,16 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Argumentos para execução do time no simulador FIRASim')
 
-    parser.add_argument('-t', '--team', type=str, default="blue", help="Define o time/lado que será executado: blue ou yellow")
-    parser.add_argument('-s', '--strategy', type=str, default="twoAttackers", help="Define a estratégia que será jogada: twoAttackers ou default" )
-    parser.add_argument('-op', '--offensivePenalty', type=str, default='spin', dest='op', help="Define o tipo de cobrança ofensiva de penalti: spin ou direct")
-    parser.add_argument('-dp', '--defensivePenalty', type=str, default='direct', dest='dp', help="Define o tipo de defesa de penalti: spin ou direct")
+    parser.add_argument('-t', '--team', type=str, default="blue",
+                        help="Define o time/lado que será executado: blue ou yellow")
+    parser.add_argument('-s', '--strategy', type=str, default="twoAttackers",
+                        help="Define a estratégia que será jogada: twoAttackers ou default" )
+    parser.add_argument('-nr', '--num_robots', type=int, default=3,
+                        help="Define a quantia de robos de cada lado")
+    parser.add_argument('-op', '--offensivePenalty', type=str, default='spin', dest='op',
+                        help="Define o tipo de cobrança ofensiva de penalti: spin ou direct")
+    parser.add_argument('-dp', '--defensivePenalty', type=str, default='direct', dest='dp',
+                        help="Define o tipo de defesa de penalti: spin ou direct")
 
     args = parser.parse_args()
 
@@ -34,18 +40,20 @@ if __name__ == "__main__":
     referee = Referee(mray, "224.5.23.2", 10003)
 
     # Initialize all  objects
-    robot0 = Robot(0, actuator, mray)
-    robot1 = Robot(1, actuator, mray)
-    robot2 = Robot(2, actuator, mray)
+    robots = []
+    for i in range(args.num_robots):
+        robot = Robot(i, actuator, mray)
+        robots.append(robot)
 
-    robotEnemy0 = Robot(0, actuator, not mray)
-    robotEnemy1 = Robot(1, actuator, not mray)
-    robotEnemy2 = Robot(2, actuator, not mray)
+    enemy_robots = []
+    for i in range(args.num_robots):
+        robot = Robot(i, actuator, not mray)
+        enemy_robots.append(robot)
 
     ball = Ball()
 
-    list_strategies = [ args.strategy, args.op, args.dp ]
-    strategy = Strategy(robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray, list_strategies)
+    list_strategies = [args.strategy, args.op, args.dp]
+    strategy = Strategy(robots, enemy_robots, ball, mray, list_strategies)
 
     # Main infinite loop
     while True:
