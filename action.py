@@ -971,8 +971,8 @@ Description: Defines the strategy of 2 attackers, who is the leader and what eac
 Output: None
 '''
 
-def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, robot_enemy_2):
-
+def leaderSelector(robot1, robot2, ball):
+        
     '''
     Calculate the distan of both robots to the ball
     '''
@@ -1014,6 +1014,10 @@ def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, rob
                     robot2.holdLeader = 0
                 else:
                     robot2.holdLeader += 1
+
+def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, robot_enemy_2):
+
+    leaderSelector(robot1, robot2, ball)
 
     if robot2.isLeader:
         if not robot1.teamYellow:
