@@ -78,12 +78,23 @@ if __name__ == "__main__":
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (not mray):
             # detecting defensive penalty
             strategy.penaltyDefensive = True
+            strategy.kickoffOffensive = False
             actuator.stop()
             fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
 
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (mray):
             # detecting offensive penalty
             strategy.penaltyOffensive = True
+            strategy.kickoffOffensive = False
+            actuator.stop()
+            fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
+
+        elif ref_data["foul"] == 4 and ref_data["yellow"] == (mray):
+            #print("entrei1")
+            # detecting offensive penalty
+            strategy.kickoffOffensive = True
+            strategy.penaltyDefensive = False
+            strategy.penaltyOffensive = False
             actuator.stop()
             fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
 
@@ -91,11 +102,13 @@ if __name__ == "__main__":
             if ref_data["foul"] != 5:  # Changing the flag except in the Stop case
                 strategy.penaltyOffensive = False
                 strategy.penaltyDefensive = False
+                strategy.kickoffOffensive = False
             fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
             actuator.stop()
 
         else:
             actuator.stop()
+        print(strategy.kickoffOffensive)
 
         # synchronize code execution based on runtime and the camera FPS
         t2 = time.time()

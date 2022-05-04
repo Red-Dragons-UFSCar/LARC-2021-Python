@@ -22,6 +22,8 @@ class Strategy:
         self.strategy = strategies[0]
         self.stOfensePenalty = strategies[1]
         self.stDefensePenalty = strategies[2]
+        self.kickoffOffensive = False
+        self.lastX = 85
 
 
     """
@@ -48,6 +50,8 @@ class Strategy:
             self.penalty_mode_defensive()
         elif self.penaltyOffensive:
             self.penalty_mode_offensive()
+        elif self.kickoffOffensive:
+            self.kickoff()
         else:
             # For the time being, the only statuses considered are which side of the field the ball is in
             if self.mray:
@@ -309,3 +313,33 @@ class Strategy:
         """Strategy to move 2 robots at same time with Master-Slave"""
         action.followLeader(self.robot0, self.robot1, self.robot2, self.ball, self.robotEnemy0, self.robotEnemy1,
                             self.robotEnemy2)
+
+    def kickoff(self):
+        if self.robot2.teamYellow:
+            if self.lastX - self.ball.xPos > 2:
+                self.lastX = 85
+                self.kickoffOffensive = False
+        else:
+            if self.lastX - self.ball.xPos < -2:
+                self.lastX = 85
+                self.kickoffOffensive = False
+
+        if self.kickoffOffensive:
+            if self.robot2.teamYellow:
+                action.girar(self.robot2,self.robot2.vMax, -self.robot2.vMax)
+            else:
+                action.girar(self.robot2,-self.robot2.vMax, self.robot2.vMax)
+            action.girar(self.robot1,self.robot1.vMax+50, self.robot1.vMax+50)
+            self.lastX = self.ball.xPos
+
+        if not self.mray:
+            if self.ball.xPos < 30 and 30 < self.ball.yPos < 110: # If the ball has inside of defense area
+                action.defender_penalty_direct(self.robot0, self.ball, left_side=not self.mray) # Goalkeeper move ball away
+            else:
+                action.screen_out_ball(self.robot0, self.ball, 14, left_side=not self.mray, upper_lim=81, lower_lim=42) # Goalkeeper keeps in goal
+        else: # The same idea for other team
+            if self.ball.xPos > 130 and 30 < self.ball.yPos < 110:
+                action.defender_penalty_direct(self.robot0, self.ball, left_side=not self.mray)
+            else:
+                action.screen_out_ball(self.robot0, self.ball, 14, left_side=not self.mray, upper_lim=81, lower_lim=42)
+        #self.kickoffOffensive = False

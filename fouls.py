@@ -107,11 +107,12 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
                 entidade2 = Entity(x=61, y=65, a=0, index=2)
             else: # Ofensive
                 entidade0 = Entity(x=17.5, y=65, a=0, index=0)
-                entidade1 = Entity(x=73, y=88, a=330, index=1)
-                entidade2 = Entity(x=75, y=58, a=25, index=2)
-                #entidade0 = Entity(x=17.5, y=65, a=0, index=0) # Sair com 90 graus
-                #entidade1 = Entity(x=69, y=85, a=330, index=1)
-                #entidade2 = Entity(x=84, y=58, a=90, index=2)
+                # Kickoff normal - Transformar em estrategia selecionavel?
+                # entidade1 = Entity(x=73, y=88, a=330, index=1)
+                # entidade2 = Entity(x=75, y=58, a=25, index=2)
+
+                entidade1 = Entity(x=73.5, y=110.3, a=328, index=1)
+                entidade2 = Entity(x=79, y=63, a=25, index=2)
             replacement.place_all([entidade0, entidade1, entidade2]) # Replace each robot
 
     if mray: # Yellow side
@@ -178,8 +179,13 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
                 entidade1 = Entity(x=91, y=89, a=240, index=1)
                 entidade2 = Entity(x=109, y=65, a=180, index=2)
             else: # Ofensive
+                # Kickoff normal - Transformar em estrategia selecionavel?
+                #entidade0 = Entity(x=152, y=65, a=180, index=0)
+                #entidade1 = Entity(x=93, y=88, a=210, index=1)
+                #entidade2 = Entity(x=95, y=58, a=155, index=2)
+
                 entidade0 = Entity(x=152, y=65, a=180, index=0)
-                entidade1 = Entity(x=93, y=88, a=210, index=1)
-                entidade2 = Entity(x=95, y=58, a=155, index=2)
+                entidade1 = Entity(x=96.5, y=110.3, a=212, index=1)
+                entidade2 = Entity(x=91, y=63, a=155, index=2)
 
             replacement.place_all([entidade0, entidade1, entidade2]) # Replace each robot
