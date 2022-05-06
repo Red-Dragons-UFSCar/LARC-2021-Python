@@ -23,6 +23,7 @@ def shoot(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, 
     robot.sim_set_vel(linear_velocity, angular_velocity)
 
 
+# TODO dar um jeito nessas funções extraídas
 def calculate_velocities(ball, enemy1, enemy2, enemy3, friend1, friend2, robot):
     """Calculates the angular and linear velocities with the univec_controller function"""
     if friend1 is None and friend2 is None:  # No friends to avoid
@@ -51,22 +52,34 @@ Description: The robot moves to the desired goal, the orientation is based on po
 Output: None
 '''
 
+
 def shoot2(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None):
-    """Input: Robot object, ball object, side of field (True = Left, False = Right), other robots objects (2 friend , 3 opponents)
+    """Input: Robot object, ball object, side of field (True = Left, False = Right), other robots objects
+     (2 friend , 3 opponents)
     Description: The robot moves to the desired goal, the orientation is based on position of the ball and the goal.
                  If the Y ball position is between 45 and 85, the arrive theta is 0, otherwise is based on line
                  between the position of the ball and the edge of goal (This function is not used).
     Output: None"""
-    if left_side: # Playing in the left side of field
-        if (ball.yPos > 45) and (ball.yPos < 85): # arrive with the angle 0
+    arrival_theta = calculate_arrival_theta_alternate(ball, left_side)
+    linear_velocity, angular_velocity = calculate_velocities(ball, enemy1, enemy2, enemy3, friend1, friend2, robot)
+
+    robot.target.update(ball.xPos, ball.yPos, arrival_theta)
+    robot.sim_set_vel(linear_velocity, angular_velocity)
+
+
+def calculate_arrival_theta_alternate(ball, left_side):
+    if left_side:  # Playing in the left side of field
+        if (ball.yPos > 45) and (ball.yPos < 85):  # arrive with the angle 0
             arrival_theta = 0
         elif ball.yPos <= 45:
-            y = 45 + (45 - ball.yPos) / (45 - 0) * 20        # Y and agle target changes depending on the position of the ball, with the biggest difference
-            arrival_theta = arctan2(y - 45, 160 - ball.xPos) # the greater the slope, in this way making a more aggressive move to the goal
+            # Y and agle target changes depending on the position of the ball, with the biggest difference
+            y = 45 + (45 - ball.yPos) / (45 - 0) * 20
+            # the greater the slope, in this way making a more aggressive move to the goal
+            arrival_theta = arctan2(y - 45, 160 - ball.xPos)
         else:
             y = 85 - (ball.yPos - 85) / (130 - 85) * 20
             arrival_theta = arctan2(y - 85, 160 - ball.xPos)
-    else: # Playing in the right side of field
+    else:  # Playing in the right side of field
         if (ball.yPos > 45) and (ball.yPos < 85):
             arrival_theta = pi
         elif ball.yPos <= 45:
@@ -75,23 +88,17 @@ def shoot2(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None,
         else:
             y = 85 - (ball.yPos - 85) / (130 - 85) * 20
             arrival_theta = arctan2(y - 85, 10 - ball.xPos)
-    robot.target.update(ball.xPos, ball.yPos, arrival_theta)
-    if friend1 is None and friend2 is None:  # No friends to avoid
-        v, w = univec_controller(robot, robot.target, avoid_obst=False, n=16, d=2) # Calculate linear and angular velocity
-    else:  # Both friends to avoid
-        robot.obst.update2(robot, ball, friend1, friend2, enemy1, enemy2, enemy3)
-        v, w = univec_controller(robot, robot.target, True, robot.obst, n=4, d=4)
-
-    robot.sim_set_vel(v, w)
+    return arrival_theta
 
 
 def defender_spin(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None):
-    """Input: Robot object, ball object, side of field (True = Left, False = Right), other robots objects (2 friend , 3 opponents)
-    Description: The robot moves to the ball at an angle to move it away from the friendly goal, and try to carry the the for the anemys goal
-                 (This is used as a main move strategy for the robots)
+    """Input: Robot object, ball object, side of field (True = Left, False = Right), other robots objects (2 friend,
+     3 opponents)
+    Description: The robot moves to the ball at an angle to move it away from the friendly goal,
+     and try to carry the the for the anemys goal (This is used as a main move strategy for the robots)
     Output: None"""
     if left_side: # Playing in the left side of field
-        arrival_theta = arctan2(65 - ball.yPos,  160- ball.xPos)  # Angle between the ball and point (150,65)
+        arrival_theta = arctan2(65 - ball.yPos,  160 - ball.xPos)  # Angle between the ball and point (150,65)
     else: # Playing in the right side of field
         arrival_theta = arctan2(65 - ball.yPos, 10 - ball.xPos)  # Angle between the ball and point (0,65)
     robot.target.update(ball.xPos, ball.yPos, arrival_theta)
