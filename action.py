@@ -16,10 +16,10 @@ def shoot(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, 
     Description: The robot moves to the middle of the desired goal, the orientation is based on line
                  between the position of the ball and the goal.
     Output: None"""
-    arrival_theta = calculate_arrival_theta(ball, left_side)
+    arrival_angle = calculate_arrival_angle(ball, left_side)
     linear_velocity, angular_velocity = calculate_velocities(ball, enemy1, enemy2, enemy3, friend1, friend2, robot)
 
-    robot.target.update(ball.xPos, ball.yPos, arrival_theta)
+    robot.target.update(ball.xPos, ball.yPos, arrival_angle)
     robot.sim_set_vel(linear_velocity, angular_velocity)
 
 
@@ -36,18 +36,18 @@ def calculate_velocities(ball, enemy1, enemy2, enemy3, friend1, friend2, robot):
     return v, w
 
 
-def calculate_arrival_theta(ball, left_side):
+def calculate_arrival_angle(ball, left_side):
     if left_side:  # Playing in the left side of field
-        arrival_theta = arctan2(65 - ball.yPos, 160 - ball.xPos)  # Angle between the ball and point (150,65)
+        arrival_angle = arctan2(65 - ball.yPos, 160 - ball.xPos)  # Angle between the ball and point (150,65)
     else:  # Playing in the right side of field
-        arrival_theta = arctan2(65 - ball.yPos, 10 - ball.xPos)  # Angle between the ball and point (0,65)
-    return arrival_theta
+        arrival_angle = arctan2(65 - ball.yPos, 10 - ball.xPos)  # Angle between the ball and point (0,65)
+    return arrival_angle
 
 
 '''
 Input: Robot object, ball object, side of field (True = Left, False = Right), other robots objects (2 friend , 3 opponents)
 Description: The robot moves to the desired goal, the orientation is based on position of the ball and the goal.
-             If the Y ball position is between 45 and 85, the arrive theta is 0, otherwise is based on line
+             If the Y ball position is between 45 and 85, the arrive angle is 0, otherwise is based on line
              between the position of the ball and the edge of goal (This function is not used).
 Output: None
 '''
@@ -57,60 +57,106 @@ def shoot2(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None,
     """Input: Robot object, ball object, side of field (True = Left, False = Right), other robots objects
      (2 friend , 3 opponents)
     Description: The robot moves to the desired goal, the orientation is based on position of the ball and the goal.
-                 If the Y ball position is between 45 and 85, the arrive theta is 0, otherwise is based on line
+                 If the Y ball position is between 45 and 85, the arrive angle is 0, otherwise is based on line
                  between the position of the ball and the edge of goal (This function is not used).
     Output: None"""
-    arrival_theta = calculate_arrival_theta_alternate(ball, left_side)
+    arrival_angle = calculate_arrival_angle_alternate(ball, left_side)
     linear_velocity, angular_velocity = calculate_velocities(ball, enemy1, enemy2, enemy3, friend1, friend2, robot)
 
-    robot.target.update(ball.xPos, ball.yPos, arrival_theta)
+    robot.target.update(ball.xPos, ball.yPos, arrival_angle)
     robot.sim_set_vel(linear_velocity, angular_velocity)
 
 
-def calculate_arrival_theta_alternate(ball, left_side):
+def calculate_arrival_angle_alternate(ball, left_side):
     if left_side:  # Playing in the left side of field
         if (ball.yPos > 45) and (ball.yPos < 85):  # arrive with the angle 0
-            arrival_theta = 0
+            arrival_angle = 0
         elif ball.yPos <= 45:
             # Y and agle target changes depending on the position of the ball, with the biggest difference
             y = 45 + (45 - ball.yPos) / (45 - 0) * 20
             # the greater the slope, in this way making a more aggressive move to the goal
-            arrival_theta = arctan2(y - 45, 160 - ball.xPos)
+            arrival_angle = arctan2(y - 45, 160 - ball.xPos)
         else:
             y = 85 - (ball.yPos - 85) / (130 - 85) * 20
-            arrival_theta = arctan2(y - 85, 160 - ball.xPos)
+            arrival_angle = arctan2(y - 85, 160 - ball.xPos)
     else:  # Playing in the right side of field
         if (ball.yPos > 45) and (ball.yPos < 85):
-            arrival_theta = pi
+            arrival_angle = pi
         elif ball.yPos <= 45:
             y = 45 + (45 - ball.yPos) / (45 - 0) * 20
-            arrival_theta = arctan2(y - 45, 10 - ball.xPos)
+            arrival_angle = arctan2(y - 45, 10 - ball.xPos)
         else:
             y = 85 - (ball.yPos - 85) / (130 - 85) * 20
-            arrival_theta = arctan2(y - 85, 10 - ball.xPos)
-    return arrival_theta
+            arrival_angle = arctan2(y - 85, 10 - ball.xPos)
+    return arrival_angle
 
 
 def defender_spin(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None):
-    """Input: Robot object, ball object, side of field (True = Left, False = Right), other robots objects (2 friend,
+    """Input: Robot object, ball object, side of field (True = Left, False = Right), other robots objects (2 friend ,
      3 opponents)
-    Description: The robot moves to the ball at an angle to move it away from the friendly goal,
-     and try to carry the the for the anemys goal (This is used as a main move strategy for the robots)
+    Description: The robot moves to the ball at an angle to move it away from the friendly goal, and try to carry the the
+     for the anemys goal(This is used as a main move strategy for the robots)
     Output: None"""
-    if left_side: # Playing in the left side of field
-        arrival_theta = arctan2(65 - ball.yPos,  160 - ball.xPos)  # Angle between the ball and point (150,65)
-    else: # Playing in the right side of field
-        arrival_theta = arctan2(65 - ball.yPos, 10 - ball.xPos)  # Angle between the ball and point (0,65)
-    robot.target.update(ball.xPos, ball.yPos, arrival_theta)
+    arrival_angle = calculate_arrival_angle_defender_spin(ball, left_side)
+    robot.target.update(ball.xPos, ball.yPos, arrival_angle)
 
-    if friend1 is None and friend2 is None:  # No friends to avoid
-        v, w = univec_controller(robot, robot.target, avoid_obst=False, n=16, d=2) # Calculate linear and angular velocity
-    else:  # Both friends to avoid
-        robot.obst.update2(robot, ball, friend1, friend2, enemy1, enemy2, enemy3)
-        v, w = univec_controller(robot, robot.target, True, robot.obst, n=4, d=4)
+    linear_velocity, angular_velocity = calculate_velocities_defender_spin(ball, enemy1, enemy2, enemy3, friend1,
+                                                                           friend2, robot)
 
-    d = robot.dist(ball) # Calculate distance between ball and robot
-    if robot.spin and d < 10: # Check if the flag spin is true and if distance is lower than a threshold
+    distance_ball_robot = robot.dist(ball)  # Calculate distance between ball and robot
+    linear_velocity, angular_velocity = do_corner_spin_defender_spin(ball, robot, distance_ball_robot,
+                                                                     linear_velocity, angular_velocity)
+
+    # Check if the distance is lower than a threshold and if the ball is on the right of robot
+    if not check_forward_advance_possible(ball, distance_ball_robot, robot):
+        robot.sim_set_vel(linear_velocity, angular_velocity)
+        return
+
+    robot.sim_set_vel2(50 * robot.face, 50 * robot.face)  # Send the velocity of right and left wheel
+
+
+
+def check_forward_advance_possible(ball, distance_ball_robot, robot):
+    if distance_ball_robot < 30:
+
+        if check_flag_velocity(ball, robot):
+            x_goal_projection = calculate_x_goal_projection(ball, robot)
+            y_goal_projection = calculate_y_goal_projection(robot, x_goal_projection)
+            if 45 < y_goal_projection < 85:
+                x_projection = robot.xPos + distance_ball_robot * cos(robot.theta)
+                y_projection = robot.yPos + distance_ball_robot * sin(robot.theta)
+                distance_ball_projection = sqrt((ball.xPos - x_projection) ** 2 + (ball.yPos - y_projection) ** 2)
+                if (robot.index == 2 or robot.index == 1) and (distance_ball_projection < 10):
+                    return True
+
+    return False
+
+
+def calculate_y_goal_projection(robot, x_goal_projection):
+    y_goal_projection = tan(robot.theta) * x_goal_projection + robot.yPos
+    return y_goal_projection
+
+
+def check_flag_velocity(ball, robot):
+    if robot.teamYellow and ball.xPos < robot.xPos:
+        return True
+    elif not robot.teamYellow and ball.xPos > robot.xPos:
+        return True
+    return False
+
+
+def calculate_x_goal_projection(ball, robot):
+    if robot.teamYellow and ball.xPos < robot.xPos:
+        x_goal_projection = 15 - robot.xPos
+    elif not robot.teamYellow and ball.xPos > robot.xPos:
+        x_goal_projection = 160 - robot.xPos
+    return x_goal_projection
+
+
+def do_corner_spin_defender_spin(ball, robot, distance_ball_robot, v, w):
+
+    # Check if the flag spin is true and if distance is lower than a threshold
+    if robot.spin and distance_ball_robot < 10:
         if not robot.teamYellow:
             '''
             Define the direction of rotation, the direction changes based on northern
@@ -130,80 +176,90 @@ def defender_spin(robot, ball, left_side=True, friend1=None, friend2=None, enemy
             else:
                 v = 0
                 w = -30
+    return v, w
 
 
-    #TODO: CHECK IF THIS IS RIGHT - MAKE IT WORK FOR BOUTH SIDES
-    if d < 30 and ball.xPos > robot.xPos: # Check if the distance is lower than a threshold and
+def calculate_velocities_defender_spin(ball, enemy1, enemy2, enemy3, friend1, friend2, robot):
+    if friend1 is None and friend2 is None:  # No friends to avoid
+        v, w = univec_controller(robot, robot.target, avoid_obst=False, n=16,
+                                 d=2)  # Calculate linear and angular velocity
+    else:  # Both friends to avoid
+        robot.obst.update2(robot, ball, friend1, friend2, enemy1, enemy2, enemy3)
+        v, w = univec_controller(robot, robot.target, True, robot.obst, n=4, d=4)
+    return v, w
 
-                                          # if the ball is on the right of robot
-        if robot.teamYellow:
-            dx = 15 - robot.xPos
-        else:
-            dx = 160 - robot.xPos
-        dy = tan(robot.theta)*dx + robot.yPos # Calculate the height of the goal arrival
-        if dy > 45 and dy < 85:
-            if robot.index == 2 or robot.index == 1:
-                robot.sim_set_vel2(50*robot.face, 50*robot.face) # Send the velocity of right and left wheel
-            else:
-                robot.sim_set_vel(v,w) # Calculate linear and angular velocity
-        else:
-            robot.sim_set_vel(v,w)
-    else:
-        robot.sim_set_vel(v,w)
+
+def calculate_arrival_angle_defender_spin(ball, left_side):
+    if left_side:  # Playing in the left side of field
+        arrival_angle = arctan2(65 - ball.yPos, 160 - ball.xPos)  # Angle between the ball and point (150,65)
+    else:  # Playing in the right side of field
+        arrival_angle = arctan2(65 - ball.yPos, 10 - ball.xPos)  # Angle between the ball and point (0,65)
+    return arrival_angle
 
 
 def screen_out_ball(robot, ball, static_point, left_side=True, upper_lim=200, lower_lim=0, friend1=None, friend2=None):
     """Input: Robot object, ball object, point to project the ball, side of field (True = Left, False = Right), moviment limits(upper and lower), other robots objects (2 friend)
     Description: Project ball Y position to the selected X point.
     Output: None"""
-    xPos = ball.xPos + ball.vx*100*22/60 # Predict ball position multiples frames ahead (Possible conflit with other ball prediction)
-    yPos = ball.yPos + ball.vy*100*22/60
 
-    if yPos >= upper_lim: # If ball position is out of limits of Y axis, set the value to the limits
-        y_point = upper_lim
+    # Predict ball position multiples frames ahead (Possible conflit with other ball prediction)
+    # If ball position is out of limits of Y axis, set the value to the limits
+    ball_y_prediction = ball.yPos + ball.vy*100*22/60
+    ball_y_target = min(ball_y_prediction, upper_lim)
+    ball_y_target = max(ball_y_prediction, lower_lim)
 
-    elif yPos <= lower_lim:
-        y_point = lower_lim
+    arrival_angle = calculate_arrival_angle_screenout(ball_y_prediction, left_side, robot)
+    robot.target.update(170 - static_point, ball_y_target, arrival_angle)
 
-    else: # Project Y position of the ball to the selected point
-        y_point = yPos
-    # Check the field side
+    if robot.contStopped > 60:  # Check if the robot is locked on the corner, and try to free him
+        linear_velocity, angular_velocity = escape_from_corner_lock(robot)
+    else:
+        linear_velocity, angular_velocity = calculate_velocities_screenout(friend1, friend2, robot)
+
+    robot.sim_set_vel(linear_velocity, angular_velocity)
+
+
+def calculate_velocities_screenout(friend1, friend2, robot):
+    if friend1 is None and friend2 is None:  # No friends to avoid
+        v, w = univec_controller(robot, robot.target, avoid_obst=False,
+                                 stop_when_arrive=True)  # Calculate linear and angular velocity
+    else:  # Both friends to avoid
+        robot.obst.update(robot, friend1, friend2)
+        v, w = univec_controller(robot, robot.target, True, robot.obst, stop_when_arrive=True)
+    return v, w
+
+
+def escape_from_corner_lock(robot):
+    if robot.teamYellow:
+        if abs(robot.angle) < 10:
+            v = -30
+            w = 5
+        else:
+            v = 30
+            w = -5
+    else:
+        if abs(robot.angle) < 10:
+            v = -30
+            w = 0
+        else:
+            v = 30
+            w = 0
+    return v, w
+
+
+def calculate_arrival_angle_screenout(ball_y_prediction, left_side, robot):
     if left_side:
-        if robot.yPos <= yPos: # Define the arrive angle based on the side of the field
-            arrival_theta = pi / 2
+        if robot.yPos <= ball_y_prediction:  # Define the arrive angle based on the side of the field
+            arrival_angle = pi / 2
         else:
-            arrival_theta = -pi / 2
-        robot.target.update(static_point, y_point, arrival_theta)
-    else:
-        if robot.yPos <= yPos:
-            arrival_theta = pi / 2
-        else:
-            arrival_theta = -pi / 2
-        robot.target.update(170 - static_point, y_point, arrival_theta)
+            arrival_angle = -pi / 2
 
-    if robot.contStopped > 60: # Check if the robot is locked on the corner, and try to free him
-        if robot.teamYellow:
-            if abs(robot.theta) < 10:
-                v = -30
-                w = 5
-            else:
-                v = 30
-                w = -5
-        else:
-            if abs(robot.theta) < 10:
-                v = -30
-                w = 0
-            else:
-                v = 30
-                w = 0
     else:
-        if friend1 is None and friend2 is None:  # No friends to avoid
-            v, w = univec_controller(robot, robot.target, avoid_obst=False, stop_when_arrive=True) # Calculate linear and angular velocity
-        else:  # Both friends to avoid
-            robot.obst.update(robot, friend1, friend2)
-            v, w = univec_controller(robot, robot.target, True, robot.obst, stop_when_arrive=True)
-
-    robot.sim_set_vel(v, w)
+        if robot.yPos <= ball_y_prediction:
+            arrival_angle = pi / 2
+        else:
+            arrival_angle = -pi / 2
+    return arrival_angle
 
 
 def goal_keeper_defender(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, enemy2=None,
@@ -211,58 +267,72 @@ def goal_keeper_defender(robot, ball, left_side=True, friend1=None, friend2=None
     """Input: Robot object, ball object, side of field (True = Left, False = Right), other robots objects (2 friends, 3 opponents)
     Description: The robot pushes the ball away from the goal and make him spin.
     Output: None"""
-    if left_side:
-        arrival_theta = arctan2(ball.yPos - 65, ball.xPos - 10)  # Angle between the ball and point (150,65)
-    else:
-        arrival_theta = arctan2(ball.yPos - 65, ball.xPos - 160)  # Angle between the ball and point (0,65)
-    robot.target.update(ball.xPos, ball.yPos, arrival_theta)
+    arrival_angle = calculate_arrival_angle_defence(ball, left_side)
+    robot.target.update(ball.xPos, ball.yPos, arrival_angle)
 
+    linear_velocity, angular_velocity = calculate_velocities_defence(enemy1, enemy2, enemy3, friend1, friend2, robot)
+
+    if robot.dist(ball) < 10:  # Check if the distance is lower than a threshold
+
+        angular_velocity, linear_velocity = spin_goalkeeper(angular_velocity, linear_velocity, robot)
+
+    robot.sim_set_vel(linear_velocity, angular_velocity)
+
+
+def spin_goalkeeper(angular_velocity, linear_velocity, robot):
+    """Define the direction of rotation, the direction changes based on northern
+    and southern hemisphere, in the North hemisphere the direction is clockwise
+    and the South hemisphere is anticlockwise."""
+    if not robot.teamYellow:
+        if robot.yPos > 65:
+            linear_velocity = 0
+            angular_velocity = -30
+        else:
+            linear_velocity = 0
+            angular_velocity = 30
+    else:
+        if robot.yPos > 65:
+            linear_velocityv = 0
+            angular_velocity = 30
+        else:
+            linear_velocity = 0
+            angular_velocity = -30
+    return angular_velocity, linear_velocity
+
+
+def calculate_velocities_defence(enemy1, enemy2, enemy3, friend1, friend2, robot):
     if friend1 is None and friend2 is None:  # No friends to avoid
         v, w = univec_controller(robot, robot.target, avoid_obst=False, n=16, d=2)
     else:  # Both friends to avoid
         robot.obst.update(robot, friend1, friend2, enemy1, enemy2, enemy3)
         v, w = univec_controller(robot, robot.target, True, robot.obst, n=4, d=4)
+    return v, w
 
-    if robot.dist(ball) < 10: # Check if the distance is lower than a threshold
-        '''
-        Define the direction of rotation, the direction changes based on northern
-        and southern hemisphere, in the North hemisphere the direction is clockwise
-        and the South hemisphere is anti-clockwise.
-        '''
-        if not robot.teamYellow:
-            if robot.yPos > 65:
-                v = 0
-                w = -30
-            else:
-                v = 0
-                w = 30
-        else:
-            if robot.yPos > 65:
-                v = 0
-                w = 30
-            else:
-                v = 0
-                w = -30
 
-    robot.sim_set_vel(v, w)
+def calculate_arrival_angle_defence(ball, left_side):
+    if left_side:
+        arrival_angle = arctan2(ball.yPos - 65, ball.xPos - 10)  # Angle between the ball and point (150,65)
+    else:
+        arrival_angle = arctan2(ball.yPos - 65, ball.xPos - 160)  # Angle between the ball and point (0,65)
+    return arrival_angle
 
 
 def protect_goal(robot, ball, r, left_side=True, friend1=None, friend2=None):
     """Input: Robot object, ball object, radius of circumference, side of field (True = Left, False = Right), other robots objects (2 friend)
-    Description: The robot make a semi-circunference around the goal.
+    Description: The robot does a semi-circunference around the goal.
     Output: None"""
     if left_side:
-        theta = arctan2((ball.yPos - 65), (ball.xPos - 15)) # Calculate angle of vector goal and ball
+        angle = arctan2((ball.yPos - 65), (ball.xPos - 15)) # Calculate angle of vector goal and ball
 
-        if pi / 2 >= theta >= (-pi / 2): # project the ball into the circumference
+        if pi / 2 >= angle >= (-pi / 2): # project the ball into the circumference
 
-            proj_x = r * cos(theta) + 15
-            proj_y = r * sin(theta) + 65
+            proj_x = r * cos(angle) + 15
+            proj_y = r * sin(angle) + 65
 
         else:
 
-            proj_x = -r * cos(theta) + 15
-            proj_y = r * sin(theta) + 65
+            proj_x = -r * cos(angle) + 15
+            proj_y = r * sin(angle) + 65
 
         '''
         Defines the arrival angle, the angle changes based on the ball's relative
@@ -271,32 +341,32 @@ def protect_goal(robot, ball, r, left_side=True, friend1=None, friend2=None):
         '''
         if robot.yPos > 100:
             if robot.xPos < ball.xPos:
-                arrival_theta = -(pi / 2 - theta)
+                arrival_angle = -(pi / 2 - angle)
 
             if robot.xPos >= ball.xPos:
-                arrival_theta = (pi / 2 + theta)
+                arrival_angle = (pi / 2 + angle)
 
         if 100 >= robot.yPos > 65:
             if robot.yPos < ball.yPos:
-                arrival_theta = (pi / 2 + theta)
+                arrival_angle = (pi / 2 + angle)
             if robot.yPos >= ball.yPos:
-                arrival_theta = -(pi / 2 - theta)
+                arrival_angle = -(pi / 2 - angle)
 
         if 65 >= robot.yPos > 30:
             if robot.yPos < ball.yPos:
-                arrival_theta = pi / 2 + theta
+                arrival_angle = pi / 2 + angle
             if robot.yPos >= ball.yPos:
-                arrival_theta = -(pi / 2 - theta)
+                arrival_angle = -(pi / 2 - angle)
 
         if robot.yPos <= 30:
             if robot.xPos < ball.xPos:
-                arrival_theta = pi / 2 + theta
+                arrival_angle = pi / 2 + angle
 
             if robot.xPos >= ball.xPos:
-                arrival_theta = -(pi / 2 - theta)
+                arrival_angle = -(pi / 2 - angle)
 
-    arrival_theta = arctan2(sin(arrival_theta), cos(arrival_theta))
-    robot.target.update(proj_x, proj_y, arrival_theta)
+    arrival_angle = arctan2(sin(arrival_angle), cos(arrival_angle))
+    robot.target.update(proj_x, proj_y, arrival_angle)
 
     if friend1 is None and friend2 is None:  # No friends to avoid
         v, w = univec_controller(robot, robot.target, avoid_obst=False, stop_when_arrive=True)
@@ -309,28 +379,22 @@ def protect_goal(robot, ball, r, left_side=True, friend1=None, friend2=None):
 
 def girar(robot, v1, v2):
     """Input: Robot object, ball object, Velocity of Right and Left wheel
-    Description: The robot spin around it's own axis
+    Description: The robot spins around it's own axis
     Output: None"""
     robot.sim_set_vel2(v1, v2)
+
 
 def defender_penalty(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None):
     """Input: Robot object, ball object, side of field (True = Left, False = Right), other robots objects (2 friend, 3 opponents)
     Description: Makes the goalkepper go straight to the ball to defend the penalty
     Output: None"""
 
-    if left_side:
-        arrival_theta = arctan2(ball.yPos - 65, ball.xPos - 10)  # Angle between the ball and point (150,65)
-    else:
-        arrival_theta = arctan2(ball.yPos - 65, ball.xPos - 160)  # Angle between the ball and point (0,65)
-    robot.target.update(ball.xPos, ball.yPos, arrival_theta)
+    arrival_angle = calculate_arrival_angle_defence(ball, left_side)
+    robot.target.update(ball.xPos, ball.yPos, arrival_angle)
 
-    if friend1 is None and friend2 is None:  # No friends to avoid
-        v, w = univec_controller(robot, robot.target, avoid_obst=False, n=16, d=2)
-    else:  # Both friends to avoid
-        robot.obst.update(robot, friend1, friend2, enemy1, enemy2, enemy3)
-        v, w = univec_controller(robot, robot.target, True, robot.obst, n=4, d=4)
+    linear_velocity, angular_velocity = calculate_velocities_defence()
 
-    robot.sim_set_vel(v, w)
+    robot.sim_set_vel(linear_velocity, angular_velocity)
 
 
 def defender_penalty_spin(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None):
@@ -340,14 +404,14 @@ def defender_penalty_spin(robot, ball, left_side=True, friend1=None, friend2=Non
     index_enemy = 0
 
     for enemy in list_enemy:
-        d = sqrt((enemy.xPos - ball.xPos)**2 + (enemy.yPos - ball.yPos)**2)
-        if d < distance:
-            distance = d
+        distance_enemy_ball = sqrt((enemy.xPos - ball.xPos)**2 + (enemy.yPos - ball.yPos)**2)
+        if distance_enemy_ball < distance:
+            distance = distance_enemy_ball
             index_enemy = enemy.index
     kicker = list_enemy[index_enemy]
 
-    theta = arctan2(ball.yPos - kicker.yPos, ball.xPos - kicker.xPos)
-    phi = pi - theta
+    angle = arctan2(ball.yPos - kicker.yPos, ball.xPos - kicker.xPos)
+    phi = pi - angle
 
     if left_side:
         dx = kicker.xPos - 14
@@ -360,13 +424,13 @@ def defender_penalty_spin(robot, ball, left_side=True, friend1=None, friend2=Non
         elif proj_y < 50:
             proj_y = 50
         if proj_y > robot.yPos:
-            arrival_theta = pi/2
+            arrival_angle = pi/2
         else:
-            arrival_theta = -pi/2
+            arrival_angle = -pi/2
 
     else:
         dx = 156 - kicker.xPos
-        dy = dx*tan(theta)
+        dy = dx*tan(angle)
 
         proj_y = kicker.yPos + dy
         proj_x = 156
@@ -375,11 +439,11 @@ def defender_penalty_spin(robot, ball, left_side=True, friend1=None, friend2=Non
         elif proj_y < 50:
             proj_y = 50
         if proj_y > robot.yPos:
-            arrival_theta = pi/2
+            arrival_angle = pi/2
         else:
-            arrival_theta = -pi/2
+            arrival_angle = -pi/2
 
-    robot.target.update(proj_x, proj_y, arrival_theta)
+    robot.target.update(proj_x, proj_y, arrival_angle)
 
     if friend1 is None and friend2 is None:  # No friends to avoid
         v, w = univec_controller(robot, robot.target, avoid_obst=False, n=16, d=2)
@@ -440,16 +504,16 @@ def attack_penalty(robot, ball, left_side=True, friend1=None, friend2=None, enem
         The arrive angle changes based on the position, and the position have 2 random possibilities
         '''
         if robot.yPos > 65:
-            arrival_theta = -deg2rad(15)
+            arrival_angle = -deg2rad(15)
         else:
-            arrival_theta = deg2rad(15)
+            arrival_angle = deg2rad(15)
     else:
         if robot.yPos > 65:
-            arrival_theta = -deg2rad(165)
+            arrival_angle = -deg2rad(165)
         else:
-            arrival_theta = deg2rad(165)
+            arrival_angle = deg2rad(165)
 
-    robot.target.update(ball.xPos, ball.yPos, arrival_theta)
+    robot.target.update(ball.xPos, ball.yPos, arrival_angle)
 
     if friend1 is None and friend2 is None:  # No friends to avoid
         v, w = univec_controller(robot, robot.target, avoid_obst=False, n=16, d=2)
@@ -484,8 +548,8 @@ def follower(robot_follower, robot_leader, ball, robot0=None, robot_enemy_0=None
     Calculate distante between the follower and the projected point
     '''
     dist = sqrt((robot_follower.xPos - proj_x) ** 2 + (robot_follower.yPos - proj_y) ** 2)
-    arrival_theta = arctan2(ball.yPos - robot_follower.yPos, ball.xPos - robot_follower.xPos)
-    robot_follower.target.update(proj_x, proj_y, arrival_theta)
+    arrival_angle = arctan2(ball.yPos - robot_follower.yPos, ball.xPos - robot_follower.xPos)
+    robot_follower.target.update(proj_x, proj_y, arrival_angle)
 
     if dist < 10: # Check if the robot is close to the projected point and stops the robot
         stop(robot_follower)
