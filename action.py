@@ -972,7 +972,7 @@ Output: None
 '''
 
 def leaderSelector(robot1, robot2, ball):
-        
+
     '''
     Calculate the distan of both robots to the ball
     '''
@@ -1023,9 +1023,9 @@ def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, rob
         if not robot1.teamYellow:
             if ball.xPos < 30 and (110 > ball.yPos > 30): # If ball is in defence side the robot 2 do the screen out, and the robot 1 follow his moves
                 if robot1.xPos < 30:
-                    screen_out_ball(robot2, robot2, 55, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
+                    screen_out_ball(robot2, robot2, 40, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
                 else:
-                    screen_out_ball(robot2, ball, 55, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
+                    screen_out_ball(robot2, ball, 40, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
                 follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
 
             else:  # If ball is in attack side the robot 2 do the defender spin, and the robot 1 follow his moves
@@ -1047,9 +1047,9 @@ def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, rob
         else:
             if ball.xPos > 130 and (110 > ball.yPos > 30):
                 if robot1.xPos > 130:
-                    screen_out_ball(robot2, robot2, 55, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
+                    screen_out_ball(robot2, robot2, 40, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
                 else:
-                    screen_out_ball(robot2, ball, 55, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
+                    screen_out_ball(robot2, ball, 40, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
                 follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
 
             else:
@@ -1068,9 +1068,9 @@ def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, rob
         if not robot1.teamYellow:
             if ball.xPos < 35 and (110 > ball.yPos > 30):
                 if robot1.xPos < 35:
-                    screen_out_ball(robot1, robot1, 55, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
+                    screen_out_ball(robot1, robot1, 40, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
                 else:
-                    screen_out_ball(robot1, ball, 55, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
+                    screen_out_ball(robot1, ball, 40, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
                 follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
 
             else:
@@ -1087,9 +1087,9 @@ def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, rob
         else:
             if ball.xPos > 130 and (110 > ball.yPos > 30):
                 if robot1.xPos > 130:
-                    screen_out_ball(robot1, robot1, 55, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
+                    screen_out_ball(robot1, robot1, 40, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
                 else:
-                    screen_out_ball(robot1, ball, 55, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
+                    screen_out_ball(robot1, ball, 40, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
                 follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
 
             else:
@@ -1103,3 +1103,6 @@ def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, rob
                                       enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
                 else:
                     follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+
+def robot_defensive(robot, ball):
+    return

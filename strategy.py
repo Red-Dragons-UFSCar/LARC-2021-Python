@@ -50,8 +50,8 @@ class Strategy:
             self.penalty_mode_defensive()
         elif self.penaltyOffensive:
             self.penalty_mode_offensive()
-        elif self.kickoffOffensive:
-            self.kickoff()
+        #elif self.kickoffOffensive:
+            #self.kickoff()
         else:
             # For the time being, the only statuses considered are which side of the field the ball is in
             if self.mray:
