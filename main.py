@@ -2,30 +2,17 @@ import time
 import sys
 import argparse
 
-import fouls
+from replace_protobuf import replacer_all
+
+#import fouls
 from bridge import (Actuator, Replacer, Vision, Referee)
 from simClasses import *
 from strategy import *
 
+
 if __name__ == "__main__":
 
-    # Fazer tratamento de entradas erradas
-
-    parser = argparse.ArgumentParser(description='Argumentos para execução do time no simulador FIRASim')
-
-    parser.add_argument('-t', '--team', type=str, default="blue", help="Define o time/lado que será executado: blue ou yellow")
-    parser.add_argument('-s', '--strategy', type=str, default="twoAttackers", help="Define a estratégia que será jogada: twoAttackers ou default" )
-    parser.add_argument('-op', '--offensivePenalty', type=str, default='spin', dest='op', help="Define o tipo de cobrança ofensiva de penalti: spin ou direct")
-    parser.add_argument('-dp', '--defensivePenalty', type=str, default='direct', dest='dp', help="Define o tipo de defesa de penalti: spin ou direct")
-
-    args = parser.parse_args()
-
-    # Choose team (my robots are yellow)
-    if args.team == "yellow":
-        mray = True
-    else:
-        mray = False
-
+    mray = True
 
     # Initialize all clients
     actuator = Actuator(mray, "127.0.0.1", 20011)
@@ -44,12 +31,10 @@ if __name__ == "__main__":
 
     ball = Ball()
 
-    list_strategies = [ args.strategy, args.op, args.dp ]
-    strategy = Strategy(robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray, list_strategies)
-
     # Main infinite loop
     while True:
         t1 = time.time()
+
         # Update the foul status
         referee.update()
         ref_data = referee.get_data()
@@ -70,32 +55,6 @@ if __name__ == "__main__":
         robotEnemy1.sim_get_pose(data_their_bots[1])
         robotEnemy2.sim_get_pose(data_their_bots[2])
         ball.sim_get_pose(data_ball)
-
-        if ref_data["game_on"]:
-            # If the game mode is set to "Game on"
-            strategy.decider()
-
-        elif ref_data["foul"] == 1 and ref_data["yellow"] == (not mray):
-            # detecting defensive penalty
-            strategy.penaltyDefensive = True
-            actuator.stop()
-            fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
-
-        elif ref_data["foul"] == 1 and ref_data["yellow"] == (mray):
-            # detecting offensive penalty
-            strategy.penaltyOffensive = True
-            actuator.stop()
-            fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
-
-        elif ref_data["foul"] != 7:
-            if ref_data["foul"] != 5:  # Changing the flag except in the Stop case
-                strategy.penaltyOffensive = False
-                strategy.penaltyDefensive = False
-            fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
-            actuator.stop()
-
-        else:
-            actuator.stop()
 
         # synchronize code execution based on runtime and the camera FPS
         t2 = time.time()
