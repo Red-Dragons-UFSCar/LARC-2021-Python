@@ -1,33 +1,16 @@
 from numpy import arctan2, sqrt, pi, deg2rad
 
 
-'''
-Input: Robot object, target object
-Description: These functions are used to change the execution of the player's strategies in the corner, 
-            in order to prevent it from getting stuck.
-Output: flag_corner: robot was detected on one side of the field
-        corner: integer that says which corner it is in = 1- left side, 2-bottom, 3- right side, 4-top
-'''
 def target_in_corner(target, robot):
+    """Input: Robot object, target object
+    Description: These functions are used to change the execution of the player's strategies in the corner,
+                in order to prevent it from getting stuck.
+    Output: flag_corner: robot was detected on one side of the field
+            corner: integer that says which corner it is in = 1- left side, 2-bottom, 3- right side, 4-top"""
     corner = 0
     flag_corner = False
     if not robot.teamYellow: #detects in which team the robot is
-        if target.coordinates.X < 20: #updates target if x position is less than 20
-
-            flag_corner = True
-            corner = 1
-            if target.coordinates.X < 5:
-                target.coordinates.update(target.coordinates.X + 3, target.coordinates.Y, target.coordinates.rotation)
-            else:
-                target.coordinates.update(target.coordinates.X + 1.5, target.coordinates.Y, target.coordinates.rotation)
-        elif target.coordinates.X > 150: #updates target if x position is bigger than 150
-
-            flag_corner = True
-            corner = 3
-            if target.coordinates.X > 155:
-                target.coordinates.update(target.coordinates.X - 3, target.coordinates.Y, target.coordinates.rotation)
-            else:
-                target.coordinates.update(target.coordinates.X - 1.5, target.coordinates.Y, target.coordinates.rotation)
+        corner, flag_corner = detect_vertical_corners(corner, flag_corner, target)
         if target.coordinates.Y < 10: #updates target if y position is less than 10
 
             flag_corner = True
@@ -84,6 +67,27 @@ def target_in_corner(target, robot):
         coordinates_rotation(robot, target, corner)
 
     return flag_corner, corner
+
+
+def detect_vertical_corners(corner, flag_corner, target):
+    if target.coordinates.X < 20:  # updates target if x position is less than 20
+
+        flag_corner = True
+        corner = 1
+        if target.coordinates.X < 5:
+            target.coordinates.update(target.coordinates.X + 3, target.coordinates.Y, target.coordinates.rotation)
+        else:
+            target.coordinates.update(target.coordinates.X + 1.5, target.coordinates.Y, target.coordinates.rotation)
+    elif target.coordinates.X > 150:  # updates target if x position is bigger than 150
+
+        flag_corner = True
+        corner = 3
+        if target.coordinates.X > 155:
+            target.coordinates.update(target.coordinates.X - 3, target.coordinates.Y, target.coordinates.rotation)
+        else:
+            target.coordinates.update(target.coordinates.X - 1.5, target.coordinates.Y, target.coordinates.rotation)
+    return corner, flag_corner
+
 
 '''
 Input: Robot object, target object, corner variable

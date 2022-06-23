@@ -1,5 +1,4 @@
 import time
-import sys
 import argparse
 
 import fouls
@@ -76,11 +75,11 @@ if __name__ == "__main__":
 
         # Updates vision data on each field object
         for index, robot in enumerate(robots):
-            robot.sim_get_pose(data_our_bot[index])
+            robot.set_simulator_data(data_our_bot[index])
         
         for index, robot in enumerate(enemy_robots):
-            robot.sim_get_pose(data_their_bots[index])      
-        ball.sim_get_pose(data_ball)
+            robot.set_simulator_data(data_their_bots[index])
+        ball.set_simulator_data(data_ball)
 
         if ref_data["game_on"]:
             # If the game mode is set to "Game on"
