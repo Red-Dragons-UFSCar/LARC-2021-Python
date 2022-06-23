@@ -14,10 +14,10 @@ def approx(robot, target, avoid_obst=True, obst=None, n=8, d=2, field_is_hiperbo
     navigate = Univector()  # Defines the navigation algorithm
     dl = 0.000001  # Constant to approximate phi_v
 
-    x = robot.xPos  # Saving (x,y) coordinates to calculate phi_v
-    y = robot.yPos
-    robot.xPos = robot.xPos + dl * cos(robot.theta)  # Incrementing robot (x,y) position
-    robot.yPos = robot.yPos + dl * sin(robot.theta)
+    x = robot.coordinates.X  # Saving (x,y) coordinates to calculate phi_v
+    y = robot.coordinates.Y
+    robot.coordinates.X = robot.coordinates.X + dl * cos(robot.coordinates.rotation)  # Incrementing robot (x,y) position
+    robot.coordinates.Y = robot.coordinates.Y + dl * sin(robot.coordinates.rotation)
 
     if avoid_obst:                                                          # If obstacle avoidance is activated
         if field_is_hiperbolic:                                             # Use of the Hyperbolic field
@@ -30,8 +30,8 @@ def approx(robot, target, avoid_obst=True, obst=None, n=8, d=2, field_is_hiperbo
         else:                                                               # Use of the old field
             stp_theta = navigate.n_vec_field(robot, target, n, d, have_face=False) # Computing a step Theta to determine phi_v
 
-    robot.xPos = x  # Returning original (x,y) coordinates
-    robot.yPos = y
+    robot.coordinates.X = x  # Returning original (x,y) coordinates
+    robot.coordinates.Y = y
 
     return stp_theta
 
@@ -59,7 +59,7 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
 
     # Angle correction if robot face is inverted
     if robot.face == -1:
-        robot.theta = arctan2(sin(robot.theta - pi), cos(robot.theta - pi))
+        robot.coordinates.rotation = arctan2(sin(robot.coordinates.rotation - pi), cos(robot.coordinates.rotation - pi))
 
     # Navigation: Go-to-Goal + Avoid Obstacle Vector Field
     if avoid_obst: # If obstacle avoidance is activated
@@ -106,7 +106,7 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
     #robot.v=v
     robot.pastPose = delete(robot.pastPose, 0, 1)  # Deleting the first column
     robot.pastPose = append(robot.pastPose, array(
-        [[round(robot.xPos)], [round(robot.yPos)], [round(float(robot.theta))], [round(float(v))]]), 1)
+        [[round(robot.coordinates.X)], [round(robot.coordinates.Y)], [round(float(robot.coordinates.rotation))], [round(float(v))]]), 1)
 
     return v, w
 
@@ -118,12 +118,12 @@ Description: Defines de better face to robot movement and estimate angle error
 Output: theta_e -> Angle error (float)
 '''
 def which_face(robot, target, des_theta, double_face):
-    theta_e = arctan2(sin(des_theta - robot.theta), cos(des_theta - robot.theta))  # Error estimation with current face
+    theta_e = arctan2(sin(des_theta - robot.coordinates.rotation), cos(des_theta - robot.coordinates.rotation))  # Error estimation with current face
 
     if (abs(theta_e) > pi / 2 + pi / 12) and (
             not robot.flagTrocaFace) and double_face:  # If the angle is convenient for face swap
         robot.face = robot.face * (-1)  # Swaps face
-        robot.theta = arctan2(sin(robot.theta + pi), cos(robot.theta + pi))  # Angle re-estimate
-        theta_e = arctan2(sin(des_theta - robot.theta), cos(des_theta - robot.theta))  # Error angle re-estimate
+        robot.coordinates.rotation = arctan2(sin(robot.coordinates.rotation + pi), cos(robot.coordinates.rotation + pi))  # Angle re-estimate
+        theta_e = arctan2(sin(des_theta - robot.coordinates.rotation), cos(des_theta - robot.coordinates.rotation))  # Error angle re-estimate
 
     return theta_e

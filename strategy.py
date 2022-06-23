@@ -10,8 +10,8 @@ class Strategy:
 
     def __init__(self, robots, enemy_robots, ball, mray, strategies):
 
-        self.robots = []
-        self.enemy_robots = []
+        self.robots = robots
+        self.enemy_robots = enemy_robots
         self.ball = ball
         self.mray = mray
         self.penaltyDefensive = False
@@ -42,12 +42,12 @@ class Strategy:
         else:
             # For the time being, the only statuses considered are which side of the field the ball is in
             if self.mray:
-                if self.ball.xPos > 85:
+                if self.ball.coordinates.X > 85:
                     self.stg_def_v2()
                 else:
                     self.stg_att_v2()
             else:
-                if self.ball.xPos > 85:
+                if self.ball.coordinates.X > 85:
                     self.stg_att_v2()
                 else:
                     self.stg_def_v2()
@@ -63,12 +63,12 @@ class Strategy:
         else:
             # For the time being, the only statuses considered are which side of the field the ball is in
             if self.mray:
-                if self.ball.xPos > 85:
+                if self.ball.coordinates.X > 85:
                     self.basic_stg_def_2()
                 else:
                     self.basic_stg_att()
             else:
-                if self.ball.xPos > 85:
+                if self.ball.coordinates.x > 85:
                     self.basic_stg_att()
                 else:
                     self.basic_stg_def_2()
@@ -79,7 +79,7 @@ class Strategy:
         Output: None.
         """
         if not self.mray:
-            if self.ball.xPos < 30 and 30 < self.ball.yPos < 110: # If the ball has inside of defense area
+            if self.ball.coordinates.X < 30 and 30 < self.ball.coordinates.Y < 110: # If the ball has inside of defense area
                 action.defender_penalty_direct(self.robots[0], self.ball, left_side=not self.mray) # Goalkeeper move ball away
                 action.screen_out_ball(self.robots[1], self.ball, 55, left_side=not self.mray)
             else:
@@ -87,7 +87,7 @@ class Strategy:
                              enemy1=self.enemy_robots[0], enemy2=self.enemy_robots[1], enemy3=self.enemy_robots[2]) # Defender chases ball
                 action.screen_out_ball(self.robots[0], self.ball, 14, left_side=not self.mray, upper_lim=81, lower_lim=42) # Goalkeeper keeps in goal
         else: # The same idea for other team
-            if self.ball.xPos > 130 and 30 < self.ball.yPos < 110:
+            if self.ball.coordinates.X > 130 and 30 < self.ball.coordinates.Y < 110:
                 action.defender_penalty_direct(self.robots[0], self.ball, left_side=not self.mray)
                 action.screen_out_ball(self.robots[1], self.ball, 55, left_side=not self.mray)
             else:
@@ -111,7 +111,7 @@ class Strategy:
         Description: Basic defense strategy with robot stop detection
         Output: None."""
         if not self.mray:
-            if self.ball.xPos < 40 and 30 < self.ball.yPos < 110: # If the ball has inside of defense area
+            if self.ball.coordinates.X < 40 and 30 < self.ball.coordinates.Y < 110: # If the ball has inside of defense area
                 action.defender_penalty_direct(self.robots[0], self.ball, left_side=not self.mray) # Goalkeeper move ball away
                 action.screen_out_ball(self.robots[1], self.ball, 55, left_side=not self.mray)
             else:
@@ -120,7 +120,7 @@ class Strategy:
                                      enemy1=self.enemy_robots[0], enemy2=self.enemy_robots[1], enemy3=self.enemy_robots[2]) # Defender chases ball
                 action.screen_out_ball(self.robots[0], self.ball, 14, left_side=not self.mray, upper_lim=81, lower_lim=42) # Goalkeeper keeps in goal
         else: # The same idea for other team
-            if self.ball.xPos > 130 and 30 < self.ball.yPos < 110:
+            if self.ball.coordinates.X > 130 and 30 < self.ball.coordinates.Y < 110:
                 action.defender_penalty_direct(self.robots[0], self.ball, left_side=not self.mray)
                 action.screen_out_ball(self.robots[1], self.ball, 55, left_side=not self.mray)
             else:
@@ -132,8 +132,8 @@ class Strategy:
         action.screen_out_ball(self.robots[2], self.ball, 110, left_side=not self.mray, upper_lim=120, lower_lim=10) # Attacker stays in midfield
 
         # Verification if robot has stopped
-        if ((abs(self.robots[0].theta) < deg2rad(10)) or (abs(self.robots[0].theta) > deg2rad(170))) and (
-                self.robots[0].xPos < 20 or self.robots[0].xPos > 150):
+        if ((abs(self.robots[0].coordinates.rotation) < deg2rad(10)) or (abs(self.robots[0].coordinates.rotation) > deg2rad(170))) and (
+                self.robots[0].coordinates.X < 20 or self.robots[0].coordinates.X > 150):
             self.robots[0].contStopped += 1
         else:
             self.robots[0].contStopped = 0
@@ -144,14 +144,14 @@ class Strategy:
              goal and move ball away when close to the goal
         Output: None."""
         if not self.mray:
-            if self.ball.xPos < 40 and 30 < self.ball.yPos < 110: # If the ball has inside of defense area
+            if self.ball.coordinates.X < 40 and 30 < self.ball.coordinates.Y < 110: # If the ball has inside of defense area
                 action.defender_penalty_direct(self.robots[0], self.ball, left_side=not self.mray) # Goalkeeper move ball away
                 self.two_attackers()
             else:
                 self.two_attackers()
                 action.screen_out_ball(self.robots[0], self.ball, 16, left_side=not self.mray, upper_lim=84, lower_lim=42) # Goalkeeper keeps in goal
         else: # The same ideia, but for other team
-            if self.ball.xPos > 130 and 30 < self.ball.yPos < 110:
+            if self.ball.coordinates.X > 130 and 30 < self.ball.coordinates.Y < 110:
                 action.defender_penalty_direct(self.robots[0], self.ball, left_side=not self.mray)
                 self.two_attackers()
             else:
@@ -159,8 +159,8 @@ class Strategy:
                 action.screen_out_ball(self.robots[0], self.ball, 16, left_side=not self.mray, upper_lim=84, lower_lim=42)
 
         # Verification if robot has stopped
-        if ((abs(self.robots[0].theta) < deg2rad(10)) or (abs(self.robots[0].theta) > deg2rad(170))) and (
-                self.robots[0].xPos < 20 or self.robots[0].xPos > 150):
+        if ((abs(self.robots[0].coordinates.rotation) < deg2rad(10)) or (abs(self.robots[0].coordinates.rotation) > deg2rad(170))) and (
+                self.robots[0].coordinates.X < 20 or self.robots[0].coordinates.X > 150):
             self.robots[0].contStopped += 1
         else:
             self.robots[0].contStopped = 0
@@ -196,10 +196,10 @@ class Strategy:
 
         # If the ball gets away from the defensive area, stops the penalty mode
         if not self.mray:
-            if self.ball.xPos > 48 or self.ball.yPos < 30 or self.ball.yPos > 100:
+            if self.ball.coordinates.X > 48 or self.ball.coordinates.Y < 30 or self.ball.coordinates.Y > 100:
                 self.penaltyDefensive = False
         else:
-            if self.ball.xPos < 112 or self.ball.yPos < 30 or self.ball.yPos > 100:
+            if self.ball.coordinates.X < 112 or self.ball.coordinates.Y < 30 or self.ball.coordinates.Y > 100:
                 self.penaltyDefensive = False
 
     def penalty_mode_offensive(self):
@@ -220,7 +220,7 @@ class Strategy:
 
 
         # If the ball gets away from the robot, stop the penalty mode
-        if sqrt((self.ball.xPos - self.robots[2].xPos) ** 2 + (self.ball.yPos - self.robots[2].yPos) ** 2) > 30:
+        if sqrt((self.ball.coordinates.X - self.robots[2].coordinates.X) ** 2 + (self.ball.coordinates.Y - self.robots[2].yPos) ** 2) > 30:
             self.penaltyOffensive = False
 
     def penalty_mode_offensive_spin(self):
@@ -246,7 +246,7 @@ class Strategy:
                     action.girar(self.robots[2], 100, 0) # Shoots the ball spinning up
 
         # If the ball gets away from the robot, stop the penalty mode
-        if sqrt((self.ball.xPos - self.robots[2].xPos) ** 2 + (self.ball.yPos - self.robots[2].yPos) ** 2) > 30:
+        if sqrt((self.ball.coordinates.X - self.robots[2].coordinates.X) ** 2 + (self.ball.coordinates.Y - self.robots[2].yPos) ** 2) > 30:
             self.penaltyOffensive = False
 
 
@@ -258,7 +258,7 @@ class Strategy:
             action.girar(self.robots[2],30,40)
         else:
             action.girar(self.robots[2],40,30)
-        if sqrt((self.ball.xPos - self.robots[2].xPos) ** 2 + (self.ball.yPos - self.robots[2].yPos) ** 2) > 20:
+        if sqrt((self.ball.coordinates.X - self.robots[2].coordinates.X) ** 2 + (self.ball.coordinates.Y - self.robots[2].yPos) ** 2) > 20:
             self.penaltyOffensive = False
 
     """

@@ -91,12 +91,12 @@ class Univector:
     '''
     def hip_vec_field(self, robot, target):
         # Two rotation matrix needed for field rotation
-        matrix = self.rot_matrix(-target.theta)
-        matrix2 = self.rot_matrix(target.theta)
+        matrix = self.rot_matrix(-target.coordinates.rotation)
+        matrix2 = self.rot_matrix(target.coordinates.rotation)
 
         # Position vectors
-        vet_pos = [[robot.xPos], [robot.yPos]]
-        target_pos = [[target.xPos], [target.yPos]]
+        vet_pos = [[robot.coordinates.X], [robot.coordinates.Y]]
+        target_pos = [[target.coordinates.X], [target.coordinates.Y]]
 
         vet_pos = array(vet_pos) - array(target_pos)    # Coordinate system translation
         vet_pos = matmul(matrix, vet_pos)               # Coordinate system rotation
@@ -149,10 +149,10 @@ class Univector:
     Output: phi -> Univector field angle (float)
     '''
     def n_vec_field(self, robot, target, n=8, d=2, have_face=False):
-        rx = target.xPos + d * cos(target.theta)
-        ry = target.yPos + d * sin(target.theta)
-        pg_ang = arctan2(target.yPos - robot.yPos, target.xPos - robot.xPos)
-        pr_ang = arctan2(ry - robot.yPos, rx - robot.xPos)
+        rx = target.coordinates.X + d * cos(target.coordinates.rotation)
+        ry = target.coordinates.Y + d * sin(target.coordinates.rotation)
+        pg_ang = arctan2(target.coordinates.Y - robot.coordinates.Y, target.coordinates.X - robot.coordinates.X)
+        pr_ang = arctan2(ry - robot.coordinates.Y, rx - robot.coordinates.X)
         alpha = arctan2(sin(pr_ang - pg_ang), cos(pr_ang - pg_ang))
         phi = arctan2(sin(pg_ang - n * alpha), cos(pg_ang - n * alpha))
         return phi
@@ -165,8 +165,8 @@ class Univector:
     '''
     def ao_vec_field(self, robot, obst):
         # Components of the shifting vector, where S=k_o*(V_obst-V_robot)
-        sx = self.k_o * (obst.v * cos(obst.theta) - robot.v * cos(robot.theta))
-        sy = self.k_o * (obst.v * sin(obst.theta) - robot.v * sin(robot.theta))
+        sx = self.k_o * (obst.v * cos(obst.coordinates.rotation) - robot.v * cos(robot.coordinates.rotation))
+        sy = self.k_o * (obst.v * sin(obst.coordinates.rotation) - robot.v * sin(robot.coordinates.rotation))
 
         s = sqrt(sx ** 2 + sy ** 2) # Module of shifting vector
         d = robot.dist(obst)        # Distance of obstacle
@@ -174,12 +174,12 @@ class Univector:
         # Equation (5)
 
         if d >= s:
-            px = obst.xPos + sx
-            py = obst.yPos + sy
+            px = obst.coordinates.X + sx
+            py = obst.coordinates.Y + sy
         else:
-            px = obst.xPos + (d / s) * sx
-            py = obst.yPos + (d / s) * sy
-        phi = arctan2(robot.yPos - py, robot.xPos - px)
+            px = obst.coordinates.X + (d / s) * sx
+            py = obst.coordinates.Y + (d / s) * sy
+        phi = arctan2(robot.coordinates.Y - py, robot.coordinates.X - px)
 
         return phi
 

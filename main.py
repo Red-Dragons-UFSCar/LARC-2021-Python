@@ -50,6 +50,10 @@ if __name__ == "__main__":
         robot = Robot(i, actuator, not mray)
         enemy_robots.append(robot)
 
+    for robot in robots:
+        robot.set_enemies(enemy_robots)
+        robot.set_friends(robots.copy())
+
     ball = Ball()
 
     list_strategies = [args.strategy, args.op, args.dp]
@@ -71,12 +75,11 @@ if __name__ == "__main__":
         data_ball = field["ball"]  # Save the ball data
 
         # Updates vision data on each field object
-        robot0.sim_get_pose(data_our_bot[0])
-        robot1.sim_get_pose(data_our_bot[1])
-        robot2.sim_get_pose(data_our_bot[2])
-        robotEnemy0.sim_get_pose(data_their_bots[0])
-        robotEnemy1.sim_get_pose(data_their_bots[1])
-        robotEnemy2.sim_get_pose(data_their_bots[2])
+        for index, robot in enumerate(robots):
+            robot.sim_get_pose(data_our_bot[index])
+        
+        for index, robot in enumerate(enemy_robots):
+            robot.sim_get_pose(data_their_bots[index])      
         ball.sim_get_pose(data_ball)
 
         if ref_data["game_on"]:
