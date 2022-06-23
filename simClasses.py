@@ -8,6 +8,7 @@ from numpy import sqrt, zeros, int32
 
 class KinematicBody:
     """Base class for all moving bodies"""
+
     def __init__(self):
         self.coordinates = SpatialCoordinates()
         self.velocities = Velocities()
@@ -35,7 +36,8 @@ class KinematicBody:
 
     def calculate_distance(self, body):
         """calculates the distance between self and another kinematic body"""
-        return sqrt((self.coordinates.X - body.coordinates.X) ** 2 + (self.coordinates.Y - body.coordinates.Y) ** 2)
+        return sqrt((self.get_coordinates().X - body.get_coordinates().X) ** 2 +
+                    (self.get_coordinates().Y - body.get_coordinates().Y) ** 2)
 
     def calculate_distance_from_goal(self, mray):
         """Checks distance from object to one of the goals, choose which goal by using mray"""
@@ -46,14 +48,14 @@ class KinematicBody:
             x_gol = 10
             y_gol = 65
 
-        return sqrt((x_gol - self.get_coordinates().X) ** 2 + (y_gol - self.get_coordinates().X) ** 2)
+        return sqrt((x_gol - self.get_coordinates().X) ** 2 + (y_gol - self.get_coordinates().Y) ** 2)
 
     def show_info(self):
         """Input: None
         Description: Logs location and velocity info on the console.
         Output: Obstacle data."""
         print('coordinates.X: {:.2f} | coordinates.Y: {:.2f} | theta: {:.2f} | velocity: {:.2f}'.format(
-                    self.coordinates.X, self.coordinates.Y, float(self.coordinates.rotation), self.velocities.linear))
+            self.coordinates.X, self.coordinates.Y, float(self.coordinates.rotation), self.velocities.linear))
 
 
 class SpatialCoordinates:
@@ -89,11 +91,11 @@ class Obstacle(KinematicBody):
         super().__init__()
         self.robot = robot
 
-    def set_obst(self, coordinates):
+    def set_obst(self, x, y, rotation):
         """Input: Coordinates of obstacle.
         Description: Sets obstacle coordinates with data from vision.
         Output: None"""
-        self.set_coordinates(coordinates)
+        self.set_coordinates(x, y, rotation)
 
     def update(self, friends, enemy1=None, enemy2=None, enemy3=None):
         """Input: Object lists.
@@ -109,7 +111,7 @@ class Obstacle(KinematicBody):
 
         distances.sort(key=lambda a: self.robot.calculate_distance(a))
         obstacle = distances[0]
-        self.set_obst(obstacle.get_coordinates())
+        self.set_obst(obstacle.get_coordinates().X, obstacle.get_coordinates().Y, obstacle.get_coordinates().rotation)
 
     def update2(self, ball, friends, enemies):
         """Input: ball, robot's friends and enemies list
@@ -132,7 +134,7 @@ class Obstacle(KinematicBody):
         obstacles.sort(key=lambda a: self.robot.calculate_distance(a))
 
         # Setting current obstacle
-        self.set_obst(obstacles[0].get_coordinates())
+        self.set_obst(obstacles[0].get_coordinates().X, obstacles[0].get_coordinates().Y, obstacles[0].get_coordinates().rotation)
 
 
 class Ball(KinematicBody):
@@ -248,4 +250,3 @@ class Robot(KinematicBody):
 
     def get_enemies(self):
         return self.enemies.copy()
-
