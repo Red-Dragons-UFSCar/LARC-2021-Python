@@ -25,7 +25,7 @@ def Go_To_Goal(robot, ball, ind):
 
 if __name__ == "__main__":
 
-    mray = True
+    mray = False
 
     # Initialize all clients
     actuator = Actuator(mray, "127.0.0.1", 20011)
@@ -110,7 +110,7 @@ if __name__ == "__main__":
         robotEnemy1.sim_get_pose(data_their_bots[1])
         robotEnemy2.sim_get_pose(data_their_bots[2])
         ball.sim_get_pose(data_ball)
-
+	
         # check if robot achive the goal
         if robot0.arrive() or flagTime:
             finish_time = time.time()
