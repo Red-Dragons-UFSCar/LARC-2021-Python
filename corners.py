@@ -16,50 +16,50 @@ def target_in_corner(target, robot):
             flag_corner = True
             corner = 2
             if target.coordinates.Y < 5:
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y + 3, target.coordinates.rotation)
+                target.coordinates.update()
             else:
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y + 1.5, target.coordinates.rotation)
+                target.coordinates.update()
         elif target.coordinates.Y > 120: #updates target if y position is bigger than 120
 
             flag_corner = True
             corner = 4
             if target.coordinates.Y > 125:
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y - 3, target.coordinates.rotation)
+                target.coordinates.update()
             else:
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y - 1.5, target.coordinates.rotation)
+                target.coordinates.update()
     else: #other team
         if target.coordinates.X < 20: #updates target if x position is less than 120
 
             flag_corner = True
             corner = 1
             if target.coordinates.X < 15:
-                target.coordinates.update(target.coordinates.X + 3, target.coordinates.Y, target.coordinates.rotation)
+                target.coordinates.update()
             else:
-                target.coordinates.update(target.coordinates.X + 1.5, target.coordinates.Y, target.coordinates.rotation)
+                target.coordinates.update()
         elif target.coordinates.X > 150: #updates target if x position is bigger than 150
 
             flag_corner = True
             corner = 3
             if target.coordinates.X > 155:
-                target.coordinates.update(target.coordinates.X - 3, target.coordinates.Y, target.coordinates.rotation)
+                target.coordinates.update()
             else:
-                target.coordinates.update(target.coordinates.X - 1.5, target.coordinates.Y, target.coordinates.rotation)
+                target.coordinates.update()
         if target.coordinates.Y < 10: #updates target if y position is less than 10
 
             flag_corner = True
             corner = 2
             if target.coordinates.Y < 5:
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y + 3, target.coordinates.rotation)
+                target.coordinates.update()
             else:
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y + 1.5, target.coordinates.rotation)
+                target.coordinates.update()
         elif target.coordinates.Y > 120: #updates target if y position is bigger than 120
 
             flag_corner = True
             corner = 4
             if target.coordinates.Y > 125:
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y - 3, target.coordinates.rotation)
+                target.coordinates.update()
             else:
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y - 1.5, target.coordinates.rotation)
+                target.coordinates.update()
 
     robot.spin = False
     if flag_corner:
@@ -75,17 +75,17 @@ def detect_vertical_corners(corner, flag_corner, target):
         flag_corner = True
         corner = 1
         if target.coordinates.X < 5:
-            target.coordinates.update(target.coordinates.X + 3, target.coordinates.Y, target.coordinates.rotation)
+            target.coordinates.update()
         else:
-            target.coordinates.update(target.coordinates.X + 1.5, target.coordinates.Y, target.coordinates.rotation)
+            target.coordinates.update()
     elif target.coordinates.X > 150:  # updates target if x position is bigger than 150
 
         flag_corner = True
         corner = 3
         if target.coordinates.X > 155:
-            target.coordinates.update(target.coordinates.X - 3, target.coordinates.Y, target.coordinates.rotation)
+            target.coordinates.update()
         else:
-            target.coordinates.update(target.coordinates.X - 1.5, target.coordinates.Y, target.coordinates.rotation)
+            target.coordinates.update()
     return corner, flag_corner
 
 
@@ -106,20 +106,20 @@ def coordinates_rotation(robot, target, corner):
 
                 else:
                     rotation_gol = arctan2(-75, 160 - robot.coordinates.X) #-75 for being at the bottom
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y, rotation_gol)
+                target.coordinates.update()
             else:
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y, 0)
+                target.coordinates.update()
 
         elif robot.coordinates.Y > 110:
             if corner == 1:
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y, pi / 2)
+                target.coordinates.update()
             elif corner == 3:
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y, -pi / 2)
+                target.coordinates.update()
         elif robot.coordinates.Y < 40:
             if corner == 1:
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y, -pi / 2)
+                target.coordinates.update()
             elif corner == 3:
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y, pi / 2)
+                target.coordinates.update()
     else:
         if corner == 2 or corner == 4:
             if dist < 6:
@@ -128,23 +128,23 @@ def coordinates_rotation(robot, target, corner):
 
                 else:
                     rotation_gol = arctan2(-75, 10 - robot.coordinates.X)
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y, rotation_gol)
+                target.coordinates.update()
             else:
                 if target.coordinates.Y > 65:
-                    target.coordinates.update(target.coordinates.X, target.coordinates.Y, -pi + deg2rad(10))
+                    target.coordinates.update()
                 else:
-                    target.coordinates.update(target.coordinates.X, target.coordinates.Y, pi - deg2rad(10))
+                    target.coordinates.update()
 
         elif robot.coordinates.Y > 110:
             if corner == 1:
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y, -pi / 2)
+                target.coordinates.update()
             elif corner == 3:
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y, pi / 2)
+                target.coordinates.update()
         elif robot.coordinates.Y < 40:
             if corner == 1:
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y, pi / 2)
+                target.coordinates.update()
             elif corner == 3:
-                target.coordinates.update(target.coordinates.X, target.coordinates.Y, -pi / 2)
+                target.coordinates.update()
 
     return None
 
@@ -190,11 +190,11 @@ Output: None
 
 def change_target_pos(robot, target, corner): #update the target with the intention of making the robot perform a reverse movement not to get stuck
     if corner == 1:
-        target.coordinates.update(robot.coordinates.X + 100, robot.coordinates.Y, 0)
+        target.coordinates.update()
     if corner == 2:
-        target.coordinates.update(robot.coordinates.X, robot.coordinates.Y + 100, pi / 2)
+        target.coordinates.update()
     if corner == 3:
-        target.coordinates.update(robot.coordinates.X - 100, robot.coordinates.Y, 0)
+        target.coordinates.update()
     if corner == 4:
-        target.coordinates.update(robot.coordinates.X, robot.coordinates.Y - 100, -pi / 2)
+        target.coordinates.update()
     return None

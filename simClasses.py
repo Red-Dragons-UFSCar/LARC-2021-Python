@@ -97,17 +97,15 @@ class Obstacle(KinematicBody):
         Output: None"""
         self.set_coordinates(x, y, rotation)
 
-    def update(self, friends, enemy1=None, enemy2=None, enemy3=None):
+    def update(self):
         """Input: Object lists.
         Description: Detects the nearest object and sets it as the current obstacle to avoid.
         Output: Current obstacle."""
-        enemies = [enemy1, enemy2, enemy3]
+        enemies = self.robot.get_enemies()
+        friends = self.robot.get_friends()
         distances = []
-        for friend in friends:
-            distances.append(friend)
-        for enemy in enemies:
-            if enemy is not None:
-                distances.append(enemy)
+        distances.extend(enemies)
+        distances.extend(friends)
 
         distances.sort(key=lambda a: self.robot.calculate_distance(a))
         obstacle = distances[0]
@@ -250,3 +248,4 @@ class Robot(KinematicBody):
 
     def get_enemies(self):
         return self.enemies.copy()
+

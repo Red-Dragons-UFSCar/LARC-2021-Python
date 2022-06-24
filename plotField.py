@@ -125,7 +125,7 @@ if __name__ == '__main__':
                 y = 85 - (ball.yPos - 85) / (130 - 85) * 20
                 arrivalTheta = arctan2(y - 85, 10 - ball.xPos)
 
-        robot2.target.update(ball.xPos, ball.yPos, arrivalTheta)
-        robot2.obst.update(robot2, robot0, robot1, robotEnemy0, robotEnemy1, robotEnemy2)
+        robot2.target.update()
+        robot2.obst.update()
 
         plot.plot_interactive(robot2.target, robot2.obst)

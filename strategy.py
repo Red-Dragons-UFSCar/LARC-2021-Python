@@ -276,5 +276,4 @@ class Strategy:
         """Input: None
         Description: Calls leader and follower technique for use in strategies.
         Output: None."""
-        action.followLeader(self.robots[0], self.robots[1], self.robots[2], self.ball, self.enemy_robots[0], self.enemy_robots[1],
-                            self.enemy_robots[2])
+        action.follow_leader(self.robots[0], self.robots[1], self.robots[2])
