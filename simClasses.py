@@ -272,6 +272,12 @@ class Robot:
         else:
             self.vL = -v - 0.5 * self.L * w
             self.vR = -v + 0.5 * self.L * w
+        
+        #print('VL: ', self.vL)
+        #print('VR: ', self.vR)
+        #print('Index: ', self.index)
+        #print('-----------------------')
+
         self.actuator.send(self.index, self.vL, self.vR)
 
     def sim_set_vel2(self, v1, v2):

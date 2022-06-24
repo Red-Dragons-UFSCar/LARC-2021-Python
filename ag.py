@@ -1,3 +1,7 @@
+from numpy import sqrt, zeros, random, argwhere, maximum, minimum, multiply, rad2deg
+
+from copy import deepcopy
+
 class GA:
     def __init__(self,nvar,varmin,varmax,maxit,npop, K_t = 10, K_p = 8, K_d = 2):
         self.nvar = nvar
@@ -28,8 +32,7 @@ class GA:
         self.max_dang = []
         self.index_dang = []
 
-
-    def update_cost_param(self,dy,dang,dt):
+    def update_cost_param(self,dy,dang,dt, flagTime):
         self.vec_dy.append(dy)
         self.vec_dang.append(dang)
         self.vec_dt.append(dt)
@@ -40,9 +43,6 @@ class GA:
         self.pop = zeros([self.npop,self.nvar])
         for i in range(self.npop):
             self.pop[i] = random.uniform(self.varmin, self.varmax, self.nvar)
-            #self.pop[i][0] = 4.084236529565755
-            #self.pop[i][1] = 26.655381503697267
-
 
     def cost_func(self, dt, dang, dy):
         cost = 0
@@ -82,7 +82,6 @@ class GA:
             self.nextPop.append(c2)
         self.oldPop = deepcopy(self.pop)
         self.pop = deepcopy(self.nextPop)
-        #print("Vai filhão")
 
     def crossover(self,p1, p2, gamma=0.1):
         c1 = deepcopy(p1)
@@ -95,8 +94,6 @@ class GA:
     def mutate(self,x, mu, sigma):
         y = deepcopy(x)
         flag = random.rand(self.nvar) <= mu
-        #ind = argwhere(flag)
-        #y[ind] += sigma*random.randn(len(ind))
         y += multiply(flag, sigma*random.randn(self.nvar))
         return y
 
@@ -104,9 +101,3 @@ class GA:
         x = maximum(x, varmin)
         x = minimum(x, varmax)
         return x
-
-    def roulette_wheel_selection(self,p):
-        c = cumsum(p)
-        r = sum(p)*random.rand()
-        ind = argwhere(r <= c)
-        return ind[0][0]

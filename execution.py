@@ -10,8 +10,8 @@ Input: Robot object, Target object, Flag to activate Obstacle Avoidance, Obstacl
 Description: Estimate of robot desired angle in projection ( x + dl, y + dl )
 Output: stp_theta -> Angle referring to robot projection (float)
 '''
-def approx(robot, target, avoid_obst=True, obst=None, n=8, d=2, field_is_hiperbolic=True):
-    navigate = Univector()  # Defines the navigation algorithm
+def approx(robot, target, navigate,avoid_obst=True, obst=None, n=8, d=2, field_is_hiperbolic=True):
+
     dl = 0.000001  # Constant to approximate phi_v
 
     x = robot.xPos  # Saving (x,y) coordinates to calculate phi_v
@@ -43,12 +43,12 @@ Description: Function to control the robot with or without obstacle avoidance
 Output: v -> Linear Velocity (float)
         w -> Angular Velocity (float)
 '''
-def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_when_arrive=False, double_face=True,
+def univec_controller(robot, target, univec_params,avoid_obst=True, obst=None, n=8, d=2, stop_when_arrive=False, double_face=True,
                       field_is_hiperbolic=True):
 
     flagCorner, corner = target_in_corner(target, robot) # Checks if the robot is in some corner
 
-    navigate = Univector()  # Defines the navigation algorithm
+    navigate = Univector(univec_params)  # Defines the navigation algorithm
     dl = 0.000001  # Constant to approximate phi_v
     k_w = 1.8  # Feedback constant for angle error (k_w=1 means no gain)
     k_p = 1  # Proporcional constant for stopping when arrive in target (k_p=1 means no gain)
@@ -79,7 +79,7 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
     Controller estimation
     '''
 
-    stp_theta = approx(robot, target, avoid_obst, obst, n, d, field_is_hiperbolic) # Desired angle prediction
+    stp_theta = approx(robot, target, navigate,avoid_obst, obst, n, d, field_is_hiperbolic) # Desired angle prediction
     phi_v = arctan2(sin(stp_theta - des_theta),     # Difference between the prediction and current angle
                     cos(stp_theta - des_theta)) / dl
     theta_e = which_face(robot, target, des_theta, double_face) # Angle error
