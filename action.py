@@ -1,6 +1,7 @@
 from numpy import pi, cos, sin, tan, arctan2, sqrt, deg2rad
 
 import simClasses
+import strategy
 from execution import univec_controller
 
 
@@ -197,7 +198,7 @@ def calculate_arrival_angle_defender_spin(ball: simClasses.Ball, left_side):
     return arrival_angle
 
 
-def screen_out_ball(robot: simClasses.Robot, ball: simClasses.Ball, static_point, left_side=True, upper_lim=200,
+def screen_out_ball(robot: simClasses.Robot, ball: simClasses.KinematicBody, static_point, left_side=True, upper_lim=200,
                     lower_lim=0):
     """Input: Robot object, ball object, point to project the ball, side of field (True = Left, False = Right), moviment limits(upper and lower), other robots objects (2 friend)
     Description: Project ball Y position to the selected X point.
@@ -585,6 +586,9 @@ def calculate_follower_velocities(robot0: simClasses.Robot, robot_follower: simC
 
 
 def project_coordinates(robot_leader):
+    """Input: Robot object
+    Description: Calculates the projected coordinates of the robot.
+    Output: Projected coordinates"""
     robot_leader_coordinates = robot_leader.get_coordinates()
     if robot_leader_coordinates.Y > 65:
         if robot_leader_coordinates.X > 75:
@@ -602,102 +606,63 @@ def project_coordinates(robot_leader):
             proj_y = robot_leader_coordinates.Y + 15
     return proj_x, proj_y
 
-def follow_leader(robot1: simClasses.Robot, robot2: simClasses.Robot, ball: simClasses.Ball):
+
+def follow_leader(robot1: simClasses.Robot, robot2: simClasses.Robot, ball: simClasses.Ball,
+                  strategy_controller: strategy.Strategy):
     """Input: Robot object (All team members), ball object, other robots objects (3 opponents)
     Description: Defines the strategy of 2 attackers, the leader and what each robot needs to do in each situation.
     Output: None"""
-    robot1_coordinates = robot1.get_coordinates()
-    robot2_coordinates = robot2.get_coordinates()
     ball_coordinates = ball.get_coordinates()
+    leader, follower = select_leader(robot1, robot2, ball, strategy_controller)
 
-    leader, follower = select_leader(robot1, robot2, ball)
+    leader_coordinates = leader.get_coordinates()
+    follower_coordinates = follower.get_coordinates()
 
-    if robot2.isLeader:
-        if not robot1.teamYellow:
-            if ball.coordinates.X < 30 and (
-                    110 > ball.coordinates.Y > 30):  # If ball is in defence side the robot 2 do the screen out, and the robot 1 follow his moves
-                if robot1.coordinates.X < 30:
-                    screen_out_ball(robot2, robot2, 55, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
-                else:
-                    screen_out_ball(robot2, ball, 55, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
-                play_follower(robot1, robot2, ball)
+    if not follower.teamYellow:
+        # If ball is on the defence side the leader does the screen out, and the follower follows his moves.
+        if (ball_coordinates.X < 30) and (110 > ball_coordinates.Y > 30):
+            if follower_coordinates.X < 30:
+                screen_out_ball(leader, leader, 55, left_side=not leader.teamYellow, upper_lim=120, lower_lim=10)
+            else:
+                screen_out_ball(leader, ball, 55, left_side=not leader.teamYellow, upper_lim=120, lower_lim=10)
+            play_follower(follower, leader, ball)
 
-            else:  # If ball is in attack side the robot 2 do the defender spin, and the robot 1 follow his moves
-                defender_spin(robot2, ball, left_side=not robot2.teamYellow)
-                '''
-                If is the robot 1 is close enough to the tha ball, starts to do the defender spin
-                '''
-                if robot1.dist(ball) < 20:
-                    if robot2.coordinates.X > 140 and (100 > robot2.coordinates.Y > 40):
-                        play_follower(robot1, robot2, ball)
-                    else:
-                        defender_spin(robot1, ball, left_side=not robot1.teamYellow)
-                else:
-                    play_follower(robot1, robot2, ball)
+        else:  # If ball is on the attack side the leader does the defender spin, and the follower follows his moves.
+            defender_spin(leader, ball, left_side=not leader.teamYellow)
+            # If the follower is close enough to the ball, it starts to do the defender spin.
+            if follower.calculate_distance(ball) < 20 and \
+                    not ((leader_coordinates.X > 140) and (100 > leader_coordinates.Y > 40)):
+                defender_spin(follower, ball, left_side=not follower.teamYellow)
+                return
 
-        # Same Idea but for the other side of de field
+            play_follower(follower, leader, ball)
+        return
+    # Same Idea but for the other side of de field
+    if follower.teamYellow:
+        if (ball_coordinates.X > 130) and (110 > ball_coordinates.Y > 30):
+            if follower_coordinates.X > 130:
+                screen_out_ball(leader, leader, 55, left_side=not leader.teamYellow, upper_lim=120, lower_lim=10)
+            else:
+                screen_out_ball(leader, ball, 55, left_side=not leader.teamYellow, upper_lim=120, lower_lim=10)
+            play_follower(follower, leader, ball)
+
         else:
-            if ball.coordinates.X > 130 and (110 > ball.coordinates.Y > 30):
-                if robot1.coordinates.X > 130:
-                    screen_out_ball(robot2, robot2, 55, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
-                else:
-                    screen_out_ball(robot2, ball, 55, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
-                play_follower(robot1, robot2, ball)
+            defender_spin(leader, ball, left_side=not leader.teamYellow)
+            if follower.calculate_distance(ball) < 20 and \
+                    not ((leader_coordinates.X < 35) and (100 > leader_coordinates.Y > 40)):
+                defender_spin(follower, ball, left_side=not follower.teamYellow)
+                return
 
-            else:
-                defender_spin(robot2, ball, left_side=not robot2.teamYellow)
-                if robot1.dist(ball) < 20:
-                    if robot2.coordinates.X < 35 and (100 > robot2.coordinates.Y > 40):
-                        play_follower(robot1, robot2, ball)
-                    else:
-                        defender_spin(robot1, ball, left_side=not robot1.teamYellow)
-                else:
-                    play_follower(robot1, robot2, ball)
-
-    elif robot1.isLeader:
-        if not robot1.teamYellow:
-            if ball.coordinates.X < 35 and (110 > ball.coordinates.Y > 30):
-                if robot1.coordinates.X < 35:
-                    screen_out_ball(robot1, robot1, 55, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
-                else:
-                    screen_out_ball(robot1, ball, 55, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
-                play_follower(robot2, robot1, ball)
-
-            else:
-                defender_spin(robot1, ball, left_side=not robot1.teamYellow)
-                if robot2.dist(ball) < 20:
-                    if robot1.coordinates.X > 140 and (100 > robot1.coordinates.Y > 40):
-                        play_follower(robot2, robot1, ball)
-                    else:
-                        defender_spin(robot2, ball, left_side=not robot2.teamYellow)
-                else:
-                    play_follower(robot2, robot1, ball)
-        else:
-            if ball.coordinates.X > 130 and (110 > ball.coordinates.Y > 30):
-                if robot1.coordinates.X > 130:
-                    screen_out_ball(robot1, robot1, 55, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
-                else:
-                    screen_out_ball(robot1, ball, 55, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
-                play_follower(robot2, robot1, ball)
-
-            else:
-                defender_spin(robot1, ball, left_side=not robot1.teamYellow)
-                if robot2.dist(ball) < 20:
-                    if robot1.coordinates.X < 35 and (100 > robot1.coordinates.Y > 40):
-                        play_follower(robot2, robot1, ball)
-                    else:
-                        defender_spin(robot2, ball, left_side=not robot2.teamYellow)
-                else:
-                    play_follower(robot2, robot1, ball)
+            play_follower(follower, leader, ball)
 
 
-def select_leader(robot1: simClasses.Robot, robot2: simClasses.Robot, ball: simClasses.Ball):
+def select_leader(robot1: simClasses.Robot, robot2: simClasses.Robot, ball: simClasses.Ball, strategy_controller: strategy.Strategy):
     """Input: Distance of the robots to the ball, robot objects
     Description: Defines which robot is the leader and who is the follower
     Output: None"""
-    leader = None
-    follower = None
-    leader_time = 0
+    leader = strategy_controller.get_leader()
+    follower = strategy_controller.get_follower()
+    leader_time = strategy_controller.get_leader_time()
     distance1_to_ball = robot1.calculate_distance(ball)
     distance2_to_ball = robot2.calculate_distance(ball)
 
@@ -728,4 +693,7 @@ def select_leader(robot1: simClasses.Robot, robot2: simClasses.Robot, ball: simC
 
         leader_time += 1
 
+    strategy_controller.set_leader(leader)
+    strategy_controller.set_follower(follower)
+    strategy_controller.set_leader_time(leader_time)
     return leader, follower

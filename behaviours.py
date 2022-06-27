@@ -2,10 +2,8 @@ from numpy import array, arctan2, cos, sin, pi, sqrt, matmul, exp
 
 
 class Univector:
-    '''
-        These functions are needed to develop the univector field, and can be found at the paper:
-        "Evolutionary Univector Field-based Navigation with Collision Avoidance for Mobile Robot"
-    '''
+    """These functions are needed to develop the univector field, and can be found at the paper:
+        "Evolutionary Univector Field-based Navigation with Collision Avoidance for Mobile Robot" """
 
     def __init__(self):
         self.d_e = 6        # Predefined radius that decides the size of the spiral.
@@ -14,13 +12,10 @@ class Univector:
         self.k_o = 0.5      # Proportional constant of obstacle velocity
         self.d_min = 3.5    # Minimum distance what the field becomes pure
 
-
-    '''
-    Input: Desired rotation angle alpha
-    Description: Creates a rotation matrix with angle alpha
-    Output: Rotation matrix 2x2 (float)
-    '''
     def rot_matrix(self, alpha):
+        """Input: Desired rotation angle alpha
+        Description: Creates a rotation matrix with angle alpha
+        Output: Rotation matrix 2x2 (float)"""
         return array(((cos(alpha), -sin(alpha)), (sin(alpha), cos(alpha))))
 
 

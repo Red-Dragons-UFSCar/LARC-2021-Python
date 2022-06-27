@@ -17,8 +17,47 @@ class Strategy:
         self.penaltyDefensive = False
         self.penaltyOffensive = False
         self.strategy = strategies[0]
-        self.stOfensePenalty = strategies[1]
+        self.stOffensePenalty = strategies[1]
         self.stDefensePenalty = strategies[2]
+        self.leader = None
+        self.follower = None
+        self.leader_time = 0
+
+    def set_leader(self, leader):
+        """Input: None
+        Description: Sets the leader robot.
+        Output: None."""
+        self.leader = leader
+
+    def set_follower(self, follower):
+        """Input: None
+        Description: Sets the follower robot.
+        Output: None."""
+        self.follower = follower
+
+    def get_leader(self):
+        """Input: None
+        Description: Returns the leader robot.
+        Output: Leader robot."""
+        return self.leader
+
+    def get_follower(self):
+        """Input: None
+        Description: Returns the follower robot.
+        Output: Follower robot."""
+        return self.follower
+
+    def set_leader_time(self, time):
+        """Input: Time
+        Description: Sets the time of the leader.
+        Output: None."""
+        self.leader_time = time
+
+    def get_leader_time(self):
+        """Input: None
+        Description: Returns the time of the leader.
+        Output: Time."""
+        return self.leader_time
 
     def decider(self):
         """Input: None
@@ -217,9 +256,9 @@ class Strategy:
         #action.attack_penalty(self.robots[2], self.ball, leftSide=not self.mray, friend1=self.robots[0], friend2=self.robots[1],
         #                      enemy1=self.enemy_robots[0], enemy2=self.enemy_robots[1], enemy3=self.enemy_robots[2]) # Attacker behaviour in penalty
 
-        if self.stOfensePenalty == 'spin':
+        if self.stOffensePenalty == 'spin':
             action.attacker_penalty_spin(self.robots[2], self.ball)
-        elif self.stOfensePenalty == 'direct':
+        elif self.stOffensePenalty == 'direct':
             action.attacker_penalty_direct(self.robots[2])
 
 
