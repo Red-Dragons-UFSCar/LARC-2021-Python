@@ -18,13 +18,10 @@ class Univector:
         Output: Rotation matrix 2x2 (float)"""
         return array(((cos(alpha), -sin(alpha)), (sin(alpha), cos(alpha))))
 
-
-    '''
-    Input: x Position, y Position, x center hyperbolic spiral, y center hyperbolic spiral
-    Description: Calculates the desired angle phi of a clockwise hyperbolic spiral univector field
-    Output: phi -> Field angle at position (x, y)  (float)
-    '''
     def phi_h_cw(self, x, y, xg, yg):
+        """Input: x Position, y Position, x center hyperbolic spiral, y center hyperbolic spiral
+        Description: Calculates the desired angle phi of a clockwise hyperbolic spiral univector field
+        Output: phi -> Field angle at position (x, y)  (float)"""
         rho = sqrt((x - xg) ** 2 + (y - yg) ** 2)   # Distance from spiral center
         theta = arctan2(y - yg, x - xg)             # Angle from spiral center
 
@@ -39,13 +36,10 @@ class Univector:
 
         return phi
 
-
-    '''
-    Input: x Position, y Position, x center hyperbolic spiral, y center hyperbolic spiral
-    Description: Calculates the desired angle phi of a counter-clockwise hyperbolic spiral univector field
-    Output: phi -> Field angle at position (x, y)  (float)
-    '''
     def phi_h_ccw(self, x, y, xg, yg):
+        """Input: x Position, y Position, x center hyperbolic spiral, y center hyperbolic spiral
+        Description: Calculates the desired angle phi of a counter-clockwise hyperbolic spiral univector field
+        Output: phi -> Field angle at position (x, y)  (float)"""
         rho = sqrt((x - xg) ** 2 + (y - yg) ** 2)   # Distance from spiral center
         theta = arctan2(y - yg, x - xg)             # Angle from spiral center
 
@@ -59,32 +53,23 @@ class Univector:
 
         return phi
 
-
-    '''
-    Input: Angle phi
-    Description: Calculates a column vector with cos(phi) and sin(phi)
-    Output: Column vector (2x1)  (float)
-    '''
     def n_h(self, phi):
+        """Input: Angle phi
+        Description: Calculates a column vector with cos(phi) and sin(phi)
+        Output: Column vector (2x1)  (float)"""
         return array([[cos(phi)], [sin(phi)]])
 
-
-    '''
-    Input: Distance r
-    Description: Calculates a gaussian distribution with average r and variance self.delta
-    Output: Resulting value of gaussian distribution (float)
-    '''
     def gaussian_func(self, r):
+        """Input: Distance r
+        Description: Calculates a gaussian distribution with average r and variance self.delta
+        Output: Resulting value of gaussian distribution (float)"""
         return exp(-0.5 * (r / self.delta) ** 2)
 
-
-    '''
-    Input: Robot object, Target object
-    Description:  Calculates the angle of hyperbolic vector field which yields us to the target position
-                  with the desired posture without avoiding any obstacle
-    Output: phi -> Univector field angle (float)
-    '''
     def hip_vec_field(self, robot, target):
+        """Input: Robot object, Target object
+        Description:  Calculates the angle of hyperbolic vector field which yields us to the target position
+                  with the desired posture without avoiding any obstacle
+        Output: phi -> Univector field angle (float)"""
         # Two rotation matrix needed for field rotation
         matrix = self.rot_matrix(-target.coordinates.rotation)
         matrix2 = self.rot_matrix(target.coordinates.rotation)
@@ -135,15 +120,14 @@ class Univector:
         return phi
 
 
-    '''
-    Input: Robot object, Target object, Constant n, Constant d, flag Have_face (why this flag is not used?)
-    Description:  Calculates the angle of 'N_Posture' vector field, which yields us to the target position
+
+    def n_vec_field(self, robot, target, n=8, d=2, have_face=False):
+        """Input: Robot object, Target object, Constant n, Constant d, flag Have_face (why this flag is not used?)
+        Description:  Calculates the angle of 'N_Posture' vector field, which yields us to the target position
                   with the desired posture without avoiding any obstacle. This univector field is explained
                   in book Soccer Robotics, in section 4.6.2. This function is not the principal
                   (main function above)
-    Output: phi -> Univector field angle (float)
-    '''
-    def n_vec_field(self, robot, target, n=8, d=2, have_face=False):
+        Output: phi -> Univector field angle (float)"""
         rx = target.coordinates.X + d * cos(target.coordinates.rotation)
         ry = target.coordinates.Y + d * sin(target.coordinates.rotation)
         pg_ang = arctan2(target.coordinates.Y - robot.coordinates.Y, target.coordinates.X - robot.coordinates.X)
@@ -152,13 +136,10 @@ class Univector:
         phi = arctan2(sin(pg_ang - n * alpha), cos(pg_ang - n * alpha))
         return phi
 
-
-    '''
-    Input: Robot object, Obstacle object
-    Description: Calculates the angle of moving obstacle avoidance vector field
-    Output: phi -> Univector field angle (float)
-    '''
     def ao_vec_field(self, robot, obst):
+        """Input: Robot object, Obstacle object
+        Description: Calculates the angle of moving obstacle avoidance vector field
+        Output: phi -> Univector field angle (float)"""
         # Components of the shifting vector, where S=k_o*(V_obst-V_robot)
         sx = self.k_o * (obst.v * cos(obst.coordinates.rotation) - robot.v * cos(robot.coordinates.rotation))
         sy = self.k_o * (obst.v * sin(obst.coordinates.rotation) - robot.v * sin(robot.coordinates.rotation))
@@ -178,14 +159,11 @@ class Univector:
 
         return phi
 
-
-    '''
-    Input: Robot object, Target object, Obstacle object
-    Description: Calculates the angle of composed vector field, which mix both move-to-target (hyperbolic)
-                 and avoid-obstacle vector field using a gaussian function
-    Output: phi -> Univector field angle (float)
-    '''
     def univec_field_h(self, robot, target, obst):
+        """Input: Robot object, Target object, Obstacle object
+        Description: Calculates the angle of composed vector field, which mix both move-to-target (hyperbolic)
+                 and avoid-obstacle vector field using a gaussian function
+        Output: phi -> Univector field angle (float)"""
         d = robot.dist(obst)    # Robot distance
 
         # Equation (6)
@@ -198,14 +176,13 @@ class Univector:
 
         return phi
 
-    '''
-    Input: Robot object, Target object, Obstacle object
-    Description: Calculates the angle of composed vector field, which mix both move-to-target (N_Posture)
+
+    def univec_field_n(self, robot, target, obst, n=8, d=2):
+        """Input: Robot object, Target object, Obstacle object
+        Description: Calculates the angle of composed vector field, which mix both move-to-target (N_Posture)
                  and avoid-obstacle vector field using a gaussian function. This function is not the main
                  (main function above)
-    Output: phi -> Univector field angle (float)
-    '''
-    def univec_field_n(self, robot, target, obst, n=8, d=2):
+        Output: phi -> Univector field angle (float)"""
         if robot.dist(obst) <= self.d_min:
             robot.flagTrocaFace = True
             phi = self.ao_vec_field(robot, obst)
