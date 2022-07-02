@@ -170,8 +170,8 @@ class Ball:
         """Input: FIRASim ball location data.
         Description: Gets position of the ball from the simulator.
         Output: None"""
-        self.xPos = data_ball.x + data_ball.vx * 100 * 8 / 60
-        self.yPos = data_ball.y + data_ball.vy * 100 * 8 / 60
+        self.xPos = data_ball.x #+ data_ball.vx * 100 * 8 / 60
+        self.yPos = data_ball.y #+ data_ball.vy * 100 * 8 / 60
 
         # Check if prev is out of field, in this case reflect ball moviment to reproduce the collision
         if self.xPos > 160:
@@ -245,7 +245,7 @@ class Robot:
         """Input: None.
         Description: Returns True if the distance between the target and the robot is less than 3cm - False otherwise
         Output: True or False."""
-        if self.dist(self.target) <= 7:
+        if self.dist(self.target) <= 7.5:
             return True
         else:
             return False

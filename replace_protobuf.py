@@ -35,6 +35,8 @@ def replacer_all(x_blue, y_blue, theta_blue, x_yellow, y_yellow, theta_yellow, x
         robot.position.x = x_blue[i]
         robot.position.y = y_blue[i]
         robot.position.orientation = theta_blue[i]
+        robot.position.vx = 0
+        robot.position.vy = 0
         robot.turnon = True
 
     for i in range(3):
@@ -44,10 +46,14 @@ def replacer_all(x_blue, y_blue, theta_blue, x_yellow, y_yellow, theta_yellow, x
         robot.position.x = x_yellow[i]
         robot.position.y = y_yellow[i]
         robot.position.orientation = theta_yellow[i]
+        robot.position.vx = 0
+        robot.position.vy = 0
         robot.turnon = True
 
     replacer.replace.ball.x = x_ball
     replacer.replace.ball.y = y_ball
+    replacer.replace.ball.vx = 0
+    replacer.replace.ball.vy = 0
 
     HOST = "127.0.0.1"  # The server's hostname or IP address
     PORT = 20011  # The port used by the server

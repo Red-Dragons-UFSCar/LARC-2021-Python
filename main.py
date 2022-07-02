@@ -14,14 +14,9 @@ import time
 import numpy as np
 
 def Go_To_Goal(robot, ball, ind):
-
-    arrival_theta = 0
-    robot.target.update(ball.xPos, ball.yPos, arrival_theta)
     v, w = univec_controller(robot, robot.target, ind,avoid_obst=False, double_face=False)
-    #print('V linear: ', v)
-    #print('V ang: ', w)
     robot.sim_set_vel(v, w)
-    #print('-----------------------')
+    print(robot.dist(ball))
 
 if __name__ == "__main__":
 
@@ -66,7 +61,7 @@ if __name__ == "__main__":
     ga_univector.initialize_pop()
 
     # Set position list
-    pos_x = [15,47.5,85,122.5,155,122.5,85,47.5]
+    pos_x = [15,47.5,85,122.5,135,122.5,85,47.5]
     pos_y = [65,115,120,115,65,25,20,25]
     pos_ang = [0,0,180,180,180,180,180,0]
 
@@ -110,25 +105,30 @@ if __name__ == "__main__":
         robotEnemy1.sim_get_pose(data_their_bots[1])
         robotEnemy2.sim_get_pose(data_their_bots[2])
         ball.sim_get_pose(data_ball)
+        robot0.target.update(ball.xPos, ball.yPos, 0)
 	
         # check if robot achive the goal
         if robot0.arrive() or flagTime:
-            finish_time = time.time()
-            dt = finish_time - start_time
+            print(robot0.arrive())
+            dt = time.time() - start_time
             dy = robot0.yPos - ball.yPos
             dang = robot0.theta
+            robot0.sim_set_vel(0, 0)
             vec_dt.append(dt)
             vec_dy.append(dy)
             vec_dang.append(dang)
             vec_flagsTime.append(flagTime)
-            start_time = time.time()
             flagTime = False
 
             if cont_pos < len(pos_x):
+                time.sleep(2)
                 replacer_all([pos_x[cont_pos], 1000, 1000],[pos_y[cont_pos], 250, 300], [0, 0, 0], [1000, 1000, 1000], [350, 400, 450], [0, 0, 0], 85, 65)
                 cont_pos = cont_pos + 1
+                time.sleep(1)
+
             else:
-                
+                time.sleep(2)
+                replacer_all([pos_x[0], 1000, 1000],[pos_y[0], 250, 300], [0, 0, 0], [1000, 1000, 1000], [350, 400, 450], [0, 0, 0], 85, 65)
                 cont_pos = 1
                 cont_ind += 1
                 ga_univector.cost_func(vec_dt, vec_dang, vec_dy)
@@ -181,6 +181,7 @@ if __name__ == "__main__":
                     ga_univector.max_dang = []
                     ga_univector.index_dang = []
             
+            start_time = time.time()
 
         elif cont_ind < ga_univector.npop:
             Go_To_Goal(robot0, ball, ga_univector.pop[cont_ind])
