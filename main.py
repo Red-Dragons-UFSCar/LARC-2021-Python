@@ -16,7 +16,6 @@ import numpy as np
 def Go_To_Goal(robot, ball, ind):
     v, w = univec_controller(robot, robot.target, ind,avoid_obst=False, double_face=False)
     robot.sim_set_vel(v, w)
-    print(robot.dist(ball))
 
 if __name__ == "__main__":
 
@@ -42,8 +41,8 @@ if __name__ == "__main__":
     # Genetic alg var
     nvar = 5
     varmin = 0
-    varmax = 10
-    maxit = 200
+    varmax = 20
+    maxit = 1000
     npop = 20
 
     # Aux var
@@ -109,7 +108,6 @@ if __name__ == "__main__":
 	
         # check if robot achive the goal
         if robot0.arrive() or flagTime:
-            print(robot0.arrive())
             dt = time.time() - start_time
             dy = robot0.yPos - ball.yPos
             dang = robot0.theta
