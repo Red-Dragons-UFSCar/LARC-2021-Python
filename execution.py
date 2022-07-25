@@ -47,6 +47,17 @@ def univec_controller(robot, target, univec_params,avoid_obst=True, obst=None, n
                       field_is_hiperbolic=True):
 
     flagCorner, corner = target_in_corner(target, robot) # Checks if the robot is in some corner
+    # univec_params[0] = 9.302233213565474
+    # univec_params[1] = 16.960956578253068
+    # univec_params[2] = 9.48822598107507
+    # univec_params[3] = 17.96452160772232
+    # univec_params[4] = 7.118557382752489
+
+    # univec_params[0] = 6
+    # univec_params[1] = 3
+    # univec_params[2] = 3.5
+    # univec_params[3] = 0.5
+    # univec_params[4] = 3.5 
 
     navigate = Univector(univec_params)  # Defines the navigation algorithm
     dl = 0.000001  # Constant to approximate phi_v
