@@ -71,12 +71,14 @@ class Univector:
                   with the desired posture without avoiding any obstacle
         Output: phi -> Univector field angle (float)"""
         # Two rotation matrix needed for field rotation
-        matrix = self.rot_matrix(-target.coordinates.rotation)
-        matrix2 = self.rot_matrix(target.coordinates.rotation)
+        robot_coordinates = robot.get_coordinates()
+        target_coordinates = target.get_coordinates()
+        matrix = self.rot_matrix(-target_coordinates.rotation)
+        matrix2 = self.rot_matrix(target_coordinates.rotation)
 
         # Position vectors
-        vet_pos = [[robot.coordinates.X], [robot.coordinates.Y]]
-        target_pos = [[target.coordinates.X], [target.coordinates.Y]]
+        vet_pos = [[robot_coordinates.X], [robot_coordinates.Y]]
+        target_pos = [[target_coordinates.X], [target_coordinates.Y]]
 
         vet_pos = array(vet_pos) - array(target_pos)    # Coordinate system translation
         vet_pos = matmul(matrix, vet_pos)               # Coordinate system rotation
@@ -110,16 +112,14 @@ class Univector:
         else:
             phi = self.phi_h_ccw(x, y - self.d_e, 0, 0)
 
-        # Rotation to return a original coordinate
-        # The vector in function matmul is a univector formed with angle phi in new coordinate system
+        # Rotation to return na original coordinate
+        # The vector in function matmul is an univector formed with angle phi in new coordinate system
         vec_phi = matmul(matrix2, [[cos(phi)], [sin(phi)]])
 
         # Angle calculation
         phi = arctan2(vec_phi[1], vec_phi[0])
 
         return phi
-
-
 
     def n_vec_field(self, robot, target, n=8, d=2, have_face=False):
         """Input: Robot object, Target object, Constant n, Constant d, flag Have_face (why this flag is not used?)
@@ -128,10 +128,12 @@ class Univector:
                   in book Soccer Robotics, in section 4.6.2. This function is not the principal
                   (main function above)
         Output: phi -> Univector field angle (float)"""
-        rx = target.coordinates.X + d * cos(target.coordinates.rotation)
-        ry = target.coordinates.Y + d * sin(target.coordinates.rotation)
-        pg_ang = arctan2(target.coordinates.Y - robot.coordinates.Y, target.coordinates.X - robot.coordinates.X)
-        pr_ang = arctan2(ry - robot.coordinates.Y, rx - robot.coordinates.X)
+        target_coordinates = target.get_coordinates()
+        robot_coordinates = robot.get_coordinates()
+        rx = target_coordinates.X + d * cos(target_coordinates.rotation)
+        ry = target_coordinates.Y + d * sin(target_coordinates.rotation)
+        pg_ang = arctan2(target_coordinates.Y - robot_coordinates.Y, target_coordinates.X - robot_coordinates.X)
+        pr_ang = arctan2(ry - robot_coordinates.Y, rx - robot_coordinates.X)
         alpha = arctan2(sin(pr_ang - pg_ang), cos(pr_ang - pg_ang))
         phi = arctan2(sin(pg_ang - n * alpha), cos(pg_ang - n * alpha))
         return phi
@@ -141,21 +143,27 @@ class Univector:
         Description: Calculates the angle of moving obstacle avoidance vector field
         Output: phi -> Univector field angle (float)"""
         # Components of the shifting vector, where S=k_o*(V_obst-V_robot)
-        sx = self.k_o * (obst.v * cos(obst.coordinates.rotation) - robot.v * cos(robot.coordinates.rotation))
-        sy = self.k_o * (obst.v * sin(obst.coordinates.rotation) - robot.v * sin(robot.coordinates.rotation))
+        obstacle_velocities = obst.get_velocities()
+        obstacle_coordinates = obst.get_coordinates()
+        robot_velocities = robot.get_velocities()
+        robot_coordinates = robot.get_coordinates()
+        sx = self.k_o * (obstacle_velocities.linear * cos(obstacle_coordinates.rotation) - robot_velocities.linear *
+                         cos(robot_coordinates.rotation))
+        sy = self.k_o * (obstacle_velocities.linear * sin(obstacle_coordinates.rotation) - robot_velocities.linear *
+                         sin(robot_coordinates.rotation))
 
-        s = sqrt(sx ** 2 + sy ** 2) # Module of shifting vector
-        d = robot.dist(obst)        # Distance of obstacle
+        s = sqrt(sx ** 2 + sy ** 2)  # Module of shifting vector
+        d = robot.calculate_distance(obst)       # Distance of obstacle
 
         # Equation (5)
 
         if d >= s:
-            px = obst.coordinates.X + sx
-            py = obst.coordinates.Y + sy
+            px = obstacle_coordinates.X + sx
+            py = obstacle_coordinates.Y + sy
         else:
-            px = obst.coordinates.X + (d / s) * sx
-            py = obst.coordinates.Y + (d / s) * sy
-        phi = arctan2(robot.coordinates.Y - py, robot.coordinates.X - px)
+            px = obstacle_coordinates.X + (d / s) * sx
+            py = obstacle_coordinates.Y + (d / s) * sy
+        phi = arctan2(robot_coordinates.Y - py, robot_coordinates.X - px)
 
         return phi
 
@@ -164,7 +172,7 @@ class Univector:
         Description: Calculates the angle of composed vector field, which mix both move-to-target (hyperbolic)
                  and avoid-obstacle vector field using a gaussian function
         Output: phi -> Univector field angle (float)"""
-        d = robot.dist(obst)    # Robot distance
+        d = robot.calculate_distance(obst)   # Robot distance
 
         # Equation (6)
 

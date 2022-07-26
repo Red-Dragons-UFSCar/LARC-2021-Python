@@ -75,7 +75,7 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
             else:
                 entidade0 = Entity(x=17.5, y=65, a=0, index=0)
                 entidade1 = Entity(x=105, y=63,a=0, index=1)
-                if ball.yPos < 65:
+                if ball.get_coordinates().Y < 65:
                     entidade2 = Entity(x=100, y=20,a=0, index=2)
                 else:
                     entidade2 = Entity(x=100, y=115,a=0, index=2)
@@ -147,9 +147,9 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
                 entidade0 = Entity(x=152.5, y=65, a=180, index=0)
                 entidade1 = Entity(x=62, y=63,a=0, index=1)
                 ball = Ball()
-                if ball.yPos < 65:
+                if ball.get_coordinates().Y < 65:
                     entidade2 = Entity(x=70, y=20,a=0, index=2)
-                elif ball.yPos > 65:
+                elif ball.get_coordinates().Y > 65:
                     entidade2 = Entity(x=70, y=115,a=0, index=2)
             replacement.place_all([entidade0, entidade1, entidade2])
 
