@@ -249,3 +249,6 @@ class Robot(KinematicBody):
     def get_enemies(self):
         return self.enemies.copy()
 
+    def get_target(self):
+        return self.target
+

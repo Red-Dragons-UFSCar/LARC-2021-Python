@@ -46,7 +46,7 @@ Output: v -> Linear Velocity (float)
 def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_when_arrive=False, double_face=True,
                       field_is_hiperbolic=True):
 
-    flagCorner, corner = target_in_corner(target, robot) # Checks if the robot is in some corner
+    flagCorner, corner = target_in_corner(robot)  # Checks if the robot is in some corner
 
     navigate = Univector()  # Defines the navigation algorithm
     dl = 0.000001  # Constant to approximate phi_v
