@@ -155,7 +155,7 @@ class Strategy:
         Output: None."""
         if not self.mray:
             if self.ball._coordinates.X < 40 and 30 < self.ball._coordinates.Y < 110:  # If the ball has inside of defense area
-                action.defender_penalty_direct(self.robots[0], self.ball,
+                action.defender_penalty_spin(self.robots[0], self.ball,
                                                left_side=not self.mray)  # Goalkeeper move ball away
                 action.screen_out_ball(self.robots[1], self.ball, 55, left_side=not self.mray)
             else:
@@ -164,7 +164,7 @@ class Strategy:
                                        lower_lim=42)  # Goalkeeper keeps in goal
         else:  # The same idea for other team
             if self.ball._coordinates.X > 130 and 30 < self.ball._coordinates.Y < 110:
-                action.defender_penalty_direct(self.robots[0], self.ball, left_side=not self.mray)
+                action.defender_penalty_spin(self.robots[0], self.ball, left_side=not self.mray)
                 action.screen_out_ball(self.robots[1], self.ball, 55, left_side=not self.mray)
             else:
                 action.defender_spin(self.robots[1], self.ball, left_side=not self.mray)
@@ -189,16 +189,16 @@ class Strategy:
         Output: None."""
         if not self.mray:
             if self.ball._coordinates.X < 40 and 30 < self.ball._coordinates.Y < 110:  # If the ball has inside of defense area
-                action.defender_penalty_direct(self.robots[0], self.ball,
+                action.defender_penalty_spin(self.robots[0], self.ball,
                                                left_side=not self.mray)  # Goalkeeper move ball away
                 self.two_attackers()
             else:
                 self.two_attackers()
                 action.screen_out_ball(self.robots[0], self.ball, 16, left_side=not self.mray, upper_lim=84,
-                                       lower_lim=42)  # Goalkeeper keeps in goal
+                                       lower_lim=42)  # Goalkeeper stays on the goal
         else:  # The same ideia, but for other team
             if self.ball._coordinates.X > 130 and 30 < self.ball._coordinates.Y < 110:
-                action.defender_penalty_direct(self.robots[0], self.ball, left_side=not self.mray)
+                action.defender_penalty_spin(self.robots[0], self.ball, left_side=not self.mray)
                 self.two_attackers()
             else:
                 self.two_attackers()

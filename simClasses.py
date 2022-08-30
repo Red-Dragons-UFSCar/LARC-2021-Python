@@ -123,7 +123,7 @@ class Obstacle(KinematicBody):
         for index in range(len(obstacles)-1, -1, -1):
             if ball_distances[index] < 15:
                 obstacles.pop(index)
-            elif goal_distances[index] < 20 and ball.calculate_distance_from_goal() < 20:
+            elif goal_distances[index] < 20 and ball.calculate_distance_from_goal(self.robot.teamYellow) < 20:
                 obstacles.pop(index)
 
         obstacles.extend(friends)
