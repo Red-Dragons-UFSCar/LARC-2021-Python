@@ -19,7 +19,7 @@ def shoot(robot,ball,leftSide=True,friends=[],enemys=[]):
         v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
     else: #? Both friends to avoid
         #robot.obst.update(robot, obstacles)
-        robot.obst.update2(robot, ball, friends, enemys)
+        robot.obst.update2(robot, ball, friends[0], friends[1], enemys[0], enemys[1], enemys[2], enemys[3], enemys[4])
         v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
 
     robot.simSetVel(v,w)
@@ -58,24 +58,27 @@ def defenderSpin2(robot,ball,leftSide=True,friends=[],enemys=[]):
 
     robot.simSetVel(v,w)
 
-def defenderSpin(robot,ball,leftSide=True,friends=[],enemys=[]):
-    if leftSide:
-        arrivalTheta=arctan2(90-ball.yPos,235-ball.xPos) #? Angle between the ball and point (150,65)
-    else:
-        arrivalTheta=arctan2(90-ball.yPos,15-ball.xPos) #? Angle between the ball and point (0,65)
-    #robot.target.update(ball.xPos,ball.yPos,0)
-    robot.target.update(ball.xPos,ball.yPos,arrivalTheta)
+def defenderSpin(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None, enemy4=None, enemy5=None):
+    if left_side: # Playing in the left side of field
+        arrival_theta = arctan2(90 - ball.yPos,  235- ball.xPos)  # Angle between the ball and point (150,65)
+    else: # Playing in the right side of field
+        arrival_theta = arctan2(90 - ball.yPos, 15 - ball.xPos)  # Angle between the ball and point (0,65)
+    robot.target.update(ball.xPos, ball.yPos, arrival_theta)
 
-    if not friends: #? No friends to avoid
-        v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
-    else: #? Both friends to avoid
-        #robot.obst.update(robot,friend1,friend2,enemy1,enemy2,enemy3)
-        robot.obst.update2(robot, ball, friends, enemys)
-        v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
+    if friend1 is None and friend2 is None:  # No friends to avoid
+        v, w = univecController(robot, robot.target, avoid_obst=False, n=16, d=2) # Calculate linear and angular velocity
+    else:  # Both friends to avoid
+        robot.obst.update2(robot, ball, friend1, friend2, enemy1, enemy2, enemy3, enemy4, enemy5)
+        v, w = univecController(robot, robot.target, True, robot.obst, n=4, d=4)
 
-    d = robot.dist(ball)
-    if robot.spin and d < 10:
+    d = robot.dist(ball) # Calculate distance between ball and robot
+    if robot.spin and d < 10: # Check if the flag spin is true and if distance is lower than a threshold
         if not robot.teamYellow:
+            '''
+            Define the direction of rotation, the direction changes based on northern
+            and southern hemisphere, in the North hemisphere the direction is clockwise
+            and the South hemisphere is anti-clockwise.
+            '''
             if robot.yPos > 90:
                 v = 0
                 w = -30
@@ -89,21 +92,79 @@ def defenderSpin(robot,ball,leftSide=True,friends=[],enemys=[]):
             else:
                 v = 0
                 w = -30
-    if d < 30 and ball.xPos > robot.xPos:
+
+    #TODO: CHECK IF THIS IS RIGHT - MAKE IT WORK FOR BOUTH SIDES
+    flagVelocity = False
+    if d < 30 :                           # Check if the distance is lower than a threshold and # if the ball is on the right of robot
         if robot.teamYellow:
-            dx = 15-robot.xPos
+            if ball.xPos < robot.xPos:
+                dx = 15 - robot.xPos
+                flagVelocity = True
         else:
-            dx = 235 - robot.xPos
-        dy = tan(robot.theta)*dx + robot.yPos
-        if dy > 70 and dy < 110:
-            if robot.index == 2 or robot.index == 1:
-                robot.simSetVel2(50*robot.face, 50*robot.face)
+            if ball.xPos > robot.xPos:
+                dx = 235 - robot.xPos
+                flagVelocity = True
+        if flagVelocity:
+            dy = tan(robot.theta)*dx + robot.yPos # Calculate the height of the goal arrival
+            if dy > 70 and dy < 110:
+                if robot.index == 2 or robot.index == 1:
+                    robot.simSetVel2(50*robot.face, 50*robot.face) # Send the velocity of right and left wheel
+                    #print("zuuum + ", robot.theta)
+                else:
+                    robot.simSetVel(v,w) # Calculate linear and angular velocity
             else:
                 robot.simSetVel(v,w)
         else:
             robot.simSetVel(v,w)
     else:
         robot.simSetVel(v,w)
+
+# def defenderSpin(robot,ball,leftSide=True,friends=[],enemys=[]):
+#     if leftSide:
+#         arrivalTheta=arctan2(90-ball.yPos,235-ball.xPos) #? Angle between the ball and point (150,65)
+#     else:
+#         arrivalTheta=arctan2(90-ball.yPos,15-ball.xPos) #? Angle between the ball and point (0,65)
+#     #robot.target.update(ball.xPos,ball.yPos,0)
+#     robot.target.update(ball.xPos,ball.yPos,arrivalTheta)
+#
+#     if not friends: #? No friends to avoid
+#         v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
+#     else: #? Both friends to avoid
+#         #robot.obst.update(robot,friend1,friend2,enemy1,enemy2,enemy3)
+#         robot.obst.update2(robot, ball, friends, enemys)
+#         v,w=univecController(robot,robot.target,True,robot.obst,n=4, d=4)
+#
+#     d = robot.dist(ball)
+#     if robot.spin and d < 10:
+#         if not robot.teamYellow:
+#             if robot.yPos > 90:
+#                 v = 0
+#                 w = -30
+#             else:
+#                 v = 0
+#                 w = 30
+#         else:
+#             if robot.yPos > 90:
+#                 v = 0
+#                 w = 30
+#             else:
+#                 v = 0
+#                 w = -30
+#     if d < 30 and ball.xPos > robot.xPos:
+#         if robot.teamYellow:
+#             dx = 15-robot.xPos
+#         else:
+#             dx = 235 - robot.xPos
+#         dy = tan(robot.theta)*dx + robot.yPos
+#         if dy > 70 and dy < 110:
+#             if robot.index == 2 or robot.index == 1:
+#                 robot.simSetVel2(50*robot.face, 50*robot.face)
+#             else:
+#                 robot.simSetVel(v,w)
+#         else:
+#             robot.simSetVel(v,w)
+#     else:
+#         robot.simSetVel(v,w)
 
 #TODO #2 Need more speed to reach the ball faster than our enemy
 def screenOutBall(robot,ball,staticPoint,leftSide=True,upperLim=200,lowerLim=0,friend1=None,friend2=None):
@@ -231,7 +292,7 @@ def directGoal(robot, ball, leftSide = True,friend1=None,friend2=None, enemy1=No
 def girar(robot, v1, v2):
     robot.simSetVel2(v1,v2)
 
-def follower(robot_follower, robot_leader, ball, robot0=None, robot_enemy_0=None, robot_enemy_1=None, robot_enemy_2=None):
+def follower(robot_follower, robot_leader, ball, robot0=None, robot_enemy_0=None, robot_enemy_1=None, robot_enemy_2=None, robot_enemy_3=None, robot_enemy_4=None):
 
     '''
     Defines the position of the follower based on the leader position, the position is a diagonal
@@ -265,10 +326,10 @@ def follower(robot_follower, robot_leader, ball, robot0=None, robot_enemy_0=None
         if robot0 is None and robot_enemy_0 is None and robot_enemy_1 is None and robot_enemy_2 is None:
             v, w = univecController(robot_follower, robot_follower.target, avoid_obst=False, n=16, d=2)
         else:  # Both friends to avoid
-            robot_follower.obst.update(robot_follower, robot0, robot_leader, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+            robot_follower.obst.update2(robot_follower, ball, robot0, robot_leader, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
             v, w = univecController(robot_follower, robot_follower.target, True, robot_follower.obst, n=4, d=4)
 
-        robot_follower.sim_set_vel(v, w)
+        robot_follower.simSetVel(v, w)
 
 '''
 Input: Robot object (All team members), ball object, other robots objects (3 opponents)
@@ -320,7 +381,7 @@ def leaderSelector(robot1, robot2, ball):
                 else:
                     robot2.holdLeader += 1
 
-def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, robot_enemy_2):
+def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4):
 
     leaderSelector(robot1, robot2, ball)
 
@@ -328,86 +389,86 @@ def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, rob
         if not robot1.teamYellow:
             if ball.xPos < 40 and (130 > ball.yPos > 50): # If ball is in defence side the robot 2 do the screen out, and the robot 1 follow his moves
                 if robot1.xPos < 30:
-                    screenOutBall(robot2, robot2, 55, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
+                    screenOutBall(robot2, robot2, 55, leftSide=not robot2.teamYellow, upper_lim=120, lower_lim=10)
                 else:
-                    screenOutBall(robot2, ball, 55, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
-                follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                    screenOutBall(robot2, ball, 55, leftSide=not robot2.teamYellow, upper_lim=120, lower_lim=10)
+                follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
 
             else:  # If ball is in attack side the robot 2 do the defender spin, and the robot 1 follow his moves
                 defenderSpin(robot2, ball, left_side=not robot2.teamYellow, friend1=robot0, friend2=robot0,
-                              enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
+                              enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2, enemy4=robot_enemy_3, enemy5=robot_enemy_4)
                 '''
                 If is the robot 1 is close enough to the tha ball, starts to do the defender spin
                 '''
                 if robot1.dist(ball) < 40:
                     if robot2.xPos > 195 and (100 > robot2.yPos > 40):
-                        follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                        follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
                     else:
                         defenderSpin(robot1, ball, left_side=not robot1.teamYellow, friend1=robot0, friend2=robot2,
-                                      enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
+                                      enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2, enemy4=robot_enemy_3, enemy5=robot_enemy_4)
                 else:
-                    follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                    follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
 
         #Same Idea but for the other side of de field
         else:
             if ball.xPos > 195 and (120 > ball.yPos > 50):
                 if robot1.xPos > 180:
-                    screenOutBall(robot2, robot2, 55, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
+                    screenOutBall(robot2, robot2, 55, leftSide=not robot2.teamYellow, upper_lim=120, lower_lim=10)
                 else:
-                    screenOutBall(robot2, ball, 55, left_side=not robot2.teamYellow, upper_lim=120, lower_lim=10)
-                follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                    screenOutBall(robot2, ball, 55, leftSide=not robot2.teamYellow, upper_lim=120, lower_lim=10)
+                follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
 
             else:
                 defenderSpin(robot2, ball, left_side=not robot2.teamYellow, friend1=robot0, friend2=robot0,
-                              enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
+                  enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2, enemy4=robot_enemy_3, enemy5=robot_enemy_4)
                 if robot1.dist(ball) < 40:
                     if robot2.xPos < 35 and (100 > robot2.yPos > 40):
-                        follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                        follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3,robot_enemy_4)
                     else:
                         defenderSpin(robot1, ball, left_side=not robot1.teamYellow, friend1=robot0, friend2=robot2,
-                                      enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
+                                      enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2, enemy4=robot_enemy_3, enemy5=robot_enemy_4)
                 else:
-                    follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                    follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
 
     elif robot1.isLeader:
         if not robot1.teamYellow:
             if ball.xPos < 35 and (120 > ball.yPos > 50):
                 if robot1.xPos < 35:
-                    screenOutBall(robot1, robot1, 55, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
+                    screenOutBall(robot1, robot1, 55, leftSide=not robot1.teamYellow, upper_lim=120, lower_lim=10)
                 else:
-                    screenOutBall(robot1, ball, 55, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
-                follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                    screenOutBall(robot1, ball, 55, leftSide=not robot1.teamYellow, upper_lim=120, lower_lim=10)
+                follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
 
             else:
                 defenderSpin(robot1, ball, left_side=not robot1.teamYellow, friend1=robot0, friend2=robot0,
-                              enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
+                              enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2, enemy4=robot_enemy_3, enemy5=robot_enemy_4)
                 if robot2.dist(ball) < 40:
                     if robot1.xPos > 195 and (100 > robot1.yPos > 40):
-                        follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                        follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
                     else:
                         defenderSpin(robot2, ball, left_side=not robot2.teamYellow, friend1=robot0, friend2=robot1,
-                                      enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
+                                      enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2, enemy4=robot_enemy_3, enemy5=robot_enemy_4)
                 else:
-                    follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                    follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
         else:
             if ball.xPos > 195 and (130 > ball.yPos > 50):
                 if robot1.xPos > 130:
-                    screenOutBall(robot1, robot1, 55, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
+                    screenOutBall(robot1, robot1, 55, leftSide=not robot1.teamYellow, upper_lim=120, lower_lim=10)
                 else:
-                    screenOutBall(robot1, ball, 55, left_side=not robot1.teamYellow, upper_lim=120, lower_lim=10)
-                follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                    screenOutBall(robot1, ball, 55, leftSide=not robot1.teamYellow, upper_lim=120, lower_lim=10)
+                follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
 
             else:
                 defenderSpin(robot1, ball, left_side=not robot1.teamYellow, friend1=robot0, friend2=robot0,
-                              enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
+                              enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2, enemy4=robot_enemy_3, enemy5=robot_enemy_4)
                 if robot2.dist(ball) < 40:
                     if robot1.xPos < 35 and (100 > robot1.yPos > 40):
-                        follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                        follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
                     else:
                         defenderSpin(robot2, ball, left_side=not robot2.teamYellow, friend1=robot0, friend2=robot1,
-                                      enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
+                                      enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2, enemy4=robot_enemy_3, enemy5=robot_enemy_4)
                 else:
-                    follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
+                    follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
 
 def defenderPenalty(robot,ball,leftSide=True,friend1=None,friend2=None, enemy1=None,  enemy2=None, enemy3=None):
     if leftSide:

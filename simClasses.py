@@ -47,6 +47,7 @@ class Obstacle:
                 index = i
         self.setObst(obstacles[index].xPos,obstacles[index].yPos,obstacles[index].v,obstacles[index].theta)
 
+    '''
     def update2(self,robot,ball,friends,enemys):
         enemys = array(enemys)
         d_ball=array([[enemys[0].dist(ball)],
@@ -113,6 +114,68 @@ class Obstacle:
         #     else:
         #         print("Obstaculo: Azul " + str(enemys[index].index))
         # self.setObst(enemys[index].xPos,enemys[index].yPos,0,0)
+    '''
+
+    def update2(self, robot, ball, friend1, friend2, enemy1, enemy2, enemy3, enemy4, enemy5):
+        enemys = array([enemy1, enemy2, enemy3, enemy4, enemy5])
+        d_ball = array([[enemy1.dist(ball)],
+                        [enemy2.dist(ball)],
+                        [enemy3.dist(ball)],
+                        [enemy4.dist(ball)],
+                        [enemy5.dist(ball)]]) # Distance to ball of all enemies robots
+        index = argmin(d_ball) # Index of shortest distance
+
+        if d_ball[index] < 15: # If robot is too close, disconsider
+            enemys = delete(enemys, [index])
+
+        if not robot.teamYellow: # Goal coordinates for each team
+            x_gol = 235
+            y_gol = 90
+        else:
+            x_gol = 15
+            y_gol = 90
+
+        if len(enemys) == 5: # If the first exception did not happen
+            # Distances to goal
+            d1 = sqrt((x_gol - enemy1.xPos) ** 2 + (y_gol - enemy1.yPos) ** 2)
+            d2 = sqrt((x_gol - enemy2.xPos) ** 2 + (y_gol - enemy2.yPos) ** 2)
+            d3 = sqrt((x_gol - enemy3.xPos) ** 2 + (y_gol - enemy3.yPos) ** 2)
+            d_gol = array([[d1],
+                           [d2],
+                           [d3]])
+
+            index = argmin(d_gol) # Index of shortest distance
+
+            dballgol = sqrt((x_gol - ball.xPos) ** 2 + (y_gol - ball.yPos) ** 2) # Ball distance from goal
+
+            if d_gol[index] < 20 and dballgol < 20: # If ball and enemy are close to goal, disconsider
+                enemys = delete(enemys, index)
+        else: # If the first exception did happen
+            # Distances to goal
+            d1 = sqrt((x_gol - enemys[0].xPos) ** 2 + (y_gol - enemys[0].yPos) ** 2)
+            d2 = sqrt((x_gol - enemys[1].xPos) ** 2 + (y_gol - enemys[1].yPos) ** 2)
+            d_gol = array([[d1],
+                           [d2]])
+
+            index = argmin(d_gol) # Index of shortest distance
+
+            dballgol = sqrt((x_gol - ball.xPos) ** 2 + (y_gol - ball.yPos) ** 2) # Ball distance from goal
+
+            if d_gol[index] < 20 and dballgol < 20: # If ball and enemy are close to goal, disconsider
+                enemys = delete(enemys, index)
+
+        # Adding the team robots
+        enemys = append(enemys, friend1)
+        enemys = append(enemys, friend2)
+        d_robot = zeros(len(enemys))
+
+        # Detecting nearest object
+        for i in range(len(enemys)):
+            d_robot[i] = robot.dist(enemys[i])
+        index = argmin(d_robot)
+
+        # Setting current obstacle
+        self.setObst(enemys[index].xPos, enemys[index].yPos, 0, 0)
 
     #% This method print a little log on console
     def showInfo(self):
@@ -129,8 +192,8 @@ class Ball:
 
     #% This method gets position of the ball in FIRASim
     def simGetPose(self, data_ball):
-        self.xPos = data_ball.x + data_ball.vx*100*8/60
-        self.yPos = data_ball.y + data_ball.vy*100*8/60
+        self.xPos = data_ball.x + data_ball.vx*100*4/60
+        self.yPos = data_ball.y + data_ball.vy*100*4/60
 
         # check if prev is out of field, in this case reflect ball moviment to reproduce the collision
         if self.xPos > 235:
