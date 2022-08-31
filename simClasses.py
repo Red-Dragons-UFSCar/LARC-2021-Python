@@ -175,7 +175,7 @@ class Robot:
         self.vL=0                            #? Left wheel velocity (cm/s) => updated on simClasses.py -> simSetVel()
         self.vR=0                            #? Right wheel velocity (cm/s) =>  updated on simClasses.py -> simSetVel()
         if self.index == 0:
-            self.vMax=35                             #! Robot max velocity (cm/s)
+            self.vMax=40                            #! Robot max velocity (cm/s)
         else:
             self.vMax=50
         self.rMax=3*self.vMax                #! Robot max rotation velocity (rad*cm/s)
@@ -185,7 +185,8 @@ class Robot:
         self.obst=Obstacle()                 #? Defines the robot obstacle
         self.target=Target()                 #? Defines the robot target
         self.pastPose=zeros(12).reshape(4,3) #? Stores the last 3 positions (x,y) and orientation => updated on execution.py
-
+        self.isLeader = None
+        self.holdLeader = 0
 
 
     #% This method calculates the distance between the robot and an object

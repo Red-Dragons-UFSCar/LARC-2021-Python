@@ -50,7 +50,8 @@ class Strategy:
                 #listRobots = [self.robot0, self.robot3, self.robot4, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
                 friends = [self.robot0, self.robot3, self.robot4]
                 enemys = [self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
-                action.Master_Slave(self.robot1,self.robot2, friends, enemys, self.ball)
+                action.followLeader(self.robot0, self.robot1, self.robot2, self.ball, self.robotEnemy0, self.robotEnemy1,
+                            self.robotEnemy2)
                 action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
         else:
             if self.ball.xPos > 195 and self.ball.yPos > 50 and self.ball.yPos < 130:
@@ -61,7 +62,8 @@ class Strategy:
                 #listRobots = [self.robot0, self.robot3, self.robot4, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
                 friends = [self.robot0, self.robot3, self.robot4]
                 enemys = [self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
-                action.Master_Slave(self.robot1,self.robot2, friends, enemys, self.ball)
+                action.followLeader(self.robot0, self.robot1, self.robot2, self.ball, self.robotEnemy0, self.robotEnemy1,
+                            self.robotEnemy2)
                 action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
         if ((abs(self.robot0.theta) < deg2rad(10)) or (abs(self.robot0.theta) > deg2rad(170))) and (self.robot0.xPos < 25 or self.robot0.xPos > 225):
             self.robot0.contStopped += 1
@@ -73,7 +75,8 @@ class Strategy:
         #listRobots = [self.robot0, self.robot1, self.robot2, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
         friends = [self.robot0, self.robot1, self.robot2]
         enemys = [self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
-        action.Master_Slave(self.robot3,self.robot4, friends, enemys, self.ball)
+        action.followLeader(self.robot0, self.robot3, self.robot4, self.ball, self.robotEnemy0, self.robotEnemy1,
+                            self.robotEnemy2)
 
         action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
         action.screenOutBall(self.robot1, self.ball, 90, leftSide=not self.mray, upperLim=85, lowerLim=5)
