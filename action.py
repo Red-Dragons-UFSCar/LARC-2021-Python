@@ -1034,7 +1034,7 @@ def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, rob
                 '''
                 If is the robot 1 is close enough to the tha ball, starts to do the defender spin
                 '''
-                if robot1.dist(ball) < 20:
+                if robot1.dist(ball) < 40:
                     if robot2.xPos > 140 and (100 > robot2.yPos > 40):
                         follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
                     else:
@@ -1055,7 +1055,7 @@ def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, rob
             else:
                 defender_spin(robot2, ball, left_side=not robot2.teamYellow, friend1=robot0, friend2=robot0,
                               enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
-                if robot1.dist(ball) < 20:
+                if robot1.dist(ball) < 40:
                     if robot2.xPos < 35 and (100 > robot2.yPos > 40):
                         follower(robot1, robot2, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
                     else:
@@ -1076,7 +1076,7 @@ def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, rob
             else:
                 defender_spin(robot1, ball, left_side=not robot1.teamYellow, friend1=robot0, friend2=robot0,
                               enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
-                if robot2.dist(ball) < 20:
+                if robot2.dist(ball) < 40:
                     if robot1.xPos > 140 and (100 > robot1.yPos > 40):
                         follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
                     else:
@@ -1095,7 +1095,7 @@ def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, rob
             else:
                 defender_spin(robot1, ball, left_side=not robot1.teamYellow, friend1=robot0, friend2=robot0,
                               enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2)
-                if robot2.dist(ball) < 20:
+                if robot2.dist(ball) < 40:
                     if robot1.xPos < 35 and (100 > robot1.yPos > 40):
                         follower(robot2, robot1, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2)
                     else:
