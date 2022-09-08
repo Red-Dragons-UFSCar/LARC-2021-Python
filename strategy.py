@@ -229,6 +229,10 @@ class Strategy:
         if self.stDefensePenalty == 'spin':
             # Goalkeeper behaviour in defensive penalty
             action.defender_penalty_spin(self.robots[0], self.ball, left_side=not self.mray)
+        elif self.stDefensePenalty == 'spin-v':
+            action.defender_penalty_spin_proj_vel(self.robots[0], self.ball, left_side=not self.mray, friend1=self.robots[1],
+                                                  friend2=self.robots[2], enemy1=self.enemy_robots[0], enemy2=self.enemy_robots[1],
+                                                  enemy3=self.enemy_robots[2])
         elif self.stDefensePenalty == 'direct':
             # Goalkeeper behaviour in defensive penalty
             action.defender_penalty(self.robots[0], self.ball, left_side=not self.mray)
@@ -257,6 +261,8 @@ class Strategy:
             action.attacker_penalty_spin(self.robots[2], self.ball)
         elif self.stOffensePenalty == 'direct':
             action.attacker_penalty_direct(self.robots[2])
+        elif self.stOffensePenalty == 'switch':
+            action.attacker_penalty_switch(self.robots[2])
 
         # If the ball gets away from the robot, stop the penalty mode
         if sqrt((ball_coordinates.X - robot_coordinates.X) ** 2 + (ball_coordinates.Y - robot_coordinates.Y) ** 2) > 30:

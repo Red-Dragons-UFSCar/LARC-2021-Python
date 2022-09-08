@@ -520,6 +520,9 @@ def attacker_penalty_direct(robot):
     else:
         girar(robot, -10, -10)
 
+def attacker_penalty_switch(robot):
+    girar(robot, -10, -10)
+
 
 def attack_penalty(robot, ball, left_side=True):
     """Input: Robot object, ball object, side of field (True = Left, False = Right), other robots objects (2 friend, 3 opponents)
@@ -548,6 +551,71 @@ def calculate_arrival_angle_attack_penalty(left_side, robot):
             arrival_angle = deg2rad(165)
     return arrival_angle
 
+
+def defender_penalty_spin_proj_vel(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None):
+
+    if abs(ball.vx) < 0.01:
+        v = 0
+        w = 0
+
+    else:
+
+        theta = arctan2(ball.vy, ball.vx)
+        phi = pi - theta
+
+        if left_side:
+            dx = ball.xPos - 14
+            dy = dx*tan(phi)
+
+            proj_y = ball.yPos + dy
+            proj_x = 14
+            if proj_y > 80:
+                proj_y = 80
+            elif proj_y < 50:
+                proj_y = 50
+            if proj_y > robot.yPos:
+                arrival_theta = pi/2
+            else:
+                arrival_theta = -pi/2
+
+        else:
+            dx = 156 - ball.xPos
+            dy = dx*tan(theta)
+
+            proj_y = ball.yPos + dy
+            proj_x = 156
+            if proj_y > 80:
+                proj_y = 80
+            elif proj_y < 50:
+                proj_y = 50
+            if proj_y > robot.yPos:
+                arrival_theta = pi/2
+            else:
+                arrival_theta = -pi/2
+
+        robot.target.update(proj_x, proj_y, arrival_theta)
+
+        if friend1 is None and friend2 is None:  # No friends to avoid
+            v, w = univec_controller(robot, robot.target, avoid_obst=False, n=16, d=2)
+        else:  # Both friends to avoid
+            robot.obst.update(robot, friend1, friend2, enemy1, enemy2, enemy3)
+            v, w = univec_controller(robot, robot.target, True, robot.obst, n=4, d=4)
+
+        if robot.dist(robot.target) < 7:
+            if left_side:
+                v = 0
+                if robot.yPos > 65:
+                    w = 30
+                else:
+                    w = -30
+            else:
+                v = 0
+                if robot.yPos > 65:
+                    w = -30
+                else:
+                    w = 30
+
+    robot.sim_set_vel(v, w)
 
 def play_follower(robot_follower: simClasses.Robot, robot_leader: simClasses.Robot, ball: simClasses.Ball,
              robot0: simClasses.Robot = None):
