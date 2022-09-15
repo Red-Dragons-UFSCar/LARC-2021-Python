@@ -43,8 +43,8 @@ class GA:
         self.pop = zeros([self.npop,self.nvar])
         for i in range(self.npop):
             self.pop[i] = random.uniform(self.varmin, self.varmax, self.nvar)
-            if i < 5:
-                self.pop[i] = [9.302233213565474, 16.960956578253068, 9.48822598107507, 17.96452160772232, 7.118557382752489]
+        #    if i < 5:
+        #        self.pop[i] = [9.302233213565474, 16.960956578253068, 9.48822598107507, 17.96452160772232, 7.118557382752489]
 
     def cost_func(self, dt, dang, dy):
         cost = 0
@@ -76,8 +76,8 @@ class GA:
         for i in range(int(self.npop/2)):
             p1, p2 = self.permutation()
             c1, c2 = self.crossover(p1, p2)
-            c1 = self.mutate(c1, 0.24, 2)
-            c2 = self.mutate(c2, 0.24, 2)
+            c1 = self.mutate(c1, 0.4, 0.5)
+            c2 = self.mutate(c2, 0.4, 0.5)
             c1 = self.apply_bound(c1, self.varmin, self.varmax)
             c2 = self.apply_bound(c2, self.varmin, self.varmax)
             self.nextPop.append(c1)

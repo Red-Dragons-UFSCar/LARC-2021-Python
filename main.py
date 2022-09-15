@@ -41,7 +41,7 @@ if __name__ == "__main__":
     # Genetic alg var
     nvar = 5
     varmin = 0
-    varmax = 20
+    varmax = 10
     maxit = 1000
     npop = 20
 
