@@ -74,11 +74,9 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
                 entidade2 = Entity(x=47.5, y=66,a=0, index=2)
             else:
                 entidade0 = Entity(x=17.5, y=65, a=0, index=0)
-                entidade1 = Entity(x=105, y=63,a=0, index=1)
+                entidade1 = Entity(x=85, y=85,a=0, index=1)
                 if ball.yPos < 65:
-                    entidade2 = Entity(x=100, y=20,a=0, index=2)
-                else:
-                    entidade2 = Entity(x=100, y=115,a=0, index=2)
+                    entidade2 = Entity(x=85, y=45,a=180, index=2)
             replacement.place_all([entidade0, entidade1, entidade2])
 
         elif ref_data["foul"] == 3: # Freeball
@@ -146,12 +144,10 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
                 entidade2 = Entity(x=122, y=63,a=0, index=2)
             else:
                 entidade0 = Entity(x=152.5, y=65, a=180, index=0)
-                entidade1 = Entity(x=62, y=63,a=0, index=1)
+                entidade1 = Entity(x=85, y=85,a=180, index=1)
                 ball = Ball()
                 if ball.yPos < 65:
-                    entidade2 = Entity(x=70, y=20,a=0, index=2)
-                elif ball.yPos > 65:
-                    entidade2 = Entity(x=70, y=115,a=0, index=2)
+                    entidade2 = Entity(x=85, y=45,a=180, index=2)
             replacement.place_all([entidade0, entidade1, entidade2])
 
         elif ref_data["foul"] == 3: # Freeball
