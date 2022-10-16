@@ -9,11 +9,11 @@ class Univector:
 
     def __init__(self, params):
         # obst2_melhorado, obst2, obst1, move2goal
-        self.d_e   = 9.349622195717016 #params[0] # Predefined radius that decides the size of the spiral.
-        self.k_r   = 8.403007627366772 #params[1] # Smoothing constant for vector field
-        self.delta = 6.35626706943918  #params[2] # Variance gaussian parameter
-        self.k_o   = 1.0363333802109564 #params[3] # Proportional constant of obstacle velocity
-        self.d_min = 4.322376353319517 #params[4] # Minimum distance what the field becomes pure
+        self.d_e   = params[0] # Predefined radius that decides the size of the spiral.
+        self.k_r   = params[1] # Smoothing constant for vector field
+        self.delta = params[2] # Variance gaussian parameter
+        self.k_o   = params[3] # Proportional constant of obstacle velocity
+        self.d_min = params[4] # Minimum distance what the field becomes pure
 
 
     '''

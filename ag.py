@@ -43,8 +43,9 @@ class GA:
         self.pop = zeros([self.npop,self.nvar])
         for i in range(self.npop):
             self.pop[i] = random.uniform(self.varmin, self.varmax, self.nvar)
-        #    if i < 5:
-        #        self.pop[i] = [9.302233213565474, 16.960956578253068, 9.48822598107507, 17.96452160772232, 7.118557382752489]
+            if i < 5:
+               self.pop[i] = [9.949208015204881, 5.563223824404487, 5.818062934476073, 0.7180865223544229, 2.4673089927053873]
+            #    self.pop[i] = [9.302233213565474, 8.403007627366772, 6.35626706943918, 1.0363333802109564, 4.322376353319517]
 
     def cost_func(self, dt, dang, dy):
         cost = 0

@@ -11,7 +11,7 @@ def convert_position(x, y, theta):
     theta = np.deg2rad(theta)
     return x, y, theta
 
-def replacer_all(x_blue, y_blue, theta_blue, x_yellow, y_yellow, theta_yellow, x_ball, y_ball):
+def replacer_all(x_blue, y_blue, theta_blue, x_yellow, y_yellow, theta_yellow, x_ball, y_ball, vx_yellow = 0, vx_blue = 0):
     replacer = packet_pb2.Packet()
 
     if x_yellow is None:
@@ -35,7 +35,7 @@ def replacer_all(x_blue, y_blue, theta_blue, x_yellow, y_yellow, theta_yellow, x
         robot.position.x = x_blue[i]
         robot.position.y = y_blue[i]
         robot.position.orientation = theta_blue[i]
-        robot.position.vx = 0
+        robot.position.vx = vx_blue
         robot.position.vy = 0
         robot.turnon = True
 
@@ -46,7 +46,7 @@ def replacer_all(x_blue, y_blue, theta_blue, x_yellow, y_yellow, theta_yellow, x
         robot.position.x = x_yellow[i]
         robot.position.y = y_yellow[i]
         robot.position.orientation = theta_yellow[i]
-        robot.position.vx = 0
+        robot.position.vx = vx_yellow
         robot.position.vy = 0
         robot.turnon = True
 
