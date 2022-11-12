@@ -17,6 +17,7 @@ if __name__ == "__main__":
     parser.add_argument('-s', '--strategy', type=str, default="twoAttackers", help="Define a estratégia que será jogada: twoAttackers ou default" )
     parser.add_argument('-op', '--offensivePenalty', type=str, default='spin', dest='op', help="Define o tipo de cobrança ofensiva de penalti: spin ou direct")
     parser.add_argument('-dp', '--defensivePenalty', type=str, default='direct', dest='dp', help="Define o tipo de defesa de penalti: spin ou direct")
+    parser.add_argument('-ap', '--adaptativePenalty', type=str, default='off', dest='ap', help="Controla a troca de estratégias de penalti durante o jogo")
 
     args = parser.parse_args()
 
@@ -71,6 +72,10 @@ if __name__ == "__main__":
         robotEnemy2.sim_get_pose(data_their_bots[2])
         ball.sim_get_pose(data_ball)
 
+        # Update penalty strategy (ap == adaptative penalty) when game is running
+        if args.ap == 'on':
+            strategy.detectGoalPenalty(ref_data, ball, mray)
+
         if ref_data["game_on"]:
             # If the game mode is set to "Game on"
             strategy.decider()
@@ -80,14 +85,14 @@ if __name__ == "__main__":
             strategy.penaltyDefensive = True
             strategy.kickoffOffensive = False
             actuator.stop()
-            fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
+            fouls.replacement_fouls(replacement, ref_data, mray, strategy.stOfensePenalty, strategy.stDefensePenalty)
 
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (mray):
             # detecting offensive penalty
             strategy.penaltyOffensive = True
             strategy.kickoffOffensive = False
             actuator.stop()
-            fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
+            fouls.replacement_fouls(replacement, ref_data, mray, strategy.stOfensePenalty, strategy.stDefensePenalty)
 
         # elif ref_data["foul"] == 4 and ref_data["yellow"] == (mray):
         #     #print("entrei1")
