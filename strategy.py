@@ -26,6 +26,8 @@ class Strategy:
         self.kickoffOffensive = False
         self.lastX = 85
 
+        self.enableAop = strategies[3]
+        self.enableAdp = strategies[4]
         self.goalsAgainst = 0
         self.startDetect = False
         self.startCounter = False
@@ -82,7 +84,7 @@ class Strategy:
                         self.defensive = False      # Reseta a flag que indica que a cobrança foi defensiva
 
             # Bloco de troca da estratégia defensiva em cascata do vetor penaltyDefensiveStrategy
-            if self.switchDefensive:
+            if self.switchDefensive and self.enableAdp:
                 if self.penaltyDefensiveStrategy[0] == self.stDefensePenalty:
                     self.stDefensePenalty = self.penaltyDefensiveStrategy[1]
                 elif self.penaltyDefensiveStrategy[1] == self.stDefensePenalty:
@@ -92,7 +94,7 @@ class Strategy:
                 self.switchDefensive = False
 
             # Bloco de troca da estratégia ofensiva em cascata do vetor penaltyOfensiveStrategy
-            if self.switchOfensive:
+            if self.switchOfensive and self.enableAop:
                 if self.penaltyOffensiveStrategy[0] == self.stOfensePenalty:
                     self.stOfensePenalty = self.penaltyOffensiveStrategy[1]
                 elif self.penaltyOffensiveStrategy[1] == self.stOfensePenalty:

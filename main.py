@@ -17,7 +17,8 @@ if __name__ == "__main__":
     parser.add_argument('-s', '--strategy', type=str, default="twoAttackers", help="Define a estratégia que será jogada: twoAttackers ou default" )
     parser.add_argument('-op', '--offensivePenalty', type=str, default='spin', dest='op', help="Define o tipo de cobrança ofensiva de penalti: spin ou direct")
     parser.add_argument('-dp', '--defensivePenalty', type=str, default='direct', dest='dp', help="Define o tipo de defesa de penalti: spin ou direct")
-    parser.add_argument('-ap', '--adaptativePenalty', type=str, default='off', dest='ap', help="Controla a troca de estratégias de penalti durante o jogo")
+    parser.add_argument('-aop', '--adaptativeOffensivePenalty', type=str, default='off', dest='aop', help="Controla a troca de estratégias de penalti durante o jogo")
+    parser.add_argument('-adp', '--adaptativeDffensivePenalty', type=str, default='off', dest='adp', help="Controla a troca de estratégias de penalti durante o jogo")
 
     args = parser.parse_args()
 
@@ -45,7 +46,7 @@ if __name__ == "__main__":
 
     ball = Ball()
 
-    list_strategies = [ args.strategy, args.op, args.dp ]
+    list_strategies = [ args.strategy, args.op, args.dp, args.aop, args.adp ]
     strategy = Strategy(robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray, list_strategies)
 
     # Main infinite loop
@@ -73,8 +74,8 @@ if __name__ == "__main__":
         ball.sim_get_pose(data_ball)
 
         # Update penalty strategy (ap == adaptative penalty) when game is running
-        if args.ap == 'on':
-            strategy.detectGoalPenalty(ref_data, ball, mray)
+        #if args.ap == 'on':
+        strategy.detectGoalPenalty(ref_data, ball, mray)
 
         if ref_data["game_on"]:
             # If the game mode is set to "Game on"
