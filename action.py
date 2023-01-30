@@ -212,7 +212,10 @@ def screen_out_ball(robot: simClasses.Robot, ball: simClasses.KinematicBody, sta
     ball_y_target = max(ball_y_prediction, lower_lim)
 
     arrival_angle = calculate_arrival_angle_screenout(ball_y_prediction, left_side, robot)
-    robot.target.set_coordinates(170 - static_point, ball_y_target, arrival_angle)
+    if left_side:
+        robot.target.set_coordinates(170 - static_point, ball_y_target, arrival_angle)
+    else:
+        robot.target.set_coordinates(static_point, ball_y_target, arrival_angle)
 
     if robot.contStopped > 60:  # Check if the robot is locked on the corner, and try to free him
         linear_velocity, angular_velocity = escape_from_corner_lock(robot)
@@ -419,7 +422,7 @@ def defender_penalty_spin(robot: simClasses.Robot, ball: simClasses.Ball, left_s
 
     arrival_angle, proj_x, proj_y = calculate_arrival_theta_defender_spin(ball, kicker, left_side, robot)
 
-    robot.target._coordinates.update()
+    robot.target.set_coordinates(proj_x, proj_y, arrival_angle)
 
     angular_velocity, linear_velocity = calculate_velocities_defender(robot)
 
