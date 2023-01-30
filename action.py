@@ -213,9 +213,9 @@ def screen_out_ball(robot: simClasses.Robot, ball: simClasses.KinematicBody, sta
 
     arrival_angle = calculate_arrival_angle_screenout(ball_y_prediction, left_side, robot)
     if left_side:
-        robot.target.set_coordinates(170 - static_point, ball_y_target, arrival_angle)
-    else:
         robot.target.set_coordinates(static_point, ball_y_target, arrival_angle)
+    else:
+        robot.target.set_coordinates(170 - static_point, ball_y_target, arrival_angle)
 
     if robot.contStopped > 60:  # Check if the robot is locked on the corner, and try to free him
         linear_velocity, angular_velocity = escape_from_corner_lock(robot)
@@ -408,7 +408,8 @@ def defender_penalty(robot: simClasses.Robot, ball: simClasses.Ball, left_side=T
     Output: None"""
 
     arrival_angle = calculate_arrival_angle_defence(ball, left_side)
-    robot.target._coordinates.update()
+    ball_coordinates = ball.get_coordinates()
+    robot.target.set_coordinates(ball_coordinates.X, ball_coordinates.Y, ball_coordinates.rotation)
 
     linear_velocity, angular_velocity = calculate_velocities_defence(robot)
 
