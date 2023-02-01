@@ -1,4 +1,4 @@
-import action
+import action, penalty_handler
 from numpy import *
 
 
@@ -13,6 +13,7 @@ class Strategy:
         self.enemy_robots = enemy_robots
         self.ball = ball
         self.mray = mray
+        self.score = [0, 0]  # Current score, [our score, enemy score]
         self.penaltyDefensive = False
         self.penaltyOffensive = False
         self.strategy = strategies[0]
@@ -21,6 +22,32 @@ class Strategy:
         self.leader = None
         self.follower = None
         self.leader_time = 0
+        self.penalty_handler = penalty_handler.PenaltyHandler()
+        self.goal_already_happened = False
+
+    def handle_game_on(self):
+        if self.goal_already_happened:
+            self.goal_already_happened = False
+        self.decider()
+
+    def handle_goal(self, foul_was_yellow):
+        if self.goal_already_happened:
+            return
+        self.goal_already_happened = True
+        match self.mray:
+            case True if foul_was_yellow:
+                self.score[1] += 1
+                print("gol inimigo")
+            case True if not foul_was_yellow:
+                self.score[0] += 1
+                print("Gol nosso")
+            case False if foul_was_yellow:
+                self.score[0] += 1
+                print("Gol nosso")
+            case False if not foul_was_yellow:
+                self.score[1] += 1
+                print("gol inimigo")
+        print(self.score)
 
     def set_leader(self, leader):
         """Input: None
@@ -156,7 +183,7 @@ class Strategy:
         if not self.mray:
             if self.ball._coordinates.X < 40 and 30 < self.ball._coordinates.Y < 110:  # If the ball has inside of defense area
                 action.defender_penalty_spin(self.robots[0], self.ball,
-                                               left_side=not self.mray)  # Goalkeeper move ball away
+                                             left_side=not self.mray)  # Goalkeeper move ball away
                 action.screen_out_ball(self.robots[1], self.ball, 55, left_side=not self.mray)
             else:
                 action.defender_spin(self.robots[1], self.ball, left_side=not self.mray)  # Defender chases ball
@@ -190,7 +217,7 @@ class Strategy:
         if not self.mray:
             if self.ball._coordinates.X < 40 and 30 < self.ball._coordinates.Y < 110:  # If the ball has inside of defense area
                 action.defender_penalty_spin(self.robots[0], self.ball,
-                                               left_side=not self.mray)  # Goalkeeper move ball away
+                                             left_side=not self.mray)  # Goalkeeper move ball away
                 self.two_attackers()
             else:
                 self.two_attackers()
@@ -230,8 +257,10 @@ class Strategy:
             # Goalkeeper behaviour in defensive penalty
             action.defender_penalty_spin(self.robots[0], self.ball, left_side=not self.mray)
         elif self.stDefensePenalty == 'spin-v':
-            action.defender_penalty_spin_proj_vel(self.robots[0], self.ball, left_side=not self.mray, friend1=self.robots[1],
-                                                  friend2=self.robots[2], enemy1=self.enemy_robots[0], enemy2=self.enemy_robots[1],
+            action.defender_penalty_spin_proj_vel(self.robots[0], self.ball, left_side=not self.mray,
+                                                  friend1=self.robots[1],
+                                                  friend2=self.robots[2], enemy1=self.enemy_robots[0],
+                                                  enemy2=self.enemy_robots[1],
                                                   enemy3=self.enemy_robots[2])
         elif self.stDefensePenalty == 'direct':
             # Goalkeeper behaviour in defensive penalty

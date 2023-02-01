@@ -79,33 +79,39 @@ if __name__ == "__main__":
         
         for index, robot in enumerate(enemy_robots):
             robot.set_simulator_data(data_their_bots[index])
+
         ball.set_simulator_data(data_ball)
 
         if ref_data["game_on"]:
             # If the game mode is set to "Game on"
-            strategy.decider()
-
-        elif ref_data["foul"] == 1 and ref_data["yellow"] == (not mray):
-            # detecting defensive penalty
-            strategy.penaltyDefensive = True
-            actuator.stop()
-            fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
-
-        elif ref_data["foul"] == 1 and ref_data["yellow"] == (mray):
-            # detecting offensive penalty
-            strategy.penaltyOffensive = True
-            actuator.stop()
-            fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
-
-        elif ref_data["foul"] != 7:
-            if ref_data["foul"] != 5:  # Changing the flag except in the Stop case
-                strategy.penaltyOffensive = False
-                strategy.penaltyDefensive = False
-            fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
-            actuator.stop()
+            strategy.handle_game_on()
 
         else:
-            actuator.stop()
+            match ref_data["foul"]:
+
+                case 1 if mray:
+                    # detecting defensive penalty
+                    strategy.penaltyDefensive = True
+                    actuator.stop()
+                    fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
+                case 1 if not mray:
+                    # detecting offensive penalty
+                    strategy.penaltyOffensive = True
+                    actuator.stop()
+                    fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
+                case 4 if ball.get_coordinates().X < 10 or ball.get_coordinates().X > 160:
+                    strategy.handle_goal(ref_data["yellow"])
+                    actuator.stop()
+                case 5:
+                    strategy.penaltyOffensive = False
+                    strategy.penaltyDefensive = False
+                    fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
+                    actuator.stop()
+                case 7:
+                    fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
+                    actuator.stop()
+                case _:
+                    actuator.stop()
 
         # synchronize code execution based on runtime and the camera FPS
         t2 = time.time()
