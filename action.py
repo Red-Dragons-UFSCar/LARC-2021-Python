@@ -209,7 +209,7 @@ def screen_out_ball(robot: simClasses.Robot, ball: simClasses.KinematicBody, sta
     # If ball position is out of limits of Y axis, set the value to the limits
     ball_y_prediction = ball_coordinates.Y + ball._velocities.Y * 100 * 22 / 60
     ball_y_target = min(ball_y_prediction, upper_lim)
-    ball_y_target = max(ball_y_prediction, lower_lim)
+    ball_y_target = max(ball_y_target, lower_lim)
 
     arrival_angle = calculate_arrival_angle_screenout(ball_y_prediction, left_side, robot)
     if left_side:
