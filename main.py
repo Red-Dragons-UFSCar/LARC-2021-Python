@@ -87,6 +87,14 @@ if __name__ == "__main__":
             strategy.handle_game_on()
 
         else:
+            """FREE_KICK = 0
+            PENALTY_KICK = 1
+            GOAL_KICK = 2
+            FREE_BALL = 3
+            KICKOFF = 4
+            STOP = 5
+            GAME_ON = 6
+            HALT = 7"""
             match ref_data["foul"]:
 
                 case 1 if mray:
@@ -99,17 +107,17 @@ if __name__ == "__main__":
                     strategy.penaltyOffensive = True
                     actuator.stop()
                     fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
-                case 4 if ball.get_coordinates().X < 10 or ball.get_coordinates().X > 160:
-                    strategy.handle_goal(ref_data["yellow"])
-                    actuator.stop()
+
                 case 5:
                     strategy.penaltyOffensive = False
                     strategy.penaltyDefensive = False
                     fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
                     actuator.stop()
-                case 7:
+
+                case 0 | 2 | 3 | 4:
                     fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
                     actuator.stop()
+
                 case _:
                     actuator.stop()
 
