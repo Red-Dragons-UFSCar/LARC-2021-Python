@@ -1,4 +1,5 @@
-import asyncio
+import time
+import threading
 import action
 from numpy import *
 
@@ -27,14 +28,14 @@ class PenaltyHandler:
         # calls function to change the penalty tactic in case of score change
         if not self.checking_for_score_change:
             self.checking_for_score_change = True
-            asyncio.create_task(self.change_offensive_tactic(self.strategy.get_score()))
+            threading.Thread(target=self.change_offensive_tactic, args=(self.strategy.get_score(),)).start()
         self.penalty_mode_offensive()
 
     def handle_defensive_penalty(self):
         # calls function to change the penalty tactic in case of score change
         if not self.checking_for_score_change:
             self.checking_for_score_change = True
-            asyncio.create_task(self.change_defensive_tactic(self.strategy.get_score()))
+            threading.Thread(target=self.change_defensive_tactic, args=(self.strategy.get_score(),)).start()
         self.penalty_mode_defensive()
 
     def penalty_mode_offensive(self):
@@ -66,6 +67,7 @@ class PenaltyHandler:
             self.strategy.end_penalty_state()
 
     def penalty_mode_defensive(self):
+        print("penalty_mode_defensive")
         """Input: None
         Description: Penalty kick defence strategy, goalkeeper defends goal, other robots chase ball.
         Output: None."""
@@ -102,15 +104,15 @@ class PenaltyHandler:
             if ball_coordinates.X < 112 or ball_coordinates.Y < 30 or ball_coordinates.Y > 100:
                 self.strategy.end_penalty_state()
 
-    # asyncronous Function to change the penalty tactic in case of score change if the score changes within 5 seconds of the penalty kick
-    async def change_offensive_tactic(self, score):
-        await asyncio.sleep(5)
-        if score != self.strategy.get_score():
+
+    def change_offensive_tactic(self, score):
+        time.sleep(5)
+        if score == self.strategy.get_score():
             self.current_offensive_tactic = (self.current_offensive_tactic + 1) % len(self.offensive_penalty_tactics)
         self.checking_for_score_change = False
 
-    async def change_defensive_tactic(self, score):
-        await asyncio.sleep(5)
+    def change_defensive_tactic(self, score):
+        time.sleep(5)
         if score != self.strategy.get_score():
             self.current_defensive_tactic = (self.current_defensive_tactic + 1) % len(self.defensive_penalty_tactics)
         self.checking_for_score_change = False

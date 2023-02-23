@@ -107,13 +107,15 @@ if __name__ == "__main__":
                     strategy.penalty_state = 1
                     actuator.stop()
                     fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
-
                 case 5:
-                    strategy.penalty_state = 0
                     fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
                     actuator.stop()
-
-                case 0 | 2 | 3 | 4:
+                case 4:
+                    strategy.handle_goal(ref_data["yellow"])
+                    fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
+                    actuator.stop()
+                case 0 | 2 | 3:
+                    strategy.end_penalty_state()
                     fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
                     actuator.stop()
 

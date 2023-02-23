@@ -95,6 +95,7 @@ class Strategy:
         Output: Prints a warning in case of error."""
         if self.penalty_state:
             self.penalty_handler.handle_penalty(self.penalty_state, self.score.copy())
+            return
         match self.strategy:
             case 'default':
                 self.coach()
