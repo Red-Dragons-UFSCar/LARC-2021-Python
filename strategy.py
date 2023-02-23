@@ -47,6 +47,9 @@ class Strategy:
                 print("gol inimigo")
         print(self.score)
 
+    def get_score(self):
+        return self.score.copy()
+
     def end_penalty_state(self):
         self.penalty_state = 0
 
