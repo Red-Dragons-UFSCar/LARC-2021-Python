@@ -14,15 +14,13 @@ class Strategy:
         self.ball = ball
         self.mray = mray
         self.score = [0, 0]  # Current score, [our score, enemy score]
-        self.penaltyDefensive = False
-        self.penaltyOffensive = False
+        self.penalty_state = 0  # 0 = no peanlty, 1 = offensive penalty, 2 = defensive penalty
         self.strategy = strategies[0]
-        self.stOffensePenalty = strategies[1]
-        self.stDefensePenalty = strategies[2]
         self.leader = None
         self.follower = None
         self.leader_time = 0
-        self.penalty_handler = penalty_handler.PenaltyHandler()
+        self.penalty_handler = penalty_handler.PenaltyHandler(self, self.robots, self.enemy_robots, self.ball,
+                                                              self.mray)
         self.goal_already_happened = False
 
     def handle_game_on(self):
@@ -48,6 +46,9 @@ class Strategy:
                 self.score[1] += 1
                 print("gol inimigo")
         print(self.score)
+
+    def end_penalty_state(self):
+        self.penalty_state = 0
 
     def set_leader(self, leader):
         """Input: None
@@ -89,56 +90,47 @@ class Strategy:
         """Input: None
         Description: Calls the function that initiates the selected strategy.
         Output: Prints a warning in case of error."""
-        if self.strategy == 'default':
-            self.coach()
-        elif self.strategy == 'twoAttackers':
-            self.coach2()
-        else:
-            print("There was an error in strategy selection")
+        if self.penalty_state:
+            self.penalty_handler.handle_penalty(self.penalty_state, self.score.copy())
+        match self.strategy:
+            case 'default':
+                self.coach()
+            case 'twoAttackers':
+                self.coach2()
+            case _:
+                print("Strategy not found")
 
     def coach2(self):
         """Input: None
         Description: Advanced strategy, one goalkeeper defends while two robots chase the ball, with one leading and the other in support.
         Output: None."""
         ball_coordinates = self.ball.get_coordinates()
-        if self.penaltyDefensive:
-            self.penalty_mode_defensive()
-        elif self.penaltyOffensive:
-            self.penalty_mode_offensive()
-        else:
-            # For the time being, the only statuses considered are which side of the field the ball is in
-            if self.mray:
-                if ball_coordinates.X > 85:
-                    self.stg_def_v2()
-                else:
-                    self.stg_att_v2()
+        if self.mray:
+            if ball_coordinates.X > 85:
+                self.stg_def_v2()
             else:
-                if ball_coordinates.X > 85:
-                    self.stg_att_v2()
-                else:
-                    self.stg_def_v2()
+                self.stg_att_v2()
+        else:
+            if ball_coordinates.X > 85:
+                self.stg_att_v2()
+            else:
+                self.stg_def_v2()
 
     def coach(self):
         """Input: None
         Description: The standard strategy, one robot as attacker, another as defender and another as goalkeeper.
         Output: None."""
         ball_coordinates = self.ball.get_coordinates()
-        if self.penaltyDefensive:
-            self.penalty_mode_defensive()
-        elif self.penaltyOffensive:
-            self.penalty_mode_offensive_spin()
-        else:
-            # For the time being, the only statuses considered are which side of the field the ball is in
-            if self.mray:
-                if ball_coordinates.X > 85:
-                    self.basic_stg_def_2()
-                else:
-                    self.basic_stg_att()
+        if self.mray:
+            if ball_coordinates.X > 85:
+                self.basic_stg_def_2()
             else:
-                if ball_coordinates.x > 85:
-                    self.basic_stg_att()
-                else:
-                    self.basic_stg_def_2()
+                self.basic_stg_att()
+        else:
+            if ball_coordinates.x > 85:
+                self.basic_stg_att()
+            else:
+                self.basic_stg_def_2()
 
     def basic_stg_def(self):
         """Input: None
@@ -247,55 +239,6 @@ class Strategy:
         self.two_attackers()
         action.screen_out_ball(self.robots[0], self.ball, 16, left_side=not self.mray, upper_lim=84, lower_lim=42)
         self.robots[0].contStopped = 0
-
-    def penalty_mode_defensive(self):
-        """Input: None
-        Description: Penalty kick defence strategy, goalkeeper defends goal, other robots chase ball.
-        Output: None."""
-        ball_coordinates = self.ball.get_coordinates()
-        if self.stDefensePenalty == 'spin':
-            # Goalkeeper behaviour in defensive penalty
-            action.defender_penalty_spin(self.robots[0], self.ball, left_side=not self.mray)
-        elif self.stDefensePenalty == 'spin-v':
-            action.defender_penalty_spin_proj_vel(self.robots[0], self.ball, left_side=not self.mray,
-                                                  friend1=self.robots[1],
-                                                  friend2=self.robots[2], enemy1=self.enemy_robots[0],
-                                                  enemy2=self.enemy_robots[1],
-                                                  enemy3=self.enemy_robots[2])
-        elif self.stDefensePenalty == 'direct':
-            # Goalkeeper behaviour in defensive penalty
-            action.defender_penalty(self.robots[0], self.ball, left_side=not self.mray)
-        # Defenders behaviour in defensive penalty
-        action.shoot(self.robots[1], self.ball, left_side=not self.mray)  # Robot 1 chasing ball
-        action.shoot(self.robots[2], self.ball, left_side=not self.mray)  # Robot 2 chasing ball
-
-        # If the ball gets away from the defensive area, stops the penalty mode
-        if not self.mray:
-            if ball_coordinates.X > 48 or ball_coordinates.Y < 30 or ball_coordinates.Y > 100:
-                self.penaltyDefensive = False
-        else:
-            if ball_coordinates.X < 112 or ball_coordinates.Y < 30 or ball_coordinates.Y > 100:
-                self.penaltyDefensive = False
-
-    def penalty_mode_offensive(self):
-        """Input: None
-        Description: Penalty kick offence strategy.
-        Output: None."""
-        ball_coordinates = self.ball.get_coordinates()
-        robot_coordinates = self.robots[2].get_coordinates()
-        action.screen_out_ball(self.robots[0], self.ball, 10, left_side=not self.mray)  # Goalkeeper keeps in goal
-        action.shoot(self.robots[1], self.ball, left_side=not self.mray)  # Defender going to the rebound
-
-        if self.stOffensePenalty == 'spin':
-            action.attacker_penalty_spin(self.robots[2], self.ball)
-        elif self.stOffensePenalty == 'direct':
-            action.attacker_penalty_direct(self.robots[2])
-        elif self.stOffensePenalty == 'switch':
-            action.attacker_penalty_switch(self.robots[2])
-
-        # If the ball gets away from the robot, stop the penalty mode
-        if sqrt((ball_coordinates.X - robot_coordinates.X) ** 2 + (ball_coordinates.Y - robot_coordinates.Y) ** 2) > 30:
-            self.penaltyOffensive = False
 
     def penalty_mode_offensive_spin(self):
         """Input: None
