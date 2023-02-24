@@ -97,12 +97,12 @@ if __name__ == "__main__":
             HALT = 7"""
             match ref_data["foul"]:
 
-                case 1 if mray:
+                case 1 if ref_data["yellow"] != mray:
                     # detecting defensive penalty
                     strategy.penalty_state = 2
                     actuator.stop()
                     fouls.replacement_fouls(replacement, ref_data, mray, strategy.penalty_handler.offensive_penalty_tactics[strategy.penalty_handler.current_offensive_tactic], strategy.penalty_handler.defensive_penalty_tactics[strategy.penalty_handler.current_defensive_tactic])
-                case 1 if not mray:
+                case 1 if ref_data["yellow"] == mray:
                     # detecting offensive penalty
                     strategy.penalty_state = 1
                     actuator.stop()

@@ -48,12 +48,12 @@ class PenaltyHandler:
         action.shoot(self.robots[1], self.ball, left_side=not self.mray)  # Defender going to the rebound
 
         current_tactic = self.offensive_penalty_tactics[self.current_offensive_tactic]
-
+        print("Tatica atual: " + current_tactic)
         match current_tactic:
             case 'spin':
                 action.attacker_penalty_spin(self.robots[2], self.ball)
             case 'direct':
-                action.attacker_penalty_direct(self.robots[2])
+                action.attacker_penalty_direct(self.robots[2], self.ball, left_side=not self.mray)
             case 'switch':
                 action.attacker_penalty_switch(self.robots[2])
             case _:
@@ -106,13 +106,13 @@ class PenaltyHandler:
 
 
     def change_offensive_tactic(self, score):
-        time.sleep(5)
+        time.sleep(2)
         if score == self.strategy.get_score():
             self.current_offensive_tactic = (self.current_offensive_tactic + 1) % len(self.offensive_penalty_tactics)
         self.checking_for_score_change = False
 
     def change_defensive_tactic(self, score):
-        time.sleep(5)
+        time.sleep(2)
         if score != self.strategy.get_score():
             self.current_defensive_tactic = (self.current_defensive_tactic + 1) % len(self.defensive_penalty_tactics)
         self.checking_for_score_change = False

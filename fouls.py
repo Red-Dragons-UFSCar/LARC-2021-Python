@@ -31,7 +31,7 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
             if ref_data["yellow"]:  # Defensive
                 if dp == "direct":
                     angle = 0
-                elif dp == "spin":
+                elif dp == "spin" or dp == "spin-v":
                     angle = 90
                 entidade0 = Entity(x=14, y=65, a=angle, index=0) # Goalkeeper
                 entidade1 = Entity(x=90, y=40, a=180, index=1) # Center back
@@ -39,7 +39,7 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
 
             else:  # Ofensive
                 entidade0 = Entity(x=17.5, y=65, a=0, index=0)
-                if op == "direct":
+                if op == "direct" or op == "switch":
                     entidade1 = Entity(x=80, y=70, a=0, index=1)
                     entidade2 = Entity(x=117.5, y=65-1.7-2, a=22, index=2)
                 elif op == "spin":
@@ -74,11 +74,9 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
                 entidade2 = Entity(x=47.5, y=66,a=0, index=2)
             else:
                 entidade0 = Entity(x=17.5, y=65, a=0, index=0)
-                entidade1 = Entity(x=105, y=63,a=0, index=1)
-                if ball.get_coordinates().Y < 65:
-                    entidade2 = Entity(x=100, y=20,a=0, index=2)
-                else:
-                    entidade2 = Entity(x=100, y=115,a=0, index=2)
+                entidade1 = Entity(x=85, y=85,a=0, index=1)
+                if ball.yPos < 65:
+                    entidade2 = Entity(x=85, y=45,a=180, index=2)
             replacement.place_all([entidade0, entidade1, entidade2])
 
         elif ref_data["foul"] == 3: # Freeball
@@ -107,11 +105,12 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
                 entidade2 = Entity(x=61, y=65, a=0, index=2)
             else: # Ofensive
                 entidade0 = Entity(x=17.5, y=65, a=0, index=0)
+                # Kickoff normal - Transformar em estrategia selecionavel?
                 entidade1 = Entity(x=73, y=88, a=330, index=1)
                 entidade2 = Entity(x=75, y=58, a=25, index=2)
-                #entidade0 = Entity(x=17.5, y=65, a=0, index=0) # Sair com 90 graus
-                #entidade1 = Entity(x=69, y=85, a=330, index=1)
-                #entidade2 = Entity(x=84, y=58, a=90, index=2)
+
+                #entidade1 = Entity(x=73.5, y=110.3, a=328, index=1)
+                #entidade2 = Entity(x=79, y=63, a=25, index=2)
             replacement.place_all([entidade0, entidade1, entidade2]) # Replace each robot
 
     if mray: # Yellow side
@@ -119,14 +118,14 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
             if not ref_data["yellow"]: # Defensive
                 if dp == "direct":
                     angle = 0
-                elif dp == "spin":
+                elif dp == "spin" or dp == "spin-v":
                     angle = 90
                 entidade0 = Entity(x=156, y=65, a=angle, index=0)
                 entidade1 = Entity(x=80, y=90, a=180, index=1)
                 entidade2 = Entity(x=80, y=40, a=180, index=2)
             else:  # Ofensive
                 entidade0 = Entity(x=152.5, y=65, a=180, index=0)
-                if op == "direct":
+                if op == "direct" or op == "switch":
                     entidade1 = Entity(x=90, y=70, a=0, index=1)
                     entidade2 = Entity(x=52.5, y=61.3, a=158, index=2)
                 elif op == "spin":
@@ -145,12 +144,10 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
                 entidade2 = Entity(x=122, y=63,a=0, index=2)
             else:
                 entidade0 = Entity(x=152.5, y=65, a=180, index=0)
-                entidade1 = Entity(x=62, y=63,a=0, index=1)
+                entidade1 = Entity(x=85, y=85,a=180, index=1)
                 ball = Ball()
-                if ball.get_coordinates().Y < 65:
-                    entidade2 = Entity(x=70, y=20,a=0, index=2)
-                elif ball.get_coordinates().Y > 65:
-                    entidade2 = Entity(x=70, y=115,a=0, index=2)
+                if ball.yPos < 65:
+                    entidade2 = Entity(x=85, y=45,a=180, index=2)
             replacement.place_all([entidade0, entidade1, entidade2])
 
         elif ref_data["foul"] == 3: # Freeball
@@ -178,8 +175,13 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
                 entidade1 = Entity(x=91, y=89, a=240, index=1)
                 entidade2 = Entity(x=109, y=65, a=180, index=2)
             else: # Ofensive
+                # Kickoff normal - Transformar em estrategia selecionavel?
+                #entidade0 = Entity(x=152, y=65, a=180, index=0)
+                #entidade1 = Entity(x=93, y=88, a=210, index=1)
+                #entidade2 = Entity(x=95, y=58, a=155, index=2)
+
                 entidade0 = Entity(x=152, y=65, a=180, index=0)
-                entidade1 = Entity(x=93, y=88, a=210, index=1)
-                entidade2 = Entity(x=95, y=58, a=155, index=2)
+                entidade1 = Entity(x=96.5, y=110.3, a=212, index=1)
+                entidade2 = Entity(x=91, y=63, a=155, index=2)
 
             replacement.place_all([entidade0, entidade1, entidade2]) # Replace each robot
