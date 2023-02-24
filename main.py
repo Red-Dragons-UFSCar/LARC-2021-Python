@@ -22,6 +22,11 @@ if __name__ == "__main__":
                         help="Define o tipo de cobrança ofensiva de penalti: spin ou direct")
     parser.add_argument('-dp', '--defensivePenalty', type=str, default='direct', dest='dp',
                         help="Define o tipo de defesa de penalti: spin ou direct")
+    parser.add_argument('-aop', '--adaptativeOffensivePenalty', type=str, default='off', dest='aop', 
+                        help="Controla a troca de estratégias de penalti durante o jogo")
+    parser.add_argument('-adp', '--adaptativeDeffensivePenalty', type=str, default='off', dest='adp', 
+                        help="Controla a troca de estratégias de penalti durante o jogo")
+
 
     args = parser.parse_args()
 
@@ -55,7 +60,7 @@ if __name__ == "__main__":
 
     ball = Ball()
 
-    list_strategies = [args.strategy, args.op, args.dp]
+    list_strategies = [args.strategy, args.op, args.dp, args.aop, args.adp]
     strategy = Strategy(robots, enemy_robots, ball, mray, list_strategies)
 
     # Main infinite loop
