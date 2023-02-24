@@ -16,6 +16,8 @@ class Strategy:
         self.score = [0, 0]  # Current score, [our score, enemy score]
         self.penalty_state = 0  # 0 = no peanlty, 1 = offensive penalty, 2 = defensive penalty
         self.strategy = strategies[0]
+        self.penaltyStrategies = strategies[1:3]
+        print(self.penaltyStrategies)
         self.leader = None
         self.follower = None
         self.leader_time = 0

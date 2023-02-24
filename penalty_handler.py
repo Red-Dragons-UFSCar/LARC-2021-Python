@@ -9,8 +9,9 @@ class PenaltyHandler:
         self.defensive_penalty_tactics = ['spin', 'spin-v', 'direct']
         self.offensive_penalty_tactics = ['spin', 'direct', 'switch']
         self.timer = 0
-        self.current_offensive_tactic = 0
-        self.current_defensive_tactic = 0
+        self.current_offensive_tactic = self.offensive_penalty_tactics.index(strategy_object.penaltyStrategies[0])
+        self.current_defensive_tactic = self.defensive_penalty_tactics.index(strategy_object.penaltyStrategies[1])
+        print(self.current_defensive_tactic)
         self.strategy = strategy_object
         self.robots = robots
         self.enemy_robots = enemy_robots
