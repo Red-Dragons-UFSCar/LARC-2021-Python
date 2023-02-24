@@ -9,14 +9,16 @@ class PenaltyHandler:
         self.defensive_penalty_tactics = ['spin', 'spin-v', 'direct']
         self.offensive_penalty_tactics = ['spin', 'direct', 'switch']
         self.timer = 0
-        self.current_offensive_tactic = 0
-        self.current_defensive_tactic = 0
+        self.current_offensive_tactic = self.offensive_penalty_tactics.index(strategy_object.penaltyStrategies[0])
+        self.current_defensive_tactic = self.defensive_penalty_tactics.index(strategy_object.penaltyStrategies[1])
         self.strategy = strategy_object
         self.robots = robots
         self.enemy_robots = enemy_robots
         self.ball = ball
         self.mray = mray
         self.checking_for_score_change = False
+        self.aop = strategy_object.aop
+        self.adp = strategy_object.adp
 
     def handle_penalty(self, penalty_state, score):
         if penalty_state == 1:
@@ -48,7 +50,6 @@ class PenaltyHandler:
         action.shoot(self.robots[1], self.ball, left_side=not self.mray)  # Defender going to the rebound
 
         current_tactic = self.offensive_penalty_tactics[self.current_offensive_tactic]
-        print("Tatica atual: " + current_tactic)
         match current_tactic:
             case 'spin':
                 action.attacker_penalty_spin(self.robots[2], self.ball)
@@ -67,7 +68,6 @@ class PenaltyHandler:
             self.strategy.end_penalty_state()
 
     def penalty_mode_defensive(self):
-        print("penalty_mode_defensive")
         """Input: None
         Description: Penalty kick defence strategy, goalkeeper defends goal, other robots chase ball.
         Output: None."""
@@ -107,12 +107,12 @@ class PenaltyHandler:
 
     def change_offensive_tactic(self, score):
         time.sleep(2)
-        if score == self.strategy.get_score():
+        if score == self.strategy.get_score() and self.aop == "on":
             self.current_offensive_tactic = (self.current_offensive_tactic + 1) % len(self.offensive_penalty_tactics)
         self.checking_for_score_change = False
 
     def change_defensive_tactic(self, score):
         time.sleep(2)
-        if score != self.strategy.get_score():
+        if score != self.strategy.get_score() and self.adp == "on":
             self.current_defensive_tactic = (self.current_defensive_tactic + 1) % len(self.defensive_penalty_tactics)
         self.checking_for_score_change = False
