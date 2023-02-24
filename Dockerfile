@@ -1,15 +1,16 @@
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 # Dependencias
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
     git \
-    qt5-default \
+    qtbase5-dev \
+    qt5-qmake \
     sudo \
     libprotobuf-dev \
     protobuf-compiler \
-    python \ 
+    python3.10 \
     python3-pip \
     && apt-get clean 
 

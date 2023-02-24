@@ -209,7 +209,7 @@ def screen_out_ball(robot: simClasses.Robot, ball: simClasses.KinematicBody, sta
     # If ball position is out of limits of Y axis, set the value to the limits
     ball_y_prediction = ball_coordinates.Y + ball._velocities.Y * 100 * 22 / 60
     ball_y_target = min(ball_y_prediction, upper_lim)
-    ball_y_target = max(ball_y_prediction, lower_lim)
+    ball_y_target = max(ball_y_target, lower_lim)
 
     arrival_angle = calculate_arrival_angle_screenout(ball_y_prediction, left_side, robot)
     if left_side:
@@ -409,7 +409,7 @@ def defender_penalty(robot: simClasses.Robot, ball: simClasses.Ball, left_side=T
 
     arrival_angle = calculate_arrival_angle_defence(ball, left_side)
     ball_coordinates = ball.get_coordinates()
-    robot.target.set_coordinates(ball_coordinates.X, ball_coordinates.Y, ball_coordinates.rotation)
+    robot.target.set_coordinates(ball_coordinates.X, ball_coordinates.Y, arrival_angle)
 
     linear_velocity, angular_velocity = calculate_velocities_defence(robot)
 
