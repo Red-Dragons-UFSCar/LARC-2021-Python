@@ -101,12 +101,12 @@ if __name__ == "__main__":
                     # detecting defensive penalty
                     strategy.penalty_state = 2
                     actuator.stop()
-                    fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
+                    fouls.replacement_fouls(replacement, ref_data, mray, strategy.penalty_handler.offensive_penalty_tactics[strategy.penalty_handler.current_offensive_tactic], strategy.penalty_handler.defensive_penalty_tactics[strategy.penalty_handler.current_defensive_tactic])
                 case 1 if not mray:
                     # detecting offensive penalty
                     strategy.penalty_state = 1
                     actuator.stop()
-                    fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
+                    fouls.replacement_fouls(replacement, ref_data, mray, strategy.penalty_handler.offensive_penalty_tactics[strategy.penalty_handler.current_offensive_tactic], strategy.penalty_handler.defensive_penalty_tactics[strategy.penalty_handler.current_defensive_tactic])
                 case 5:
                     fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
                     actuator.stop()
