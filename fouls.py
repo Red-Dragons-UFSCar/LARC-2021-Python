@@ -40,8 +40,11 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
             else:  # Ofensive
                 entidade0 = Entity(x=17.5, y=65, a=0, index=0)
                 if op == "direct" or op == "switch":
+                    # Original
                     entidade1 = Entity(x=80, y=70, a=0, index=1)
-                    entidade2 = Entity(x=117.5, y=65-1.7-2, a=22, index=2)
+                    #entidade2 = Entity(x=117.5, y=65-1.7-2, a=22, index=2)
+                    # A de baixo melhorou um pouco 
+                    entidade2 = Entity(x=117.5-0.2, y=65-1.7-2, a=22+2, index=2)
                 elif op == "spin":
                     r = random.uniform(0, 1) # Generate random number between 0 and 1
                     if r < 0.001: # 0.5 is default value
@@ -50,6 +53,13 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
                     else:
                         entidade1 = Entity(x=80, y=70, a=0, index=1)
                         entidade2 = Entity(x=105, y=45, a=50, index=2)
+                elif op == "new-spin":
+                    entidade1 = Entity(x=80, y=70, a=0, index=1)
+                    entidade2 = Entity(x=120.3, y=59, a=90, index=2)
+                elif op == "block":
+                    entidade1 = Entity(x=80, y=75, a=0, index=1)
+                    # Estrategia sacana
+                    entidade2 = Entity(x=117.3, y=61.3-4, a=24, index=2)
             '''
             else:  # Ofensive
                 r = random.uniform(0, 1) # Generate random number between 0 and 1

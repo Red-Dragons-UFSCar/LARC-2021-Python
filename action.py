@@ -884,12 +884,16 @@ def attacker_penalty_spin(robot, ball):
 
 def attacker_penalty_direct(robot):
     if robot.teamYellow:
-        girar(robot,40,30)
+        girar(robot,60,60)
     else:
-        girar(robot,40,30)
+        girar(robot,100,100)
 
 def attacker_penalty_switch(robot):
         girar(robot,-10,-10)
+
+def attacker_penalty_newSpin(robot):
+    if not robot.teamYellow:
+        girar(robot,100,-100)
 
 '''
 Input: Robot object, ball object, side of field (True = Left, False = Right), other robots objects (2 friend, 3 opponents)

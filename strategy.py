@@ -36,7 +36,7 @@ class Strategy:
         self.switchOfensive = False
         self.switchDefensive = False
         self.penaltyDefensiveStrategy = ['spin', 'spin-v', 'direct']
-        self.penaltyOffensiveStrategy = ['spin', 'direct', 'switch']
+        self.penaltyOffensiveStrategy = ['spin', 'direct', 'block', 'new-spin']
         self.ofensive = False
         self.defensive = False
 
@@ -100,6 +100,8 @@ class Strategy:
                 elif self.penaltyOffensiveStrategy[1] == self.stOfensePenalty:
                     self.stOfensePenalty = self.penaltyOffensiveStrategy[2]
                 elif self.penaltyOffensiveStrategy[2] == self.stOfensePenalty:
+                    self.stOfensePenalty = self.penaltyOffensiveStrategy[3]
+                elif self.penaltyOffensiveStrategy[3] == self.stOfensePenalty:
                     self.stOfensePenalty = self.penaltyOffensiveStrategy[0]
                 self.switchOfensive = False
 
@@ -335,8 +337,14 @@ class Strategy:
             action.attacker_penalty_spin(self.robot2, self.ball)
         elif self.stOfensePenalty == 'direct':
             action.attacker_penalty_direct(self.robot2)
+            #action.attacker_penalty_direct(self.robot1)
         elif self.stOfensePenalty == 'switch':
             action.attacker_penalty_switch(self.robot2)
+        elif self.stOfensePenalty == 'new-spin':
+            action.attacker_penalty_newSpin(self.robot2)
+        elif self.stOfensePenalty == 'block':
+            action.attacker_penalty_direct(self.robot2)
+            action.attacker_penalty_direct(self.robot1)
 
 
 
