@@ -44,7 +44,7 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
                     entidade1 = Entity(x=80, y=70, a=0, index=1)
                     #entidade2 = Entity(x=117.5, y=65-1.7-2, a=22, index=2)
                     # A de baixo melhorou um pouco 
-                    entidade2 = Entity(x=117.5-0.2, y=65-1.7-2, a=22+2, index=2)
+                    entidade2 = Entity(x=117.5-0.2+0.7, y=61.3-2.5, a=22+2, index=2)
                 elif op == "spin":
                     r = random.uniform(0, 1) # Generate random number between 0 and 1
                     if r < 0.001: # 0.5 is default value
