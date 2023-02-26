@@ -166,8 +166,8 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
 
         elif ref_data["foul"] == 2:
             if ref_data["yellow"]:
-                entidade0 = Entity(x=152.5, y=58, a=180, index=0)
-                entidade1 = Entity(x=153, y=22,a=150, index=1)
+                entidade0 = Entity(x=152.5, y=50, a=-90, index=0)
+                entidade1 = Entity(x=153, y=26,a=180, index=1)
                 entidade2 = Entity(x=122, y=63,a=0, index=2)
             else:
                 entidade0 = Entity(x=152.5, y=65, a=180, index=0)
