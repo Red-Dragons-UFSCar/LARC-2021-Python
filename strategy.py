@@ -343,8 +343,9 @@ class Strategy:
         elif self.stOfensePenalty == 'new-spin':
             action.attacker_penalty_newSpin(self.robot2)
         elif self.stOfensePenalty == 'block':
-            action.attacker_penalty_direct(self.robot2)
-            action.attacker_penalty_direct(self.robot1)
+            #action.attacker_penalty_direct(self.robot2)
+            #action.attacker_penalty_direct(self.robot1)
+            action.attacker_penalty_block(self.robot1, self.robot2, self.ball)
 
 
 

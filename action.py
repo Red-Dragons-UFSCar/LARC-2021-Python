@@ -895,6 +895,15 @@ def attacker_penalty_newSpin(robot):
     if not robot.teamYellow:
         girar(robot,100,-100)
 
+def attacker_penalty_block(robot1, robot2, ball):
+    if ball.yPos > 72 or ball.yPos < 58:
+        print("entrei aqui")
+        robot2.sim_set_vel(0, 0)
+    else:
+        attacker_penalty_direct(robot2)
+    
+    attacker_penalty_direct(robot1)
+
 '''
 Input: Robot object, ball object, side of field (True = Left, False = Right), other robots objects (2 friend, 3 opponents)
 Description: Positions the robot to take the penalty, it is positioned and moves to go towards the corners of the goal.

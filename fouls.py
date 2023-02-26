@@ -152,8 +152,10 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
                         entidade1 = Entity(x=90, y=70, a=0, index=1)
                         entidade2 = Entity(x=65, y=45, a=130, index=2)
                 elif op == "block":
+                    # Cobra pra cima
                     #entidade1 = Entity(x=90, y=75, a=180, index=1)
                     #entidade2 = Entity(x=52.7, y=61.3-4, a=156, index=2)
+                    # Cobra pra baixo
                     entidade1 = Entity(x=90, y=55, a=180, index=1)
                     entidade2 = Entity(x=52.7, y=72.7, a=204, index=2)
             replacement.place_all([entidade0, entidade1, entidade2]) # Replace each robot
