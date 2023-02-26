@@ -894,6 +894,8 @@ def attacker_penalty_switch(robot):
 def attacker_penalty_newSpin(robot):
     if not robot.teamYellow:
         girar(robot,100,-100)
+    else:
+        girar(robot,-100,100)
 
 def attacker_penalty_block(robot1, robot2, ball):
     if ball.yPos > 72 or ball.yPos < 58:
