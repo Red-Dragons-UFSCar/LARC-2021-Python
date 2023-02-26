@@ -884,7 +884,7 @@ def attacker_penalty_spin(robot, ball):
 
 def attacker_penalty_direct(robot):
     if robot.teamYellow:
-        girar(robot,60,60)
+        girar(robot,100,100)
     else:
         girar(robot,100,100)
 

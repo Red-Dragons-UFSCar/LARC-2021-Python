@@ -57,9 +57,11 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
                     entidade1 = Entity(x=80, y=70, a=0, index=1)
                     entidade2 = Entity(x=120.3, y=59, a=90, index=2)
                 elif op == "block":
-                    entidade1 = Entity(x=80, y=75, a=0, index=1)
-                    # Estrategia sacana
-                    entidade2 = Entity(x=117.3, y=61.3-4, a=24, index=2)
+                    #entidade1 = Entity(x=80, y=75, a=0, index=1)
+                    #entidade2 = Entity(x=117.3, y=61.3-4, a=24, index=2)
+
+                    entidade1 = Entity(x=80, y=55, a=0, index=1)
+                    entidade2 = Entity(x=117.3, y=72.7, a=-24, index=2)
             '''
             else:  # Ofensive
                 r = random.uniform(0, 1) # Generate random number between 0 and 1
@@ -145,6 +147,11 @@ def replacement_fouls(replacement, ref_data, mray, op, dp):
                     else:
                         entidade1 = Entity(x=90, y=70, a=0, index=1)
                         entidade2 = Entity(x=65, y=45, a=130, index=2)
+                elif op == "block":
+                    #entidade1 = Entity(x=90, y=75, a=180, index=1)
+                    #entidade2 = Entity(x=52.7, y=61.3-4, a=156, index=2)
+                    entidade1 = Entity(x=90, y=55, a=180, index=1)
+                    entidade2 = Entity(x=52.7, y=72.7, a=204, index=2)
             replacement.place_all([entidade0, entidade1, entidade2]) # Replace each robot
 
         elif ref_data["foul"] == 2:

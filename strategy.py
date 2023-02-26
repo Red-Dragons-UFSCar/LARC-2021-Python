@@ -36,7 +36,7 @@ class Strategy:
         self.switchOfensive = False
         self.switchDefensive = False
         self.penaltyDefensiveStrategy = ['spin', 'spin-v', 'direct']
-        self.penaltyOffensiveStrategy = ['spin', 'direct', 'block', 'new-spin']
+        self.penaltyOffensiveStrategy = ['spin', 'direct', 'block', 'spin']
         self.ofensive = False
         self.defensive = False
 
