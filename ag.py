@@ -1,6 +1,8 @@
-from numpy import sqrt, zeros, random, argwhere, maximum, minimum, multiply, rad2deg
+from numpy import sqrt, zeros, random, argwhere, maximum, minimum, multiply, rad2deg, inf
 
 from copy import deepcopy
+
+import csv
 
 class GA:
     def __init__(self,nvar,varmin,varmax,maxit,npop, K_t = 10, K_p = 8, K_d = 2):
@@ -9,9 +11,15 @@ class GA:
         self.varmax = varmax
         self.maxit = maxit
         self.npop = npop
+
         self.K_t = K_t
         self.K_p = K_p
         self.K_d = K_d
+        
+        self.generation = 0
+        self.position = 0
+        self.individual = 0
+        
         self.pop = []
         self.vec_cost = []
         self.vec_dy = []
@@ -31,6 +39,9 @@ class GA:
         self.index_dy = []
         self.max_dang = []
         self.index_dang = []
+
+        self.header = ['Generation','d_e', 'k_r','delta','k_o','d_min','Cost','index_dt','dt','index_dy','dy','index_dang','dang']
+        self.data_csv = []
 
     def update_cost_param(self,dy,dang,dt, flagTime):
         self.vec_dy.append(dy)
@@ -59,6 +70,11 @@ class GA:
         self.index_dang.append(dang.index(self.max_dang[-1]) + 1)
         self.vec_cost.append(cost)
 
+        self.vec_dt = []
+        self.vec_dy = []
+        self.vec_dang = []
+        self.flagsTime = []
+
         print("Custos: ", self.vec_cost)
 
     def findBetterCost(self):
@@ -86,6 +102,15 @@ class GA:
         self.oldPop = deepcopy(self.pop)
         self.pop = deepcopy(self.nextPop)
 
+        self.generation += 1
+        self.position = 0
+        self.individual = 0
+
+        self.vec_dt = []
+        self.vec_dy = []
+        self.vec_dang = []
+        self.flagsTime = []
+
     def crossover(self,p1, p2, gamma=0.1):
         c1 = deepcopy(p1)
         c2 = deepcopy(p2)
@@ -104,3 +129,51 @@ class GA:
         x = maximum(x, varmin)
         x = minimum(x, varmax)
         return x
+    
+    def selection(self):
+        print("Seleção")
+
+        aux_temp_pop = zeros([self.npop,self.nvar])
+        aux_cost = []
+
+        for i in range(self.npop):
+            min_value = min(self.vec_cost)
+            min_index = self.vec_cost.index(min_value)
+            aux_cost.append(min_value)
+            aux_temp_pop[i] = self.pop[min_index]
+            self.vec_cost[min_index] = inf
+        self.pop = deepcopy(aux_temp_pop)
+        self.vec_cost = deepcopy(aux_cost)
+        print("Os melhores foram selecionados!!!")
+
+    def writeData(self):
+        if self.individual == self.npop:
+
+            self.selection()
+
+            for i in range(self.npop):
+                self.data_csv.append([self.generation,self.pop[i][0],self.pop[i][1],self.pop[i][2],self.pop[i][3],self.pop[i][4], self.vec_cost[i],
+                                    self.index_dt[i], self.max_dt[i], self.index_dy[i], self.max_dy[i],self.index_dang[i], self.max_dang[i]])
+            self.findBetterCost()
+            with open('results.csv', 'w', encoding='UTF8', newline='') as f:
+                writer = csv.writer(f)
+
+                # write the header
+                writer.writerow(self.header)
+
+                # write multiple rows
+                writer.writerows(self.data_csv)
+
+                f.close()
+
+            print("Média da geração: ", sum(self.vec_cost)/self.npop)
+            print("Melhor custo: ", self.cost_better)
+            print("Parâmetros do individuo: ", self.pop[self.index_better])
+            print("----")
+            self.max_dt = []
+            self.index_dt = []
+            self.max_dy = []
+            self.index_dy = []
+            self.max_dang = []
+            self.index_dang = []
+            self.vec_cost = []

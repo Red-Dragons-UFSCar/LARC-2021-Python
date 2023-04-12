@@ -43,16 +43,8 @@ if __name__ == "__main__":
     varmin = 0
     varmax = 10
     maxit = 1000
-    npop = 20
+    npop = 4
 
-    # Aux var
-    cont_gen = 0
-    cont_pos = 0
-    cont_ind = 0
-    vec_dt = []
-    vec_dy = []
-    vec_dang = []
-    vec_flagsTime = []
     flagTime = False
     flagColision = False
 
@@ -79,23 +71,22 @@ if __name__ == "__main__":
     # timer
     start_time = 0
     finish_time = 0
-    first_time = True
-
-    # data var
-
-    header = ['Generation','d_e', 'k_r','delta','k_o','d_min','Cost','index_dt','dt','index_dy','dy','index_dang','dang']
-    data_csv = []
+    start_enviroment = True
 
     # Main infinite loop
     while True:
         t1 = time.time()
 
-        if first_time:
-            replacer_all([pos_x_0[0], pos_x_1[0], pos_x_2[0]],[pos_y_0[0], pos_y_1[0], pos_y_2[0]], [0, 0, 0], [1000, 1000, 1000], [350, 400, 450], [0, 0, 0], pos_x_ball[0], pos_y_ball[0])
-            cont_pos = cont_pos + 1
+        if start_enviroment:
+            print('Teleport position ', ga_univector.position)
+            time.sleep(2)
+            print(ga_univector.position)
+            replacer_all([pos_x_0[ga_univector.position], pos_x_1[ga_univector.position], pos_x_2[ga_univector.position]],[pos_y_0[ga_univector.position], pos_y_1[ga_univector.position], pos_y_2[ga_univector.position]], [0, 0, 0], [1000, 1000, 1000], [350, 400, 450], [0, 0, 0], pos_x_ball[ga_univector.position], pos_y_ball[ga_univector.position])
+            time.sleep(1)
             robot0.target.update(ball.xPos, ball.yPos, theta = 0)
             start_time = time.time()
-            first_time = False
+            start_enviroment = False
+            ga_univector.position = ga_univector.position + 1
 
         # Update the foul status
         referee.update()
@@ -126,100 +117,60 @@ if __name__ == "__main__":
                 dt = 500
             else:
                 dt = time.time() - start_time
-            dy = robot0.yPos - ball.yPos
-            dang = robot0.theta
+
             robot0.sim_set_vel(0, 0)
             print(dt)
-            vec_dt.append(dt)
-            vec_dy.append(dy)
-            vec_dang.append(dang)
-            vec_flagsTime.append(flagTime)
+
+            # Informações do individuo
+            dy = robot0.yPos - ball.yPos
+            dang = robot0.theta
+
+            ga_univector.update_cost_param(dy,dang,dt,flagTime)
+
             flagTime = False
             flagColision = False
+            start_enviroment = True
 
-            if cont_pos < len(pos_x_0):
-                time.sleep(2)
-                replacer_all([pos_x_0[cont_pos], pos_x_1[cont_pos], pos_x_2[cont_pos]],[pos_y_0[cont_pos], pos_y_1[cont_pos], pos_y_2[cont_pos]], [0, 0, 0], [1000, 1000, 1000], [350, 400, 450], [0, 0, 0], pos_x_ball[cont_pos], pos_y_ball[cont_pos])
-                cont_pos = cont_pos + 1
-                time.sleep(1)
+            # Reposicionamento para a próxima posição de treinamento
+            if ga_univector.position == len(pos_x_0):
+                # Todas as posições de treinamento foram concluidas para o individuo
+                print('#### TERMINOU INDIVIDUO', ga_univector.individual ,'####')
+                ga_univector.individual += 1 # -> Virar atributo da classe
 
-            else:
-                print('#### TERMINOU INDIVIDUO', cont_ind ,'####')
-                cont_pos = 0
                 time.sleep(2)
-                replacer_all([pos_x_0[cont_pos], pos_x_1[cont_pos], pos_x_2[cont_pos]],[pos_y_0[cont_pos], pos_y_1[cont_pos], pos_y_2[cont_pos]], [0, 0, 0], [1000, 1000, 1000], [350, 400, 450], [0, 0, 0], pos_x_ball[cont_pos], pos_y_ball[cont_pos])
-                cont_pos = cont_pos + 1
-                cont_ind += 1
-                ga_univector.cost_func(vec_dt, vec_dang, vec_dy)
+
+                ga_univector.position = 0
+
+                # Atualiza a função de fitness do individuo -> Passar
+                ga_univector.cost_func(ga_univector.vec_dt, ga_univector.vec_dang, ga_univector.vec_dy)
+
                 flagTime = False
-                vec_dt = []
-                vec_dy = []
-                vec_dang = []
-                vec_flagsTime = []
 
-                if len(ga_univector.vec_cost) == 2*ga_univector.npop:
-                    temp_pop = np.zeros([2*ga_univector.npop,ga_univector.nvar])
-                    aux_temp_pop = np.zeros([ga_univector.npop,ga_univector.nvar])
-                    aux_cost = []
-                    for i in range(2*ga_univector.npop):
-                        if i < ga_univector.npop:
-                            temp_pop[i] = ga_univector.oldPop[i]
-                        else:
-                            temp_pop[i] = ga_univector.pop[i-ga_univector.npop]
-                    for i in range(ga_univector.npop):
-                        min_value = min(ga_univector.vec_cost)
-                        min_index = ga_univector.vec_cost.index(min_value)
-                        aux_cost.append(min_value)
-                        aux_temp_pop[i] = temp_pop[min_index]
-                        ga_univector.vec_cost[min_index] = np.inf
-                    ga_univector.pop = deepcopy(aux_temp_pop)
-                    ga_univector.vec_cost = deepcopy(aux_cost)
-                    print("Os melhores foram selecionados!!!")
-                    for i in range(ga_univector.npop):
-                        data_csv.append([cont_gen,ga_univector.pop[i][0],ga_univector.pop[i][1],ga_univector.pop[i][2],ga_univector.pop[i][3],ga_univector.pop[i][4], ga_univector.vec_cost[i],
-                                            ga_univector.index_dt[i], ga_univector.max_dt[i], ga_univector.index_dy[i], ga_univector.max_dy[i],ga_univector.index_dang[i], ga_univector.max_dang[i]])
-                    ga_univector.findBetterCost()
-                    with open('results.csv', 'w', encoding='UTF8', newline='') as f:
-                        writer = csv.writer(f)
+                # Seleção dos individuos - Rever a seleção para algum padrão
+                if ga_univector.individual == ga_univector.npop:
 
-                        # write the header
-                        writer.writerow(header)
+                    ga_univector.selection()
 
-                        # write multiple rows
-                        writer.writerows(data_csv)
-
-                        f.close()
-                    print("Média da geração: ", sum(ga_univector.vec_cost)/ga_univector.npop)
-                    print("Melhor custo: ", ga_univector.cost_better)
-                    print("Parâmetros do individuo: ", ga_univector.pop[ga_univector.index_better])
-                    print("----")
-                    ga_univector.max_dt = []
-                    ga_univector.index_dt = []
-                    ga_univector.max_dy = []
-                    ga_univector.index_dy = []
-                    ga_univector.max_dang = []
-                    ga_univector.index_dang = []
+                    ga_univector.writeData()
             
             start_time = time.time()
 
-        elif cont_ind < ga_univector.npop:
-            Go_To_Goal(robot0, ball, ga_univector.pop[cont_ind])
-            if robot0.dist(robot1) < 7 or robot0.dist(robot2) < 7:
+        # Função de controle do robô
+        # Talvez mudar essa ordem do if-else por que o else pula para a próxima geração
+        elif ga_univector.individual < ga_univector.npop:
+            Go_To_Goal(robot0, ball, ga_univector.pop[ga_univector.individual])
+            if robot0.dist(robot1) < 7 or robot0.dist(robot2) < 7: # Rever essa distância de colisão
                 flagColision = True
             if time.time() - start_time > 10:
                 print('--- tempo estourou! ---')
                 flagTime = True
                 start_time = time.time()   
         else:
+            print('Next Gen')
             ga_univector.nextGen()
-            cont_gen += 1
-            cont_pos = 0
-            cont_ind = 0
             flagTime = False
-            vec_dt = []
-            vec_dy = []
-            vec_dang = []
-            vec_flagsTime = []            
+            start_enviroment = True
+        
         # synchronize code execution based on runtime and the camera FPS
         t2 = time.time()
         if t2 - t1 < 1 / 60:
