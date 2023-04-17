@@ -59,23 +59,21 @@ class GA:
             #    self.pop[i] = [9.302233213565474, 8.403007627366772, 6.35626706943918, 1.0363333802109564, 4.322376353319517]
 
     def cost_func(self, dt, dang, dy):
-        cost = 0
+        self.cost = 0
         for i in range(len(dang)):
-            cost += self.K_t*dt[i] + self.K_p*sqrt(rad2deg(dang[i])*rad2deg(dang[i])) + self.K_d*dy[i]*dy[i]
+            self.cost += self.K_t*dt[i] + self.K_p*sqrt(rad2deg(dang[i])*rad2deg(dang[i])) + self.K_d*dy[i]*dy[i]
         self.max_dt.append(max(dt))
         self.index_dt.append(dt.index(self.max_dt[-1]) + 1)
         self.max_dy.append(max(dy))
         self.index_dy.append(dy.index(self.max_dy[-1]) + 1)
         self.max_dang.append(max(dang))
         self.index_dang.append(dang.index(self.max_dang[-1]) + 1)
-        self.vec_cost.append(cost)
+        self.vec_cost.append(self.cost)
 
         self.vec_dt = []
         self.vec_dy = []
         self.vec_dang = []
         self.flagsTime = []
-
-        print("Custos: ", self.vec_cost)
 
     def findBetterCost(self):
         for i in range(len(self.vec_cost)):
@@ -131,8 +129,6 @@ class GA:
         return x
     
     def selection(self):
-        print("Seleção")
-
         aux_temp_pop = zeros([self.npop,self.nvar])
         aux_cost = []
 
@@ -144,12 +140,9 @@ class GA:
             self.vec_cost[min_index] = inf
         self.pop = deepcopy(aux_temp_pop)
         self.vec_cost = deepcopy(aux_cost)
-        print("Os melhores foram selecionados!!!")
 
     def writeData(self):
         if self.individual == self.npop:
-
-            self.selection()
 
             for i in range(self.npop):
                 self.data_csv.append([self.generation,self.pop[i][0],self.pop[i][1],self.pop[i][2],self.pop[i][3],self.pop[i][4], self.vec_cost[i],
@@ -165,11 +158,13 @@ class GA:
                 writer.writerows(self.data_csv)
 
                 f.close()
+            print("\n-----GENERATION END-----")
+            print("General infos:")
+            print("Fitness Average: ", sum(self.vec_cost)/self.npop)
+            print("Better fitness: ", self.cost_better)
+            print("Better parameters: ", self.pop[self.index_better])
+            print("-----")
 
-            print("Média da geração: ", sum(self.vec_cost)/self.npop)
-            print("Melhor custo: ", self.cost_better)
-            print("Parâmetros do individuo: ", self.pop[self.index_better])
-            print("----")
             self.max_dt = []
             self.index_dt = []
             self.max_dy = []

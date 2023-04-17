@@ -1,6 +1,5 @@
 from replace_protobuf import replacer_all
 from ag import GA
-from copy import deepcopy
 
 #import fouls
 from bridge import (Actuator, Replacer, Vision, Referee)
@@ -8,7 +7,6 @@ from simClasses import *
 from strategy import *
 from execution import univec_controller
 
-import csv
 import time
 
 import numpy as np
@@ -73,20 +71,34 @@ if __name__ == "__main__":
     finish_time = 0
     start_enviroment = True
 
+    # Delay necessário para o teleporte dos robôs
+    time_delay = 5/60
+
+    # Tresholds
+    timer_limit = 10
+    distance_colision = 10 
+
+    logInfo = True
+
     # Main infinite loop
     while True:
         t1 = time.time()
-
+        
+        # Criação de um novo ambiente para treinamento
         if start_enviroment:
-            print('Teleport position ', ga_univector.position)
-            time.sleep(2)
-            print(ga_univector.position)
+            if logInfo: print('Teleport enviroment ', ga_univector.position)
+
+            # Teleporte dos robôs - Timers necessários!
+            time.sleep(time_delay)
             replacer_all([pos_x_0[ga_univector.position], pos_x_1[ga_univector.position], pos_x_2[ga_univector.position]],[pos_y_0[ga_univector.position], pos_y_1[ga_univector.position], pos_y_2[ga_univector.position]], [0, 0, 0], [1000, 1000, 1000], [350, 400, 450], [0, 0, 0], pos_x_ball[ga_univector.position], pos_y_ball[ga_univector.position])
-            time.sleep(1)
-            robot0.target.update(ball.xPos, ball.yPos, theta = 0)
+            time.sleep(time_delay)
+
+            # Início do tempo de amostragem do cenário
             start_time = time.time()
-            start_enviroment = False
+
+            # Atualização de variáveis
             ga_univector.position = ga_univector.position + 1
+            start_enviroment = False
 
         # Update the foul status
         referee.update()
@@ -108,68 +120,85 @@ if __name__ == "__main__":
         robotEnemy1.sim_get_pose(data_their_bots[1])
         robotEnemy2.sim_get_pose(data_their_bots[2])
         ball.sim_get_pose(data_ball)
-        robot0.target.update(ball.xPos, ball.yPos, 0)
-        robot0.obst.update(robot0, robot1, robot2)
+
+        # Definição da bola como alvo
+        robot0.target.update(ball.xPos, ball.yPos, theta = 0)
+        robot0.obst.update(robot0, robot1, robot2) # Definir melhor os obstáculos
 	
-        # check if robot achive the goal
-        if robot0.arrive() or flagTime:
+        # check if robot achive the goal or any foul has occured
+        if robot0.arrive() or flagTime or flagColision:
+            # Stop the robot
+            robot0.sim_set_vel(0, 0)
+
             if flagTime or flagColision:
-                dt = 500
+                dt = 500    # Penalty in cost function (review in future)
             else:
                 dt = time.time() - start_time
-
-            robot0.sim_set_vel(0, 0)
-            print(dt)
 
             # Informações do individuo
             dy = robot0.yPos - ball.yPos
             dang = robot0.theta
 
+            # Atualiza as variáveis de fitness
             ga_univector.update_cost_param(dy,dang,dt,flagTime)
 
+            # Reseta as variaveis de controle de punições
             flagTime = False
             flagColision = False
+
+            # Próximo cenário é disponibilizado
             start_enviroment = True
 
-            # Reposicionamento para a próxima posição de treinamento
+            # Verificação se os cenários acabaram - Individuo concluido
             if ga_univector.position == len(pos_x_0):
-                # Todas as posições de treinamento foram concluidas para o individuo
-                print('#### TERMINOU INDIVIDUO', ga_univector.individual ,'####')
-                ga_univector.individual += 1 # -> Virar atributo da classe
 
-                time.sleep(2)
-
-                ga_univector.position = 0
-
-                # Atualiza a função de fitness do individuo -> Passar
+                # Atualiza a função de fitness do individuo
                 ga_univector.cost_func(ga_univector.vec_dt, ga_univector.vec_dang, ga_univector.vec_dy)
 
-                flagTime = False
+                if logInfo:
+                    print("Generation " + str(ga_univector.generation+1) +  ", Individual " + str(ga_univector.individual+1) + " finished!")
+                    print("Parameters: ", ga_univector.pop[ga_univector.individual])
+                    print("Fitness value: ", ga_univector.cost)
+                    print("-----")
 
-                # Seleção dos individuos - Rever a seleção para algum padrão
+                ga_univector.individual += 1 
+                ga_univector.position = 0
+
+                # Processo genético do algoritmo
                 if ga_univector.individual == ga_univector.npop:
 
                     ga_univector.selection()
 
                     ga_univector.writeData()
+
+                    ga_univector.nextGen()
+
+                    if logInfo: 
+                        # print("\n-----")
+                        # print("Fitness Average: ", sum(ga_univector.vec_cost)/ga_univector.npop)
+                        # print("Better fitness: ", ga_univector.cost_better)
+                        # print("Better parameters: ", ga_univector.pop[ga_univector.index_better])
+                        # print("-----")
+                        print("\n--------------------NEXT GENERATION--------------------\n")
+
             
             start_time = time.time()
 
         # Função de controle do robô
-        # Talvez mudar essa ordem do if-else por que o else pula para a próxima geração
-        elif ga_univector.individual < ga_univector.npop:
-            Go_To_Goal(robot0, ball, ga_univector.pop[ga_univector.individual])
-            if robot0.dist(robot1) < 7 or robot0.dist(robot2) < 7: # Rever essa distância de colisão
-                flagColision = True
-            if time.time() - start_time > 10:
-                print('--- tempo estourou! ---')
-                flagTime = True
-                start_time = time.time()   
         else:
-            print('Next Gen')
-            ga_univector.nextGen()
-            flagTime = False
-            start_enviroment = True
+            Go_To_Goal(robot0, ball, ga_univector.pop[ga_univector.individual])
+
+            # Verificação de colisão
+            if robot0.dist(robot1) < distance_colision or robot0.dist(robot2) < distance_colision:
+                flagColision = True
+
+                if logInfo: print("[WARNING] - Colision!")
+
+            # Verificação de tempo decorrido
+            if time.time() - start_time > timer_limit:
+                flagTime = True
+
+                if logInfo: print('[WARNING] - Timeout!')
         
         # synchronize code execution based on runtime and the camera FPS
         t2 = time.time()
