@@ -3,6 +3,7 @@ from numpy import sqrt, zeros, random, argwhere, maximum, minimum, multiply, rad
 from copy import deepcopy
 
 import csv
+from datetime import datetime
 
 class GA:
     def __init__(self,nvar,varmin,varmax,maxit,npop, K_t = 10, K_p = 8, K_d = 2):
@@ -40,8 +41,31 @@ class GA:
         self.max_dang = []
         self.index_dang = []
 
-        self.header = ['Generation','d_e', 'k_r','delta','k_o','d_min','Cost','index_dt','dt','index_dy','dy','index_dang','dang']
+        self.header = ['Generation','d_e', 'k_r','delta','k_o','d_min','fitness','index_dt','dt','index_dy','dy','index_dang','dang']
+        self.header1 = ['Generation','d_e', 'k_r','delta','k_o','d_min','fitness','index_dt','dt','index_dy','dy','index_dang','dang','average_fitness']
         self.data_csv = []
+
+        self.startFile()
+
+    def startFile(self):
+        now = datetime.now()
+        self.nameFile = now.strftime("%d-%m-%Y_%H:%M:%S")
+        with open('data/'+self.nameFile+'.csv', 'w', encoding='UTF8', newline='') as f:
+            writer = csv.writer(f)
+
+            # write the header
+            writer.writerow(self.header1)
+
+            f.close()
+
+    def addFile(self, data):
+        with open('data/'+self.nameFile+'.csv', 'a', encoding='UTF8', newline='') as f:
+            writer = csv.writer(f)
+
+            # write the header
+            writer.writerow(data)
+
+            f.close()
 
     def update_cost_param(self,dy,dang,dt, flagTime):
         self.vec_dy.append(dy)
@@ -54,7 +78,7 @@ class GA:
         self.pop = zeros([self.npop,self.nvar])
         for i in range(self.npop):
             self.pop[i] = random.uniform(self.varmin, self.varmax, self.nvar)
-            if i < 5:
+            if i < 0:
                self.pop[i] = [9.949208015204881, 5.563223824404487, 5.818062934476073, 0.7180865223544229, 2.4673089927053873]
             #    self.pop[i] = [9.302233213565474, 8.403007627366772, 6.35626706943918, 1.0363333802109564, 4.322376353319517]
 
@@ -129,35 +153,46 @@ class GA:
         return x
     
     def selection(self):
-        aux_temp_pop = zeros([self.npop,self.nvar])
-        aux_cost = []
+        # Método de torneio
 
-        for i in range(self.npop):
-            min_value = min(self.vec_cost)
-            min_index = self.vec_cost.index(min_value)
-            aux_cost.append(min_value)
-            aux_temp_pop[i] = self.pop[min_index]
-            self.vec_cost[min_index] = inf
+        aux_temp_pop = zeros([self.npop,self.nvar])
+
+        for j in range(self.npop):
+
+            candidatos = 3
+            sel = random.randint(0, self.npop, candidatos)
+
+            custos = []
+            for i in range(candidatos):
+                custos.append(self.vec_cost[sel[i]])
+            min_cost = min(custos)
+            min_index = custos.index(min_cost)
+            ind = self.pop[sel[min_index]]
+            aux_temp_pop[j] = ind
+
         self.pop = deepcopy(aux_temp_pop)
-        self.vec_cost = deepcopy(aux_cost)
+        print("\nNext population: ")
+        print(self.pop)
+        print("")
 
     def writeData(self):
-        if self.individual == self.npop:
-
-            for i in range(self.npop):
-                self.data_csv.append([self.generation,self.pop[i][0],self.pop[i][1],self.pop[i][2],self.pop[i][3],self.pop[i][4], self.vec_cost[i],
-                                    self.index_dt[i], self.max_dt[i], self.index_dy[i], self.max_dy[i],self.index_dang[i], self.max_dang[i]])
+        if self.individual == self.npop:            
+            
             self.findBetterCost()
-            with open('results.csv', 'w', encoding='UTF8', newline='') as f:
-                writer = csv.writer(f)
+            self.generationData = []
+            self.generationData.append(self.generation)
+            self.generationData += self.pop[self.index_better].tolist()
+            self.generationData.append(self.vec_cost[self.index_better])
+            self.generationData.append(self.index_dt[self.index_better])
+            self.generationData.append(self.max_dt[self.index_better])
+            self.generationData.append(self.index_dy[self.index_better])
+            self.generationData.append(self.max_dy[self.index_better])
+            self.generationData.append(self.index_dang[self.index_better])
+            self.generationData.append(self.max_dang[self.index_better])
+            self.generationData.append(sum(self.vec_cost)/self.npop)
 
-                # write the header
-                writer.writerow(self.header)
+            self.addFile(self.generationData)
 
-                # write multiple rows
-                writer.writerows(self.data_csv)
-
-                f.close()
             print("\n-----GENERATION END-----")
             print("General infos:")
             print("Fitness Average: ", sum(self.vec_cost)/self.npop)

@@ -174,12 +174,8 @@ if __name__ == "__main__":
                     ga_univector.nextGen()
 
                     if logInfo: 
-                        # print("\n-----")
-                        # print("Fitness Average: ", sum(ga_univector.vec_cost)/ga_univector.npop)
-                        # print("Better fitness: ", ga_univector.cost_better)
-                        # print("Better parameters: ", ga_univector.pop[ga_univector.index_better])
-                        # print("-----")
-                        print("\n--------------------NEXT GENERATION--------------------\n")
+                        
+                        print("\n-------------------- NEXT GENERATION --------------------\n")
 
             
             start_time = time.time()
