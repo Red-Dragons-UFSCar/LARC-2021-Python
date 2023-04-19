@@ -5,15 +5,18 @@ from bridge import (Vision)
 from simClasses import *
 from strategy import *
 
+import numpy as np
+
 
 class PlotField:
     def __init__(self):
         self.figureOpen = False
 
     def plot_interactive(self, target, robot, obstacle=None):
-        self.univec = behaviours.Univector()  # Objeto univector
-        self.x_pos = range(1, 150, 5)  # Plot do campo inteiro
-        self.y_pos = range(1, 150, 5)
+        params = [9.949208015204881, 5.563223824404487, 5.818062934476073, 0.7180865223544229, 10]
+        self.univec = behaviours.Univector(params)  # Objeto univector
+        self.x_pos = range(0, 150, 3)  # Plot do campo inteiro
+        self.y_pos = range(0, 130, 3)
 
         self.robo = robot
 
@@ -59,9 +62,11 @@ class PlotField:
         # plt.quiver(*origin, V[:,0], V[:,1])
         # plt.show(block=True)
 
+        print("a")
+
 
 if __name__ == '__main__':
-    mray = True
+    mray = False
 
     vision = Vision(mray, "224.0.0.1", 10002)
 
@@ -71,13 +76,13 @@ if __name__ == '__main__':
     robot1 = Robot(1, actuator=None, mray=teamYellow)
     robot2 = Robot(2, actuator=None, mray=teamYellow)
 
-    robotEnemy0 = Robot(0, actuator=None, mray=teamYellow)
-    robotEnemy1 = Robot(1, actuator=None, mray=teamYellow)
-    robotEnemy2 = Robot(2, actuator=None, mray=teamYellow)
+    robotEnemy0 = Robot(0, actuator=None, mray=not teamYellow)
+    robotEnemy1 = Robot(1, actuator=None, mray=not teamYellow)
+    robotEnemy2 = Robot(2, actuator=None, mray=not teamYellow)
 
     ball = Ball()
 
-    strategy = Strategy(robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray)
+    strategy = Strategy(robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray, [None, None, None])
 
     plot = PlotField()
 
@@ -128,4 +133,4 @@ if __name__ == '__main__':
         robot2.target.update(ball.xPos, ball.yPos, arrivalTheta)
         robot2.obst.update(robot2, robot0, robot1, robotEnemy0, robotEnemy1, robotEnemy2)
 
-        plot.plot_interactive(robot2.target, robot2.obst)
+        plot.plot_interactive(robot2.target, robot2, robot2.obst)

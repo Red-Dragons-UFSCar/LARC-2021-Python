@@ -6,7 +6,7 @@ import csv
 from datetime import datetime
 
 class GA:
-    def __init__(self,nvar,varmin,varmax,maxit,npop, K_t = 10, K_p = 8, K_d = 2):
+    def __init__(self,nvar,varmin,varmax,maxit,npop, K_t = 1, K_p = 8, K_d = 2):
         self.nvar = nvar
         self.varmin = varmin
         self.varmax = varmax
