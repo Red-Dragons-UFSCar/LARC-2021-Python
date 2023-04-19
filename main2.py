@@ -167,15 +167,20 @@ if __name__ == "__main__":
                 # Processo genético do algoritmo
                 if ga_univector.individual == ga_univector.npop:
 
-                    ga_univector.selection()
-
-                    ga_univector.writeData()
-
                     ga_univector.nextGen()
 
                     if logInfo: 
+
+                        print("\n-----GENERATION END-----")
+                        print("General infos:")
+                        print("Fitness Average: ", sum(ga_univector.vec_cost)/ga_univector.npop)
+                        print("Better fitness: ", ga_univector.cost_better)
+                        print("Better parameters: ", ga_univector.pop[ga_univector.index_better])
+                        print("-----")
                         
                         print("\n-------------------- NEXT GENERATION --------------------\n")
+                    
+                    ga_univector.resetInfos()
 
             
             start_time = time.time()

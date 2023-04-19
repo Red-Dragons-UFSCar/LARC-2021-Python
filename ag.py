@@ -16,6 +16,10 @@ class GA:
         self.K_t = K_t
         self.K_p = K_p
         self.K_d = K_d
+
+        self.mutationRate = 0.1
+        self.mutationStandardDerivation = 0.5
+        self.crossoverGamma = 0.1
         
         self.generation = 0
         self.position = 0
@@ -106,17 +110,23 @@ class GA:
                 self.cost_better = self.vec_cost[i]
 
     def permutation(self):
-        q = random.permutation(self.npop)
-        p1 = self.pop[q[0]]
-        p2 = self.pop[q[1]]
-        return p1, p2
+        self.q = random.permutation(self.npop)
+        #p1 = self.pop[q[0]]
+        #p2 = self.pop[q[1]]
+        #return p1, p2
 
     def nextGen(self):
+        self.findBetterCost()
+
+        self.selection()
+
+        self.permutation()
+        
         for i in range(int(self.npop/2)):
-            p1, p2 = self.permutation()
-            c1, c2 = self.crossover(p1, p2)
-            c1 = self.mutate(c1, 0.4, 0.5)
-            c2 = self.mutate(c2, 0.4, 0.5)
+            p1, p2 = self.q[2*i], self.q[2*i+1]
+            c1, c2 = self.crossover(p1, p2, self.crossoverGamma)
+            c1 = self.mutate(c1, self.mutationRate, self.mutationStandardDerivation)
+            c2 = self.mutate(c2, self.mutationRate, self.mutationStandardDerivation)
             c1 = self.apply_bound(c1, self.varmin, self.varmax)
             c2 = self.apply_bound(c2, self.varmin, self.varmax)
             self.nextPop.append(c1)
@@ -124,16 +134,19 @@ class GA:
         self.oldPop = deepcopy(self.pop)
         self.pop = deepcopy(self.nextPop)
 
-        self.generation += 1
-        self.position = 0
-        self.individual = 0
+        self.writeData()
 
-        self.vec_dt = []
-        self.vec_dy = []
-        self.vec_dang = []
-        self.flagsTime = []
+        # self.generation += 1
+        # self.position = 0
+        # self.individual = 0
 
-    def crossover(self,p1, p2, gamma=0.1):
+        # self.vec_dt = []
+        # self.vec_dy = []
+        # self.vec_dang = []
+        # self.flagsTime = []
+
+    def crossover(self,p1, p2, gamma):
+        # Crossover BLX-alpha
         c1 = deepcopy(p1)
         c2 = deepcopy(p2)
         alpha = random.uniform(-gamma, 1+gamma, self.nvar)
@@ -171,14 +184,9 @@ class GA:
             aux_temp_pop[j] = ind
 
         self.pop = deepcopy(aux_temp_pop)
-        print("\nNext population: ")
-        print(self.pop)
-        print("")
 
     def writeData(self):
         if self.individual == self.npop:            
-            
-            self.findBetterCost()
             self.generationData = []
             self.generationData.append(self.generation)
             self.generationData += self.pop[self.index_better].tolist()
@@ -193,17 +201,35 @@ class GA:
 
             self.addFile(self.generationData)
 
-            print("\n-----GENERATION END-----")
-            print("General infos:")
-            print("Fitness Average: ", sum(self.vec_cost)/self.npop)
-            print("Better fitness: ", self.cost_better)
-            print("Better parameters: ", self.pop[self.index_better])
-            print("-----")
+            # print("\n-----GENERATION END-----")
+            # print("General infos:")
+            # print("Fitness Average: ", sum(self.vec_cost)/self.npop)
+            # print("Better fitness: ", self.cost_better)
+            # print("Better parameters: ", self.pop[self.index_better])
+            # print("-----")
 
-            self.max_dt = []
-            self.index_dt = []
-            self.max_dy = []
-            self.index_dy = []
-            self.max_dang = []
-            self.index_dang = []
-            self.vec_cost = []
+            # self.max_dt = []
+            # self.index_dt = []
+            # self.max_dy = []
+            # self.index_dy = []
+            # self.max_dang = []
+            # self.index_dang = []
+            # self.vec_cost = []
+
+    def resetInfos(self):
+        self.generation += 1
+        self.position = 0
+        self.individual = 0
+
+        self.vec_dt = []
+        self.vec_dy = []
+        self.vec_dang = []
+        self.flagsTime = []
+
+        self.max_dt = []
+        self.index_dt = []
+        self.max_dy = []
+        self.index_dy = []
+        self.max_dang = []
+        self.index_dang = []
+        self.vec_cost = []
