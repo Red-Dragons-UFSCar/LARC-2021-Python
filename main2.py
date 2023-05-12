@@ -38,10 +38,10 @@ if __name__ == "__main__":
     
     # Genetic alg var
     nvar = 5
-    varmin = 0
+    varmin = 0.1
     varmax = 10
     maxit = 1000
-    npop = 4
+    npop = 100
 
     flagTime = False
     flagColision = False
@@ -50,21 +50,46 @@ if __name__ == "__main__":
     ga_univector = GA(nvar,varmin,varmax,maxit,npop)
     ga_univector.initialize_pop()
 
-    # Set position list
-    pos_x_0   = [15,15]
-    pos_y_0   = [65,65]
-    pos_ang_0 = [0,0]
+    # Cenário 0
+    # pos_x_0   = [15,15]
+    # pos_y_0   = [65,65]
+    # pos_ang_0 = [0,0]
 
-    pos_x_1   = [50,70]
-    pos_y_1   = [60,60]
-    pos_ang_1 = [0,0]
+    # pos_x_1   = [50,70]
+    # pos_y_1   = [60,60]
+    # pos_ang_1 = [0,0]
 
-    pos_x_2   = [122.5,105]
-    pos_y_2   = [70,70]
-    pos_ang_2 = [0,0]
+    # pos_x_2   = [122.5,105]
+    # pos_y_2   = [70,70]
+    # pos_ang_2 = [0,0]
 
-    pos_x_ball = [140,125]
-    pos_y_ball = [65,65]
+    # pos_x_ball = [160,145] # Alvo
+    # pos_y_ball = [65,65]
+
+
+    # Cenário 1
+    pos_x_0   = [27.5,85,142.5] # Robo treinado
+    pos_y_0   = [105,65,25]
+    pos_ang_0 = [-90,0,90]
+
+    pos_x_1   = [105,105,105]
+    pos_y_1   = [105,105,105]
+    pos_ang_1 = [0,0,0]
+
+    pos_x_2   = [122.5,122.5,122.5]
+    pos_y_2   = [65,65,65]
+    pos_ang_2 = [0,0,0]
+
+    pos_x_0_e   = [160,160,160] # Robos do outro time
+    pos_y_0_e   = [65,65,65]
+    pos_ang_0_e = [0,0,0]
+
+    pos_x_ball = [0,0,0]
+    pos_y_ball = [0,0,0]
+
+    target_x = [142.5,142.5,142.5]
+    target_y = [105,105,105]
+    target_angle = [-180,-180,-180]
 
     # timer
     start_time = 0
@@ -90,7 +115,15 @@ if __name__ == "__main__":
 
             # Teleporte dos robôs - Timers necessários!
             time.sleep(time_delay)
-            replacer_all([pos_x_0[ga_univector.position], pos_x_1[ga_univector.position], pos_x_2[ga_univector.position]],[pos_y_0[ga_univector.position], pos_y_1[ga_univector.position], pos_y_2[ga_univector.position]], [0, 0, 0], [1000, 1000, 1000], [350, 400, 450], [0, 0, 0], pos_x_ball[ga_univector.position], pos_y_ball[ga_univector.position])
+            replacer_all([pos_x_0[ga_univector.position], pos_x_1[ga_univector.position], pos_x_2[ga_univector.position]],
+                         [pos_y_0[ga_univector.position], pos_y_1[ga_univector.position], pos_y_2[ga_univector.position]], 
+                         [pos_ang_0[ga_univector.position], pos_ang_1[ga_univector.position], pos_ang_2[ga_univector.position]], 
+                         [pos_x_0_e[ga_univector.position], 1000, 1000], 
+                         [pos_y_0_e[ga_univector.position], 400, 450], 
+                         [pos_ang_0_e[ga_univector.position], 0, 0], 
+                         pos_x_ball[ga_univector.position], 
+                         pos_y_ball[ga_univector.position])
+            robot0.target.update(target_x[ga_univector.position], target_y[ga_univector.position], target_angle[ga_univector.position])
             time.sleep(time_delay)
 
             # Início do tempo de amostragem do cenário
@@ -122,29 +155,26 @@ if __name__ == "__main__":
         ball.sim_get_pose(data_ball)
 
         # Definição da bola como alvo
-        robot0.target.update(ball.xPos, ball.yPos, theta = 0)
-        robot0.obst.update(robot0, robot1, robot2) # Definir melhor os obstáculos
+        robot0.obst.update(robot0, robot1, robot2, robotEnemy0,robotEnemy1,robotEnemy2) # Definir melhor os obstáculos
 	
         # check if robot achive the goal or any foul has occured
         if robot0.arrive() or flagTime or flagColision:
             # Stop the robot
             robot0.sim_set_vel(0, 0)
 
-            if flagTime or flagColision:
-                dt = 500    # Penalty in cost function (review in future)
-            else:
-                dt = time.time() - start_time
+            #if flagTime or flagColision:
+            #    dt = 500    # Penalty in cost function (review in future)
+            #else:
+            #    dt = time.time() - start_time
+            dt = time.time() - start_time
 
             # Informações do individuo
-            dy = robot0.yPos - ball.yPos
-            dang = robot0.theta
+            dy = robot0.yPos - target_y[ga_univector.position-1]
+            dang = np.arctan2(np.sin(robot0.theta-target_angle[ga_univector.position-1]*np.pi/180), 
+                              np.cos(robot0.theta-target_angle[ga_univector.position-1]*np.pi/180))
 
             # Atualiza as variáveis de fitness
-            ga_univector.update_cost_param(dy,dang,dt,flagTime)
-
-            # Reseta as variaveis de controle de punições
-            flagTime = False
-            flagColision = False
+            ga_univector.update_cost_param(dy,dang,dt)
 
             # Próximo cenário é disponibilizado
             start_enviroment = True
@@ -153,7 +183,7 @@ if __name__ == "__main__":
             if ga_univector.position == len(pos_x_0):
 
                 # Atualiza a função de fitness do individuo
-                ga_univector.cost_func(ga_univector.vec_dt, ga_univector.vec_dang, ga_univector.vec_dy)
+                ga_univector.cost_func(ga_univector.vec_dt, ga_univector.vec_dang, ga_univector.vec_dy, flagTime, flagColision)
 
                 if logInfo:
                     print("Generation " + str(ga_univector.generation+1) +  ", Individual " + str(ga_univector.individual+1) + " finished!")
@@ -182,7 +212,10 @@ if __name__ == "__main__":
                     
                     ga_univector.resetInfos()
 
-            
+                # Reseta as variaveis de controle de punições
+                flagTime = False
+                flagColision = False
+
             start_time = time.time()
 
         # Função de controle do robô
@@ -190,7 +223,7 @@ if __name__ == "__main__":
             Go_To_Goal(robot0, ball, ga_univector.pop[ga_univector.individual])
 
             # Verificação de colisão
-            if robot0.dist(robot1) < distance_colision or robot0.dist(robot2) < distance_colision:
+            if robot0.dist(robot1) < distance_colision or robot0.dist(robot2) < distance_colision or robot0.dist(robotEnemy0) < distance_colision:
                 flagColision = True
 
                 if logInfo: print("[WARNING] - Colision!")

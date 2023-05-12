@@ -245,7 +245,7 @@ class Robot:
         """Input: None.
         Description: Returns True if the distance between the target and the robot is less than 3cm - False otherwise
         Output: True or False."""
-        if self.dist(self.target) <= 7.5:
+        if self.dist(self.target) <= 3:
             return True
         else:
             return False

@@ -19,6 +19,7 @@ class GA:
 
         self.mutationRate = 0.1
         self.mutationStandardDerivation = 0.5
+        self.crossoverRate = 0.9
         self.crossoverGamma = 0.1
         
         self.generation = 0
@@ -30,10 +31,10 @@ class GA:
         self.vec_dy = []
         self.vec_dang = []
         self.vec_dt = []
-        self.flagsTime = []
 
         self.index_better = 0
         self.cost_better = 1e6
+        self.cost_better_all = 1e6
 
         self.nextPop = []
         self.oldPop = []
@@ -71,25 +72,34 @@ class GA:
 
             f.close()
 
-    def update_cost_param(self,dy,dang,dt, flagTime):
+    def update_cost_param(self,dy,dang,dt):
         self.vec_dy.append(dy)
         self.vec_dang.append(dang)
         self.vec_dt.append(dt)
-        self.flagsTime.append(flagTime)
 
     def initialize_pop(self):
 
         self.pop = zeros([self.npop,self.nvar])
         for i in range(self.npop):
             self.pop[i] = random.uniform(self.varmin, self.varmax, self.nvar)
-            if i < 0:
-               self.pop[i] = [9.949208015204881, 5.563223824404487, 5.818062934476073, 0.7180865223544229, 2.4673089927053873]
-            #    self.pop[i] = [9.302233213565474, 8.403007627366772, 6.35626706943918, 1.0363333802109564, 4.322376353319517]
-
-    def cost_func(self, dt, dang, dy):
+            if i < 2:
+               #self.pop[i] = [9.949208015204881, 5.563223824404487, 5.818062934476073, 0.7180865223544229, 2.4673089927053873]
+               self.pop[i] = [2.653303339730094, 6.8860973487077874, 6.435074375051041, 5.994451248691961, 5.918745940902441]
+            elif i<4:
+                self.pop[i] = [2.1813530138094825,7.857709951079561,6.582757598795251,5.705388249266784,6.123060951431255]
+    
+    def cost_func(self, dt, dang, dy, flagTime, flagColision):
         self.cost = 0
         for i in range(len(dang)):
             self.cost += self.K_t*dt[i] + self.K_p*sqrt(rad2deg(dang[i])*rad2deg(dang[i])) + self.K_d*dy[i]*dy[i]
+            #print("K_t: ", self.K_t*dt[i])
+            #print("K_p: ", self.K_p*sqrt(rad2deg(dang[i])*rad2deg(dang[i])))
+            #print("K_d: ", self.K_d*dy[i]*dy[i])
+
+        if flagTime or flagColision:
+            #print("Computei")
+            self.cost += 1e6
+        
         self.max_dt.append(max(dt))
         self.index_dt.append(dt.index(self.max_dt[-1]) + 1)
         self.max_dy.append(max(dy))
@@ -101,13 +111,17 @@ class GA:
         self.vec_dt = []
         self.vec_dy = []
         self.vec_dang = []
-        self.flagsTime = []
 
     def findBetterCost(self):
+        self.cost_better = 1e6
+
         for i in range(len(self.vec_cost)):
             if self.vec_cost[i] < self.cost_better:
                 self.index_better = i
                 self.cost_better = self.vec_cost[i]
+        
+        if self.cost_better_all < self.cost_better:
+            self.cost_better_all = self.cost_better
 
     def permutation(self):
         self.q = random.permutation(self.npop)
@@ -116,25 +130,42 @@ class GA:
         #return p1, p2
 
     def nextGen(self):
+
+        #print("\nPop atual: ")
+        #print(self.pop)
+
         self.findBetterCost()
 
-        self.selection()
+        self.writeData()
 
-        self.permutation()
-        
+        self.selection()
+        #self.permutation()
+        #print("\nPop atual 2: ")
+        #print(self.pop)
         for i in range(int(self.npop/2)):
-            p1, p2 = self.q[2*i], self.q[2*i+1]
+            #print("\nIndividuos " + str(2*i) + " e " + str(2*i+1))
+            p1, p2 = deepcopy(self.pop[2*i]), deepcopy(self.pop[2*i+1])
+            #print("Pai 1: ", p1)
+            #print("Pai 2: ", p2)
             c1, c2 = self.crossover(p1, p2, self.crossoverGamma)
+            #print("Cross 1: ", c1)
+            #print("Cross 2: ", c2)
             c1 = self.mutate(c1, self.mutationRate, self.mutationStandardDerivation)
             c2 = self.mutate(c2, self.mutationRate, self.mutationStandardDerivation)
+            #print("Mut 1: ", c1)
+            #print("Mut 2: ", c2)
             c1 = self.apply_bound(c1, self.varmin, self.varmax)
             c2 = self.apply_bound(c2, self.varmin, self.varmax)
+            #print("Bound 1: ", c1)
+            #print("Bound 2: ", c2)
             self.nextPop.append(c1)
             self.nextPop.append(c2)
         self.oldPop = deepcopy(self.pop)
         self.pop = deepcopy(self.nextPop)
 
-        self.writeData()
+        #print("\nPop nova: ")
+        #print(len(self.pop))
+        #print(self.pop)
 
         # self.generation += 1
         # self.position = 0
@@ -143,15 +174,27 @@ class GA:
         # self.vec_dt = []
         # self.vec_dy = []
         # self.vec_dang = []
-        # self.flagsTime = []
 
     def crossover(self,p1, p2, gamma):
         # Crossover BLX-alpha
-        c1 = deepcopy(p1)
-        c2 = deepcopy(p2)
-        alpha = random.uniform(-gamma, 1+gamma, self.nvar)
-        c1 = multiply(alpha,p1) + multiply((1-alpha),p2)
-        c2 = multiply(alpha,p2) + multiply((1-alpha),p1)
+        #c1 = deepcopy(p1)
+        #c2 = deepcopy(p2)
+        
+        beta = random.uniform(0, 1)
+        
+        if beta < self.crossoverRate:
+            alpha = random.uniform(-gamma, 1+gamma, self.nvar)
+            #print("Alpha: ",alpha)
+            #print("p1: ", p1)
+            #print("multiply1: ", multiply(alpha,p1))
+            #print("multiply2: ", multiply((1-alpha),p2))
+            #print("Soma: ", multiply(alpha,p1) + multiply((1-alpha),p2))
+            c1 = multiply(alpha,p1) + multiply((1-alpha),p2)
+            c2 = multiply(alpha,p2) + multiply((1-alpha),p1)
+        else:
+            #print("Nao dei crossover")
+            c1 = deepcopy(p1)
+            c2 = deepcopy(p2)
         return c1, c2
 
     def mutate(self,x, mu, sigma):
@@ -172,7 +215,7 @@ class GA:
 
         for j in range(self.npop):
 
-            candidatos = 3
+            candidatos = int(self.npop*0.3)
             sel = random.randint(0, self.npop, candidatos)
 
             custos = []
@@ -224,7 +267,6 @@ class GA:
         self.vec_dt = []
         self.vec_dy = []
         self.vec_dang = []
-        self.flagsTime = []
 
         self.max_dt = []
         self.index_dt = []
@@ -233,3 +275,5 @@ class GA:
         self.max_dang = []
         self.index_dang = []
         self.vec_cost = []
+
+        self.nextPop = []

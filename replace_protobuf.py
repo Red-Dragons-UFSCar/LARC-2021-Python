@@ -8,7 +8,7 @@ def convert_position(x, y, theta):
     y = np.array(y)
     x = (x - 85)/100
     y = (y - 65)/100
-    theta = np.deg2rad(theta)
+    #theta = np.deg2rad(theta)
     return x, y, theta
 
 def replacer_all(x_blue, y_blue, theta_blue, x_yellow, y_yellow, theta_yellow, x_ball, y_ball, vx_yellow = 0, vx_blue = 0):
