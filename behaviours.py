@@ -85,8 +85,8 @@ class Univector:
         nCCW = [[nCCW[0][0]], [nCCW[1][0]]]
 
         if (y >= -self.d_e and y < self.d_e):
-            x_phi = 0.5*(abs(yl)*nCCW[0][0]+abs(yr)**2*nCW[0][0])/self.d_e
-            y_phi = 0.5*(abs(yl)*nCCW[1][0]+abs(yr)**2*nCW[1][0])/self.d_e
+            x_phi = 0.5 * (abs(yl) * nCCW[0][0] + abs(yr) * nCW[0][0]) / self.d_e
+            y_phi = 0.5 * (abs(yl) * nCCW[1][0] + abs(yr) * nCW[1][0]) / self.d_e
             phi = arctan2(y_phi, x_phi)
             phi = phi[0]
         elif (y < -self.d_e):
@@ -135,8 +135,11 @@ class Univector:
         if (d <= self.d_min):
             phi=self.aoVecField(robot,obst)
         else:
-            phi=self.gaussianFunc(d-self.d_min)*self.aoVecField(robot,obst)
-            phi+=(1-self.gaussianFunc(d-self.d_min))*self.hipVecField(robot,target)
+            phi_auf = self.aoVecField(robot, obst)
+            phi_tuf = self.hipVecField(robot, target)
+            diff = arctan2(sin(phi_auf - phi_tuf), cos(phi_auf - phi_tuf))
+            gauss = self.gaussianFunc(d - self.d_min)
+            phi = gauss * diff + phi_tuf
         return phi
 
 

@@ -287,3 +287,8 @@ class Robot:
     #% This method print a little log on console
     def showInfo(self):
         print('xPos: {:.2f} | yPos: {:.2f} | theta: {:.2f} | velocity: {:.2f}'.format(self.xPos,self.yPos,float(self.theta),float(self.v)))
+
+    def calculate_distance(self, body):
+        """calculates the distance between self and another kinematic body"""
+        return sqrt((self.get_coordinates().X - body.get_coordinates().X) ** 2 +
+                    (self.get_coordinates().Y - body.get_coordinates().Y) ** 2)
