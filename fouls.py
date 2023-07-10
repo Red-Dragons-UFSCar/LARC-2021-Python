@@ -53,13 +53,13 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade1 = Entity(x=45.38, y=116.01,a=-42.51, index=1)
                 entidade2 = Entity(x=38.27, y=122.52,a=-42.51, index=2)
                 entidade3 = Entity(x=45, y=150,a=0, index=3)
-                entidade4 = Entity(x=45, y=30,a=-101.76, index=4)
+                entidade4 = Entity(x=70, y=30,a=-225, index=4)
             elif ref_data["quad"] == 3:
                 entidade0 = Entity(x=22, y=90,a=0, index=0)
                 entidade1 = Entity(x=38.27, y=57.47,a=-137.48, index=1)
                 entidade2 = Entity(x=45.38, y=63.98,a=-137.48, index=2)
                 entidade3 = Entity(x=45, y=30,a=0, index=3)
-                entidade4 = Entity(x=45, y=150,a=101.76, index=4)
+                entidade4 = Entity(x=70, y=150,a=225, index=4)
             elif ref_data["quad"] == 4:
                 entidade0 = Entity(x=22, y=90,a=0, index=0)
                 entidade1 = Entity(x=50.66, y=71.89,a=-109.98, index=1)
@@ -117,7 +117,7 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade1 = Entity(x=211.72, y=122.52, a=222.51, index=1)
                 entidade2 = Entity(x=204.61, y=116.01,a=222.51, index=2)
                 entidade3 = Entity(x=205, y=150,a=0, index=3)
-                entidade4 = Entity(x=205, y=30,a=-78.23, index=4)
+                entidade4 = Entity(x=180, y=30,a=45, index=4)
             elif ref_data["quad"] == 2:
                 entidade0 = Entity(x=228, y=90,a=0, index=0)
                 entidade1 = Entity(x=199.33, y=108.10,a=250.01, index=1)
@@ -135,7 +135,7 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade1 = Entity(x=204.61, y=63.98,a=317.48, index=1)
                 entidade2 = Entity(x=211.72, y=57.47,a=317.48, index=2)
                 entidade3 = Entity(x=205, y=30,a=0, index=3)
-                entidade4 = Entity(x=205, y=150,a=78.23, index=4)
+                entidade4 = Entity(x=180, y=150,a=-45, index=4)
             replacement.place_all([entidade0, entidade1, entidade2, entidade3, entidade4])
 
 
