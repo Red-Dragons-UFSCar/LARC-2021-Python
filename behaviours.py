@@ -6,9 +6,9 @@ class Univector:
         "Evolutionary Univector Field-based Navigation with Collision Avoidance for Mobile Robot" """
 
     def __init__(self):
-        self.d_e = 6        # Predefined radius that decides the size of the spiral.
-        self.k_r = 3        # Smoothing constant for vector field
-        self.delta = 3.5    # Variance gaussian parameter
+        self.d_e = 6#6        # Predefined radius that decides the size of the spiral.
+        self.k_r = 3#3        # Smoothing constant for vector field
+        self.delta = 5#3.5    # Variance gaussian parameter
         self.k_o = 0.5      # Proportional constant of obstacle velocity
         self.d_min = 3.5    # Minimum distance what the field becomes pure
 
@@ -103,8 +103,8 @@ class Univector:
 
         # Composition of the two hyperbolic spirals
         if -self.d_e <= y < self.d_e:
-            x_phi = 0.5 * (abs(yl) * n_ccw[0][0] + abs(yr) ** 2 * n_cw[0][0]) / self.d_e
-            y_phi = 0.5 * (abs(yl) * n_ccw[1][0] + abs(yr) ** 2 * n_cw[1][0]) / self.d_e
+            x_phi = 0.5 * (abs(yl) * n_ccw[0][0] + abs(yr)  * n_cw[0][0]) / self.d_e
+            y_phi = 0.5 * (abs(yl) * n_ccw[1][0] + abs(yr)  * n_cw[1][0]) / self.d_e
             phi = arctan2(y_phi, x_phi)
             phi = phi[0]
         elif y < -self.d_e:

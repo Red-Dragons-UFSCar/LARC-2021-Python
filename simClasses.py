@@ -1,4 +1,4 @@
-from numpy import sqrt, zeros, int32
+from numpy import sqrt, zeros, int32, ndarray
 
 # Units: cm, rad, s
 
@@ -11,6 +11,9 @@ class KinematicBody:
         self._velocities = Velocities()
 
     def set_coordinates(self, x, y, rotation):
+        self._coordinates.last_X = self._coordinates.X
+        self._coordinates.last_Y = self._coordinates.Y
+        self._coordinates.last_rotation = self._coordinates.rotation
         self._coordinates.X = x
         self._coordinates.Y = y
         self._coordinates.rotation = rotation
@@ -58,6 +61,9 @@ class KinematicBody:
 
 class SpatialCoordinates:
     def __init__(self, x=0, y=0, rotation=0):
+        self.last_X = x
+        self.last_Y = y
+        self.last_rotation = rotation
         self.X = x
         self.Y = y
         self.rotation = rotation
@@ -147,22 +153,27 @@ class Ball(KinematicBody):
         """Input: FIRASim ball location data.
         Description: Sets positional and velocity data from simulator.
         Output: None"""
-        self._coordinates.X = data_ball.x + data_ball.vx * 100 * 8 / 60
-        self._coordinates.Y = data_ball.y + data_ball.vy * 100 * 8 / 60
+        # Original
+        #self._coordinates.X = data_ball.x + data_ball.vx * 100 * 8 / 60
+        #self._coordinates.Y = data_ball.y + data_ball.vy * 100 * 8 / 60
+
+        # Alterado
+        self._coordinates.X = data_ball['x'] + data_ball['vx'] * 100 * 8 / 60
+        self._coordinates.Y = data_ball['y'] + data_ball['vy'] * 100 * 8 / 60
 
         # Check if prev is out of field, in this case reflect ball movement to reproduce the collision
-        if self._coordinates.X > 160:
-            self._coordinates.X = 160 - (self._coordinates.Y - 160)
-        elif self._coordinates.X < 10:
-            self._coordinates.X = 10 - (self._coordinates.Y - 10)
+        # if self._coordinates.X > 160:
+        #     self._coordinates.X = 160 - (self._coordinates.Y - 160)
+        # elif self._coordinates.X < 10:
+        #     self._coordinates.X = 10 - (self._coordinates.Y - 10)
 
-        if self._coordinates.Y > 130:
-            self._coordinates.Y = 130 - (self._coordinates.Y - 130)
-        elif self._coordinates.Y < 0:
-            self._coordinates.Y = - self._coordinates.Y
+        # if self._coordinates.Y > 130:
+        #     self._coordinates.Y = 130 - (self._coordinates.Y - 130)
+        # elif self._coordinates.Y < 0:
+        #     self._coordinates.Y = - self._coordinates.Y
 
-        self._velocities.X = data_ball.vx
-        self._velocities.Y = data_ball.vy
+        self._velocities.X = data_ball['vx']
+        self._velocities.Y = data_ball['vy']
 
 
 class Robot(KinematicBody):
@@ -186,10 +197,11 @@ class Robot(KinematicBody):
         self.vL = 0  # ? Left wheel velocity (cm/s) => updated on simClasses.py -> simSetVel()
         self.vR = 0  # ? Right wheel velocity (cm/s) =>  updated on simClasses.py -> simSetVel()
         if self.index == 0:  # ! Robot max velocity (cm/s)
-            self.vMax = 40  # 35
+            self.vMax = 20  # 35
         else:
-            self.vMax = 50
-        self.rMax = 3 * self.vMax  # ! Robot max rotation velocity (rad*cm/s)
+            self.vMax = 20
+        #self.rMax = 3 * self.vMax  # ! Robot max rotation velocity (rad*cm/s)
+        self.rMax = 0.2*20  # ! Robot max rotation velocity (rad*cm/s)
         self.L = 7.5  # ? Base length of the robot (cm)
         self.LSimulador = 6.11 # ? Base length of the robot on copelia (cm)
         self.R = 3.4  # ? Wheel radius (cm)
@@ -199,6 +211,14 @@ class Robot(KinematicBody):
         self._friends = []
         self.pastPose = zeros(12).reshape(4,
                                           3)
+        
+        self.last_univector_angle = 0
+        self.univector_angle = 0
+        self.theta_e = 0
+        self.int_theta_e = 0
+        self.last_theta = 0
+
+        self.stateRetangle = 0
 
     def arrive(self):
         """Input: None.
@@ -213,27 +233,35 @@ class Robot(KinematicBody):
         """Input: Simulator robot data.
         Description: Sets positional and velocity data from simulator data
         Output: None."""
-        self.set_coordinates(data_robot.x, data_robot.y, data_robot.a)
-        linear_velocity = sqrt(data_robot.vx ** 2 + data_robot.vy ** 2)
-        self.set_velocities(linear_velocity, data_robot.va, data_robot.x, data_robot.y)
+        self.set_coordinates(data_robot['x'], data_robot['y'], data_robot['orientation'])
+        linear_velocity = sqrt(data_robot['vx'] ** 2 + data_robot['vy'] ** 2)
+        self.set_velocities(linear_velocity, data_robot['vorientation'], data_robot['x'], data_robot['y'])
 
     def sim_set_vel(self, v, w):
         """Input: Linear and angular velocity data.
         Description: Sends velocity data to simulator to move the robots.
         Output: None."""
+        if isinstance(v, ndarray):
+            v = v[0]
+        if isinstance(w, ndarray):
+            w = w[0]
         if self.face == 1:
+            #self.vR = v + 0.5 * self.L * w
+            #self.vL = v - 0.5 * self.L * w
             self.vR = v + 0.5 * self.L * w
             self.vL = v - 0.5 * self.L * w
         else:
             self.vL = -v - 0.5 * self.L * w
             self.vR = -v + 0.5 * self.L * w
-        self.actuator.send(self.index, self.vL, self.vR)
+        #self.actuator.send(self.index, v1, v2)
+        self.actuator.send_mensage(self.index,self.teamYellow,self.vR,self.vL)
 
     def sim_set_vel2(self, v1, v2):
         """Input: Wheels velocity data.
         Description: Sends velocity data to simulator to move the robots.
         Output: None."""
-        self.actuator.send(self.index, v1, v2)
+        self.actuator.send_mensage(self.index,self.teamYellow,self.vR,self.vL)
+        #self.actuator.send(self.index, v1, v2)
 
     def set_friends(self, friends):
         self._friends = friends

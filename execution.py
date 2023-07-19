@@ -33,6 +33,16 @@ def approx(robot, target, avoid_obst=True, obst=None, n=8, d=2, field_is_hiperbo
 
     return stp_theta
 
+def calculate_phi_v(robot, target):
+    delta_theta_d = robot.univector_angle - robot.last_univector_angle
+    #print("delta_d: ", delta_theta_d)
+    delta_x = robot._coordinates.X - robot._coordinates.last_X
+    #print("delta_x: ", delta_x)
+    delta_y = robot._coordinates.Y - robot._coordinates.last_Y
+    #print("delta_y: ", delta_y)
+    phi_V = delta_theta_d/(delta_x+0.001) * cos(robot._coordinates.rotation) + delta_theta_d/(delta_y+0.001) * sin(robot._coordinates.rotation)
+    #print("Phi_v: ", phi_V)
+    return phi_V
 
 def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_when_arrive=False, double_face=True,
                       field_is_hiperbolic=True):
@@ -42,10 +52,11 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
     Output: v -> Linear Velocity (float)
         w -> Angular Velocity (float)"""
     handle_edge_behaviour(robot)  # Checks if the robot is in some corner
+    #double_face=False
 
     navigate = Univector()  # Defines the navigation algorithm
     dl = 0.000001  # Constant to approximate phi_v
-    k_w = 1.8  # Feedback constant for angle error (k_w=1 means no gain)
+    k_w = 0.8  # Feedback constant for angle error (k_w=1 means no gain)
     k_p = 1  # Proporcional constant for stopping when arrive in target (k_p=1 means no gain)
 
     # Target angle estimation
@@ -55,6 +66,7 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
         robot._coordinates.rotation = arctan2(sin(robot._coordinates.rotation - pi), cos(robot._coordinates.rotation - pi))
 
     # Navigation: Go-to-Goal + Avoid Obstacle Vector Field
+    robot.last_univector_angle = robot.univector_angle
     if avoid_obst: # If obstacle avoidance is activated
         if field_is_hiperbolic:                                             # Use of the Hyperbolic field
             des_theta = navigate.univec_field_h(robot, target, obst)        # Desired angle w/ go-to-goal and avoid obstacle vector field
@@ -67,18 +79,24 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
             des_theta = navigate.hip_vec_field(robot, target)                       # Desired angle w/ go-to-goal
         else:                                                                       # Use of the old field
             des_theta = navigate.n_vec_field(robot, target, n, d, have_face=False)  # Desired angle w/ go-to-goal
-
+    robot.univector_angle = des_theta
     # Controller estimation
 
     stp_theta = approx(robot, target, avoid_obst, obst, n, d, field_is_hiperbolic) # Desired angle prediction
     phi_v = arctan2(sin(stp_theta - des_theta),     # Difference between the prediction and current angle
                     cos(stp_theta - des_theta)) / dl
+    phi_v = calculate_phi_v(robot, target)
+    #phi_v = 0
     theta_e = which_face(robot, target, des_theta, double_face) # Angle error
 
     # Controller velocities v1, v2, v3 estimation
 
     v1 = (2 * robot.vMax - robot.LSimulador * k_w * sqrt(abs(theta_e))) / (2 + robot.LSimulador * abs(phi_v))
-    v2 = (sqrt(k_w ** 2 + 4 * robot.rMax * abs(phi_v)) - k_w * sqrt(abs(theta_e))) / (2 * abs(phi_v) + dl)
+    
+    if phi_v == 0:
+        v2 = robot.vMax
+    else:
+        v2 = (sqrt(k_w ** 2 + 4 * robot.rMax * abs(phi_v)) - k_w * sqrt(abs(theta_e))) / (2 * abs(phi_v))
 
     if stop_when_arrive:
         v3 = k_p * robot.calculate_distance(target)
@@ -92,6 +110,7 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
         v = min(abs(v1), abs(v2), abs(v3))  # Controller velocities v and w
         w = v * phi_v + k_w * sign(theta_e) * sqrt(abs(theta_e))
 
+    v, w = pid(robot, des_theta)
     # Some code to store the past position, orientation and velocity
 
     #robot.v=v
@@ -99,6 +118,9 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
     robot.pastPose = append(robot.pastPose, array(
         [[round(robot._coordinates.X)], [round(robot._coordinates.Y)], [round(float(robot._coordinates.rotation))], [round(float(v))]]), 1)
 
+    #print("v1: ", v1)
+    #print("v2: ", v2)
+    #print("v3: ", v3)
     return v, w
 
 
@@ -117,3 +139,30 @@ def which_face(robot, target, des_theta, double_face):
         theta_e = arctan2(sin(des_theta - robot_coordinates.rotation), cos(des_theta - robot_coordinates.rotation))  # Error angle re-estimate
 
     return theta_e
+
+def pid(robot, des_theta):
+    robot_coordinates = robot.get_coordinates()
+    #target_coordinates = target.get_coordinates()
+    #des_theta = target_coordinates.rotation
+    theta_e = arctan2(sin(des_theta - robot_coordinates.rotation), cos(des_theta - robot_coordinates.rotation))  # Error estimation with current face
+    de = (theta_e- robot.last_theta)/(1/60)
+    robot.theta_e = theta_e
+    robot.int_theta_e += robot.theta_e
+
+    #print("Erro: ", theta_e*180/pi)
+    Kp = 2.4
+    Ki = 0
+    Kd = 0.000
+    saturacao = 6
+    w = Kp*theta_e + Ki*robot.int_theta_e + Kd*de
+    if w > saturacao:
+        w = saturacao
+    elif w < -saturacao:
+        w = -saturacao
+    print("w: ", w)
+    w = w*robot.face
+    v = 40*robot.face
+    robot.last_theta = theta_e
+    return v, w
+
+

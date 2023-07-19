@@ -6,6 +6,18 @@ from bridge import (Actuator, Replacer, Vision, Referee)
 from simClasses import *
 from strategy import *
 
+from vss_communication import StrategyControl
+
+import action
+
+import pandas as pd
+
+vetor_angulo = []
+vetor_tempo = []
+
+t_start = time.time()
+t1 = time.time()
+
 if __name__ == "__main__":
 
     # Fazer tratamento de entradas erradas
@@ -37,21 +49,24 @@ if __name__ == "__main__":
         mray = False
 
 
-    # Initialize all clients
+    # Initialize all clients (simulation)
     actuator = Actuator(mray, "127.0.0.1", 20011)
-    replacement = Replacer(mray, "224.5.23.2", 10004)
-    vision = Vision(mray, "224.0.0.1", 10002)
+    # replacement = Replacer(mray, "224.5.23.2", 10004)
+    # vision = Vision(mray, "224.0.0.1", 10002)
     referee = Referee(mray, "224.5.23.2", 10003)
+
+    # Intialize all clients (real)
+    client_control = StrategyControl()
 
     # Initialize all  objects
     robots = []
     for i in range(args.num_robots):
-        robot = Robot(i, actuator, mray)
+        robot = Robot(i, client_control, mray)
         robots.append(robot)
 
     enemy_robots = []
     for i in range(args.num_robots):
-        robot = Robot(i, actuator, not mray)
+        robot = Robot(i, client_control, not mray)
         enemy_robots.append(robot)
 
     for robot in robots:
@@ -62,72 +77,48 @@ if __name__ == "__main__":
 
     list_strategies = [args.strategy, args.op, args.dp, args.aop, args.adp]
     strategy = Strategy(robots, enemy_robots, ball, mray, list_strategies)
+    v = 0.2
+    incremento = 0.3
 
     # Main infinite loop
+    t1 = time.time()
     while True:
-        t1 = time.time()
-        # Update the foul status
-        referee.update()
-        ref_data = referee.get_data()
-
-        # Update the vision data
-        vision.update()
-        field = vision.get_field_data()
-
-        data_our_bot = field["our_bots"]  # Save data from allied robots
-        data_their_bots = field["their_bots"]  # Save data from enemy robots
-        data_ball = field["ball"]  # Save the ball data
-
-        # Updates vision data on each field object
-        for index, robot in enumerate(robots):
-            robot.set_simulator_data(data_our_bot[index])
         
-        for index, robot in enumerate(enemy_robots):
-            robot.set_simulator_data(data_their_bots[index])
+        
+        client_control.update()
+        field, errorCode = client_control.get_data_Red()
 
-        ball.set_simulator_data(data_ball)
+        #'''
+        if errorCode == 0:
+            data_our_bot = field["our_bots"]  # Save data from allied robots
+            data_their_bots = field["their_bots"]  # Save data from enemy robots
+            data_ball = field["ball"]  # Save the ball data
 
-        if ref_data["game_on"]:
-            # If the game mode is set to "Game on"
-            strategy.handle_game_on()
+            # Updates vision data on each field object
+            for index, robot in enumerate(robots):
+                robot.set_simulator_data(data_our_bot[index])
+            
+            for index, robot in enumerate(enemy_robots):
+                robot.set_simulator_data(data_their_bots[index])
 
-        else:
-            """FREE_KICK = 0
-            PENALTY_KICK = 1
-            GOAL_KICK = 2
-            FREE_BALL = 3
-            KICKOFF = 4
-            STOP = 5
-            GAME_ON = 6
-            HALT = 7"""
-            match ref_data["foul"]:
+            ball.set_simulator_data(data_ball)
 
-                case 1 if ref_data["yellow"] != mray:
-                    # detecting defensive penalty
-                    strategy.penalty_state = 2
-                    actuator.stop()
-                    fouls.replacement_fouls(replacement, ref_data, mray, strategy.penalty_handler.offensive_penalty_tactics[strategy.penalty_handler.current_offensive_tactic], strategy.penalty_handler.defensive_penalty_tactics[strategy.penalty_handler.current_defensive_tactic])
-                case 1 if ref_data["yellow"] == mray:
-                    # detecting offensive penalty
-                    strategy.penalty_state = 1
-                    actuator.stop()
-                    fouls.replacement_fouls(replacement, ref_data, mray, strategy.penalty_handler.offensive_penalty_tactics[strategy.penalty_handler.current_offensive_tactic], strategy.penalty_handler.defensive_penalty_tactics[strategy.penalty_handler.current_defensive_tactic])
-                case 5:
-                    fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
-                    actuator.stop()
-                case 4:
-                    strategy.handle_goal(ref_data["yellow"])
-                    fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
-                    actuator.stop()
-                case 0 | 2 | 3:
-                    strategy.end_penalty_state()
-                    fouls.replacement_fouls(replacement, ref_data, mray, args.op, args.dp)
-                    actuator.stop()
-
-                case _:
-                    actuator.stop()
-
-        # synchronize code execution based on runtime and the camera FPS
-        t2 = time.time()
-        if t2 - t1 < 1 / 60:
-            time.sleep(1 / 60 - (t2 - t1))
+            #print(ball.get_coordinates().X)
+            #strategy.handle_game_on()
+            #action.defender_spin(robots[2], ball, left_side=not mray)  # Attacker behavior
+            #robots[2].sim_set_vel(20, 0.5)
+            
+            #action.shoot(robots[2], ball)
+            action.rectangle(robots[2])
+            #action.screen_out_ball(robots[2], ball, 70, True, upper_lim = 100, lower_lim= 30)
+            #'''
+            # synchronize code execution based on runtime and the camera FPS
+            if v >= 30:
+                incremento = incremento*(-1)
+            elif v <= -30:
+                incremento = incremento*(-1)
+            v = v + incremento
+            #robots[2].sim_set_vel(0, v        print("Fim")
+            t2 = time.time()
+            #if t2 - t1 < 1 / 60:
+                #time.sleep(1 / 60 - (t2 - t1))

@@ -2,7 +2,7 @@ from numpy import pi, cos, sin, tan, arctan2, sqrt, deg2rad
 
 import simClasses
 import strategy
-from execution import univec_controller
+from execution import univec_controller, pid
 
 
 def stop(robot: simClasses.Robot):
@@ -19,6 +19,7 @@ def shoot(robot: simClasses.Robot, ball: simClasses.Ball, left_side=True):
                  between the position of the ball and the goal.
     Output: None"""
     arrival_angle = calculate_arrival_angle(ball, left_side)
+    arrival_angle = 0
     linear_velocity, angular_velocity = calculate_velocities(ball, robot)
 
     robot.target.set_coordinates(ball._coordinates.X, ball._coordinates.Y, arrival_angle)
@@ -30,11 +31,11 @@ def calculate_velocities(ball: simClasses.Ball, robot: simClasses.Robot):
     """Calculates the angular and linear velocities with the univec_controller function"""
     if robot.get_friends()[0] is None and robot.get_friends()[1] is None:  # No friends to avoid
         linear_velocity, angular_velocity = univec_controller(robot, robot.target, avoid_obst=False, n=16,
-                                                              d=2)  # Calculate linear and angular velocity
+                                                              d=2, double_face=False)  # Calculate linear and angular velocity
 
     else:  # Both friends to avoid
         robot.obst.update2(ball, robot.get_friends(), robot.get_enemies())
-        linear_velocity, angular_velocity = univec_controller(robot, robot.target, True, robot.obst, n=4, d=4)
+        linear_velocity, angular_velocity = univec_controller(robot, robot.target, avoid_obst=False, obst=robot.obst, n=4, d=4, double_face=False)
     return linear_velocity, angular_velocity
 
 
@@ -221,6 +222,9 @@ def screen_out_ball(robot: simClasses.Robot, ball: simClasses.KinematicBody, sta
         linear_velocity, angular_velocity = escape_from_corner_lock(robot)
     else:
         linear_velocity, angular_velocity = calculate_velocities_screenout(robot)
+
+    if robot.calculate_distance(robot.target) < 5:
+        linear_velocity = 0
 
     robot.sim_set_vel(linear_velocity, angular_velocity)
 
@@ -770,3 +774,21 @@ def select_leader(robot1: simClasses.Robot, robot2: simClasses.Robot, ball: simC
     strategy_controller.set_follower(follower)
     strategy_controller.set_leader_time(leader_time)
     return leader, follower
+
+def rectangle(robot: simClasses.Robot):
+    posicoes_x = [47.5, 122.5, 122.5, 47.5]
+    posicoes_y = [25, 25, 105, 105]
+    posicoes_angulo = [-90*pi/180, 0, 90*pi/180, 180*pi/180]
+
+    robot.target.set_coordinates(posicoes_x[robot.stateRetangle%4], 
+                                 posicoes_y[robot.stateRetangle%4], 
+                                 posicoes_angulo[robot.stateRetangle%4])
+    
+    if robot.calculate_distance(robot.target) < 5:
+        robot.stateRetangle += 1
+    
+    print("Indice alvo: ", robot.stateRetangle%4)
+
+    linear_velocity, angular_velocity = calculate_velocities(robot.target, robot)
+
+    robot.sim_set_vel(linear_velocity, angular_velocity)

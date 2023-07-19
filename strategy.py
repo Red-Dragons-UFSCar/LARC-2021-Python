@@ -29,7 +29,8 @@ class Strategy:
     def handle_game_on(self):
         if self.goal_already_happened:
             self.goal_already_happened = False
-        self.decider()
+        #self.decider()
+        action.defender_spin(self.robots[0], self.ball, left_side=not self.mray)  # Attacker behavior
 
     def handle_goal(self, foul_was_yellow):
         if self.goal_already_happened:
