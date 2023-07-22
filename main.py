@@ -38,9 +38,9 @@ if __name__ == "__main__":
 
     # Initialize all clients
     actuator = Actuator(mray, "127.0.0.1", 20011)
-    replacement = Replacer(mray, "224.5.23.2", 10004)
-    vision = Vision(mray, "224.0.0.1", 10003)
-    referee = Referee(mray, "224.5.23.2", 10005)
+    replacement = Replacer(mray, "224.5.23.2", 10006)
+    vision = Vision(mray, "224.0.0.1", 10002)
+    referee = Referee(mray, "224.5.23.2", 10007)
 
     # Initialize all  objects
     robot0 = Robot(0, actuator, mray)
@@ -92,7 +92,7 @@ if __name__ == "__main__":
         #defenderWall(robot1,robot2,ball)
         
 
-        
+
         if ref_data["game_on"]:
             # Se o modo de jogo estiver em "Game on"
             strategy.coach()
