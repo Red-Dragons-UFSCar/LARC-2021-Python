@@ -64,6 +64,8 @@ if __name__ == "__main__":
         robot = Robot(i, client_control, mray)
         robots.append(robot)
 
+    #robots = [robots[2], robots[1], robots[0]]
+
     enemy_robots = []
     for i in range(args.num_robots):
         robot = Robot(i, client_control, not mray)
@@ -105,12 +107,15 @@ if __name__ == "__main__":
 
             #print(ball.get_coordinates().X)
             #strategy.handle_game_on()
+            strategy.coach2()
             #action.defender_spin(robots[2], ball, left_side=not mray)  # Attacker behavior
             #robots[2].sim_set_vel(20, 0.5)
             
             #action.shoot(robots[2], ball)
-            action.rectangle(robots[2])
-            #action.screen_out_ball(robots[2], ball, 70, True, upper_lim = 100, lower_lim= 30)
+            #action.rectangle(robots[2])
+            #action.screen_out_ball(robots[0], ball, 130, True, upper_lim = 90, lower_lim= 50)
+            #action.screen_out_ball(robots[1], ball, 110, True, upper_lim = 100, lower_lim= 30)
+            #action.defender_spin(robots[2], ball)
             #'''
             # synchronize code execution based on runtime and the camera FPS
             if v >= 30:

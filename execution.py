@@ -56,7 +56,7 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
 
     navigate = Univector()  # Defines the navigation algorithm
     dl = 0.000001  # Constant to approximate phi_v
-    k_w = 0.8  # Feedback constant for angle error (k_w=1 means no gain)
+    k_w = 1.7  # Feedback constant for angle error (k_w=1 means no gain)
     k_p = 1  # Proporcional constant for stopping when arrive in target (k_p=1 means no gain)
 
     # Target angle estimation
@@ -85,8 +85,8 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
     stp_theta = approx(robot, target, avoid_obst, obst, n, d, field_is_hiperbolic) # Desired angle prediction
     phi_v = arctan2(sin(stp_theta - des_theta),     # Difference between the prediction and current angle
                     cos(stp_theta - des_theta)) / dl
-    phi_v = calculate_phi_v(robot, target)
-    #phi_v = 0
+    #phi_v = calculate_phi_v(robot, target)
+    phi_v = 0
     theta_e = which_face(robot, target, des_theta, double_face) # Angle error
 
     # Controller velocities v1, v2, v3 estimation
@@ -110,7 +110,7 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
         v = min(abs(v1), abs(v2), abs(v3))  # Controller velocities v and w
         w = v * phi_v + k_w * sign(theta_e) * sqrt(abs(theta_e))
 
-    v, w = pid(robot, des_theta)
+    #v, w = pid(robot, des_theta)
     # Some code to store the past position, orientation and velocity
 
     #robot.v=v
@@ -150,7 +150,7 @@ def pid(robot, des_theta):
     robot.int_theta_e += robot.theta_e
 
     #print("Erro: ", theta_e*180/pi)
-    Kp = 2.4
+    Kp = 1
     Ki = 0
     Kd = 0.000
     saturacao = 6
@@ -160,8 +160,8 @@ def pid(robot, des_theta):
     elif w < -saturacao:
         w = -saturacao
     print("w: ", w)
-    w = w*robot.face
-    v = 40*robot.face
+    w = w#*robot.face
+    v = 20#*robot.face
     robot.last_theta = theta_e
     return v, w
 

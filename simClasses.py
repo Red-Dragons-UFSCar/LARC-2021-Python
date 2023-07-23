@@ -197,11 +197,11 @@ class Robot(KinematicBody):
         self.vL = 0  # ? Left wheel velocity (cm/s) => updated on simClasses.py -> simSetVel()
         self.vR = 0  # ? Right wheel velocity (cm/s) =>  updated on simClasses.py -> simSetVel()
         if self.index == 0:  # ! Robot max velocity (cm/s)
-            self.vMax = 20  # 35
+            self.vMax = 30  # 35
         else:
-            self.vMax = 20
+            self.vMax = 30
         #self.rMax = 3 * self.vMax  # ! Robot max rotation velocity (rad*cm/s)
-        self.rMax = 0.2*20  # ! Robot max rotation velocity (rad*cm/s)
+        self.rMax = 0.8*20  # ! Robot max rotation velocity (rad*cm/s)
         self.L = 7.5  # ? Base length of the robot (cm)
         self.LSimulador = 6.11 # ? Base length of the robot on copelia (cm)
         self.R = 3.4  # ? Wheel radius (cm)
@@ -260,7 +260,7 @@ class Robot(KinematicBody):
         """Input: Wheels velocity data.
         Description: Sends velocity data to simulator to move the robots.
         Output: None."""
-        self.actuator.send_mensage(self.index,self.teamYellow,self.vR,self.vL)
+        self.actuator.send_mensage(self.index,self.teamYellow, v1, v2)
         #self.actuator.send(self.index, v1, v2)
 
     def set_friends(self, friends):

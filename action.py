@@ -31,11 +31,11 @@ def calculate_velocities(ball: simClasses.Ball, robot: simClasses.Robot):
     """Calculates the angular and linear velocities with the univec_controller function"""
     if robot.get_friends()[0] is None and robot.get_friends()[1] is None:  # No friends to avoid
         linear_velocity, angular_velocity = univec_controller(robot, robot.target, avoid_obst=False, n=16,
-                                                              d=2, double_face=False)  # Calculate linear and angular velocity
+                                                              d=2, double_face=True)  # Calculate linear and angular velocity
 
     else:  # Both friends to avoid
         robot.obst.update2(ball, robot.get_friends(), robot.get_enemies())
-        linear_velocity, angular_velocity = univec_controller(robot, robot.target, avoid_obst=False, obst=robot.obst, n=4, d=4, double_face=False)
+        linear_velocity, angular_velocity = univec_controller(robot, robot.target, avoid_obst=False, obst=robot.obst, n=4, d=4, double_face=True)
     return linear_velocity, angular_velocity
 
 
@@ -109,8 +109,9 @@ def defender_spin(robot: simClasses.Robot, ball: simClasses.Ball, left_side=True
     # Check if the distance is lower than a threshold and if the ball is on the right of robot
     if not check_forward_advance_possible(ball, distance_ball_robot, robot):
         robot.sim_set_vel(linear_velocity, angular_velocity)
+        #robot.sim_set_vel(0, 0)
         return
-
+    print("Dei zuum")
     robot.sim_set_vel2(50 * robot.face, 50 * robot.face)  # Send the velocity of right and left wheel
 
 
@@ -127,7 +128,8 @@ def check_forward_advance_possible(ball: simClasses.Ball, distance_ball_robot, r
                 y_projection = robot_coordinates.Y + distance_ball_robot * sin(robot._coordinates.rotation)
                 distance_ball_projection = sqrt(
                     (ball_coordinates.X - x_projection) ** 2 + (ball_coordinates.Y - y_projection) ** 2)
-                if (robot.index == 2 or robot.index == 1) and (distance_ball_projection < 10):
+                if (robot.index == 2 or robot.index == 1) and (distance_ball_projection < 20):
+                    print("zuum")
                     return True
 
     return False
