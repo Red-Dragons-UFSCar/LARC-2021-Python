@@ -219,12 +219,14 @@ class Robot(KinematicBody):
         self.last_theta = 0
 
         self.stateRetangle = 0
+        self.flagKeepFace = False
+        self.contKeepFace = 0
 
     def arrive(self):
         """Input: None.
         Description: Returns True if the distance between the target and the robot is less than 3cm - False otherwise
         Output: True or False."""
-        if self.calculate_distance(self.target) <= 3:
+        if self.calculate_distance(self.target) <= 7:
             return True
         else:
             return False
@@ -245,6 +247,8 @@ class Robot(KinematicBody):
             v = v[0]
         if isinstance(w, ndarray):
             w = w[0]
+
+        '''
         if self.face == 1:
             #self.vR = v + 0.5 * self.L * w
             #self.vL = v - 0.5 * self.L * w
@@ -253,6 +257,12 @@ class Robot(KinematicBody):
         else:
             self.vL = -v - 0.5 * self.L * w
             self.vR = -v + 0.5 * self.L * w
+        '''
+
+        self.vR = v + 0.5 * self.L * w
+        self.vL = v - 0.5 * self.L * w
+        
+        
         #self.actuator.send(self.index, v1, v2)
         self.actuator.send_mensage(self.index,self.teamYellow,self.vR,self.vL)
 

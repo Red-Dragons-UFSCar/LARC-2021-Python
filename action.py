@@ -225,7 +225,7 @@ def screen_out_ball(robot: simClasses.Robot, ball: simClasses.KinematicBody, sta
     else:
         linear_velocity, angular_velocity = calculate_velocities_screenout(robot)
 
-    if robot.calculate_distance(robot.target) < 5:
+    if robot.calculate_distance(robot.target) < 10:
         linear_velocity = 0
 
     robot.sim_set_vel(linear_velocity, angular_velocity)
@@ -792,5 +792,25 @@ def rectangle(robot: simClasses.Robot):
     print("Indice alvo: ", robot.stateRetangle%4)
 
     linear_velocity, angular_velocity = calculate_velocities(robot.target, robot)
+
+    coordinates = robot.get_coordinates()
+
+    print(coordinates.rotation )
+    if coordinates.Y < 7.5 and -pi/2 -pi/12 < coordinates.rotation < -pi/2 +pi/12:
+        print("AAAAAAAAAAA")
+        linear_velocity = -20*robot.face
+        angular_velocity = 0
+    elif coordinates.Y > 122 and pi/2 -pi/15 < coordinates.rotation < pi/2 +pi/15:
+        print("BBBBBBBBBB")
+        linear_velocity = -20*robot.face
+        angular_velocity = 0
+    elif coordinates.X > 150 and -pi/15 < coordinates.rotation < +pi/15:
+        print("CCCCCCCCC")
+        linear_velocity = -20*robot.face
+        angular_velocity = 0
+    elif coordinates.X < 20 and (pi-pi/15 < coordinates.rotation or coordinates.rotation > -pi+pi/15):
+        print("CCCCCCCCC")
+        linear_velocity = -20*robot.face
+        angular_velocity = 0
 
     robot.sim_set_vel(linear_velocity, angular_velocity)

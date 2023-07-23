@@ -62,8 +62,8 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
     # Target angle estimation
 
     # Angle correction if robot face is inverted
-    if robot.face == -1:
-        robot._coordinates.rotation = arctan2(sin(robot._coordinates.rotation - pi), cos(robot._coordinates.rotation - pi))
+    #if robot.face == -1:
+        #robot._coordinates.rotation = arctan2(sin(robot._coordinates.rotation - pi), cos(robot._coordinates.rotation - pi))
 
     # Navigation: Go-to-Goal + Avoid Obstacle Vector Field
     robot.last_univector_angle = robot.univector_angle
@@ -110,7 +110,7 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
         v = min(abs(v1), abs(v2), abs(v3))  # Controller velocities v and w
         w = v * phi_v + k_w * sign(theta_e) * sqrt(abs(theta_e))
 
-    #v, w = pid(robot, des_theta)
+    v, w = pid(robot, des_theta)
     # Some code to store the past position, orientation and velocity
 
     #robot.v=v
@@ -129,40 +129,100 @@ def which_face(robot, target, des_theta, double_face):
     """Input: Robot object, Target object, Desired angle, Flag to activate face swap
     Description: Defines de better face to robot movement and estimate angle error
     Output: theta_e -> Angle error (float)"""
+    #double_face = False
     robot_coordinates = robot.get_coordinates()
-    theta_e = arctan2(sin(des_theta - robot_coordinates.rotation), cos(des_theta - robot_coordinates.rotation))  # Error estimation with current face
+    if robot.face == 1:
+        theta_e = arctan2(sin(des_theta - robot_coordinates.rotation), cos(des_theta - robot_coordinates.rotation))  # Error estimation with current face
+    else:
+        theta_e = arctan2(sin(des_theta - robot_coordinates.rotation + pi), cos(des_theta - robot_coordinates.rotation + pi))  # Error estimation with current face
 
     if (abs(theta_e) > pi / 2 + pi / 12) and (
             not robot.flagTrocaFace) and double_face:  # If the angle is convenient for face swap
-        robot.face = robot.face * (-1)  # Swaps face
-        robot_coordinates.rotation = arctan2(sin(robot_coordinates.rotation + pi), cos(robot_coordinates.rotation + pi))  # Angle re-estimate
-        theta_e = arctan2(sin(des_theta - robot_coordinates.rotation), cos(des_theta - robot_coordinates.rotation))  # Error angle re-estimate
-
+        if robot.flagKeepFace:
+            robot.face = robot.face * (-1)  # Swaps face
+            robot_coordinates.rotation = arctan2(sin(robot_coordinates.rotation + pi), cos(robot_coordinates.rotation + pi))  # Angle re-estimate
+            theta_e = arctan2(sin(des_theta - robot_coordinates.rotation), cos(des_theta - robot_coordinates.rotation))  # Error angle re-estimate
+            robot.flagKeepFace = False
+            robot.contKeepFace = 0
+        else:
+            if robot.contKeepFace > 15:
+                robot.flagKeepFace = True
+            else:
+                robot.contKeepFace += 1
     return theta_e
 
 def pid(robot, des_theta):
     robot_coordinates = robot.get_coordinates()
-    #target_coordinates = target.get_coordinates()
-    #des_theta = target_coordinates.rotation
-    theta_e = arctan2(sin(des_theta - robot_coordinates.rotation), cos(des_theta - robot_coordinates.rotation))  # Error estimation with current face
-    de = (theta_e- robot.last_theta)/(1/60)
+    #robot.face = -1
+    if robot.face==1:
+        theta_e = arctan2(sin(des_theta - robot_coordinates.rotation), cos(des_theta - robot_coordinates.rotation))  # Error estimation with current face
+    else:
+        theta_e = arctan2(sin(des_theta - robot_coordinates.rotation+pi), cos(des_theta - robot_coordinates.rotation+pi))  # Error estimation with current face
+    #theta_e = arctan2(sin(des_theta - robot_coordinates.rotation+pi), cos(des_theta - robot_coordinates.rotation+pi))  # Error estimation with current face
+    de = (theta_e- robot.last_theta)
     robot.theta_e = theta_e
     robot.int_theta_e += robot.theta_e
 
     #print("Erro: ", theta_e*180/pi)
     Kp = 1
     Ki = 0
-    Kd = 0.000
+    Kd = 1
     saturacao = 6
     w = Kp*theta_e + Ki*robot.int_theta_e + Kd*de
     if w > saturacao:
         w = saturacao
     elif w < -saturacao:
         w = -saturacao
-    print("w: ", w)
+    print("Face: ", robot.face)
     w = w#*robot.face
-    v = 20#*robot.face
+    v = 20*robot.face
     robot.last_theta = theta_e
     return v, w
 
+def pid2(robot, des_theta):
+    Kp = 10
+    Ki = 0
+    Kd = 2
 
+    robot_coordinates = robot.get_coordinates()
+    theta_e = arctan2(sin(des_theta - robot_coordinates.rotation), cos(des_theta - robot_coordinates.rotation))  # Error estimation with current face
+    theta_e = theta_e[0]
+    robot.theta_e = theta_e
+
+    motorSpeed = Kp*theta_e + Kd*(theta_e- robot.last_theta) + Ki*robot.int_theta_e
+
+    baseSpeed = robot.vMax
+
+    #motorSpeed = motorSpeed > baseSpeed ? baseSpeed : motorSpeed;
+    #motorSpeed = motorSpeed < -baseSpeed ? -baseSpeed : motorSpeed;
+
+    #if motorSpeed > 2*baseSpeed: motorSpeed = 2*baseSpeed
+    #if motorSpeed < 0: motorSpeed = motorSpeed*2
+    #if motorSpeed < -2*baseSpeed: motorSpeed = -2*baseSpeed
+
+    #if (motorSpeed > 0):
+    #    leftMotorSpeed = baseSpeed
+    #    rightMotorSpeed = baseSpeed - motorSpeed
+    #else:
+    #    leftMotorSpeed = baseSpeed + motorSpeed
+    #    rightMotorSpeed = baseSpeed
+    
+    if 0 < leftMotorSpeed < 5: leftMotorSpeed = -5
+    if -5 < leftMotorSpeed < 0: leftMotorSpeed = -5
+
+    if 0 < rightMotorSpeed < 5: rightMotorSpeed = -5
+    if -5 < rightMotorSpeed < 0: rightMotorSpeed = -5
+
+    if rightMotorSpeed > baseSpeed: rightMotorSpeed = baseSpeed
+    if rightMotorSpeed < -baseSpeed: rightMotorSpeed = -baseSpeed
+    if leftMotorSpeed > baseSpeed: leftMotorSpeed = baseSpeed
+    if leftMotorSpeed < -baseSpeed: leftMotorSpeed = -baseSpeed
+    
+    
+    print("vR: ", leftMotorSpeed)
+    print("vL: ", rightMotorSpeed)
+
+    robot.int_theta_e += robot.theta_e
+    robot.last_theta = theta_e
+
+    return leftMotorSpeed, rightMotorSpeed
