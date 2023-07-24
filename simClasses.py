@@ -212,11 +212,17 @@ class Robot(KinematicBody):
         self.pastPose = zeros(12).reshape(4,
                                           3)
         
+        # PID1
         self.last_univector_angle = 0
         self.univector_angle = 0
         self.theta_e = 0
         self.int_theta_e = 0
         self.last_theta = 0
+
+        # PID3
+        self.u_k1 = 0
+        self.e_k1 = 0
+        self.e_k2 = 0
 
         self.stateRetangle = 0
         self.flagKeepFace = False

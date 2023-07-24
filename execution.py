@@ -110,7 +110,7 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
         v = min(abs(v1), abs(v2), abs(v3))  # Controller velocities v and w
         w = v * phi_v + k_w * sign(theta_e) * sqrt(abs(theta_e))
 
-    v, w = pid(robot, des_theta)
+    v, w = pid3(robot, des_theta)
     # Some code to store the past position, orientation and velocity
 
     #robot.v=v
@@ -164,9 +164,9 @@ def pid(robot, des_theta):
     robot.int_theta_e += robot.theta_e
 
     #print("Erro: ", theta_e*180/pi)
-    Kp = 1
-    Ki = 0
-    Kd = 1
+    Kp = 1.2
+    Ki = 0.01
+    Kd = 0
     saturacao = 6
     w = Kp*theta_e + Ki*robot.int_theta_e + Kd*de
     if w > saturacao:
@@ -175,8 +175,42 @@ def pid(robot, des_theta):
         w = -saturacao
     print("Face: ", robot.face)
     w = w#*robot.face
-    v = 20*robot.face
+    v = 30*robot.face
     robot.last_theta = theta_e
+    return v, w
+
+def pid3(robot, des_theta):
+    Kp = 1.6#1.6
+    Kd = 0.05
+    Ki = 0.0
+    T0 = 1/60
+
+    q0 = Kp + Kd/T0 + Ki*T0
+    q1 = -Kp -2*Kd/T0
+    q2 = Kd/T0
+
+    robot_coordinates = robot.get_coordinates()
+    if robot.face==1:
+        theta_e = arctan2(sin(des_theta - robot_coordinates.rotation), cos(des_theta - robot_coordinates.rotation))  # Error estimation with current face
+    else:
+        theta_e = arctan2(sin(des_theta - robot_coordinates.rotation+pi), cos(des_theta - robot_coordinates.rotation+pi))  # Error estimation with current face
+
+    uk = robot.u_k1 + q0*theta_e + q1*robot.e_k1 + q2*robot.e_k2
+
+    w = uk
+    saturacao = 6
+
+    if w > saturacao:
+        w = saturacao
+    elif w < -saturacao:
+        w = -saturacao
+
+    robot.e_k2 = robot.e_k1
+    robot.e_k1 = theta_e
+    robot.u_k1 = uk
+
+    w = w#*robot.face
+    v = 20*robot.face#*((1-w/saturacao)*0.5 + 0.5)
     return v, w
 
 def pid2(robot, des_theta):

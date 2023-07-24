@@ -50,7 +50,6 @@ if __name__ == "__main__":
 
 
     # Initialize all clients (simulation)
-    mray= True
     actuator = Actuator(mray, "127.0.0.1", 20011)
     # replacement = Replacer(mray, "224.5.23.2", 10004)
     # vision = Vision(mray, "224.0.0.1", 10002)
@@ -114,8 +113,8 @@ if __name__ == "__main__":
             
             #action.shoot(robots[2], ball)
             #action.rectangle(robots[2])
-            action.screen_out_ball(robots[0], ball, 130, True, upper_lim = 90, lower_lim= 50)
-            #action.screen_out_ball(robots[1], ball, 110, True, upper_lim = 100, lower_lim= 30)
+            #action.screen_out_ball(robots[0], ball, 130, True, upper_lim = 90, lower_lim= 50)
+            action.screen_out_ball(robots[2], ball, 110, True, upper_lim = 100, lower_lim= 30)
             #action.defender_spin(robots[2], ball)
             #'''
             # synchronize code execution based on runtime and the camera FPS
