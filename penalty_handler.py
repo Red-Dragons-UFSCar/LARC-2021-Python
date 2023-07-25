@@ -7,7 +7,7 @@ from numpy import *
 class PenaltyHandler:
     def __init__(self, strategy_object, robots, enemy_robots, ball, mray):
         self.defensive_penalty_tactics = ['spin', 'spin-v', 'direct']
-        self.offensive_penalty_tactics = ['spin', 'direct', 'switch']
+        self.offensive_penalty_tactics = ['spin', 'block', 'direct', 'new-spin']
         self.timer = 0
         self.current_offensive_tactic = self.offensive_penalty_tactics.index(strategy_object.penaltyStrategies[0])
         self.current_defensive_tactic = self.defensive_penalty_tactics.index(strategy_object.penaltyStrategies[1])
@@ -54,9 +54,13 @@ class PenaltyHandler:
             case 'spin':
                 action.attacker_penalty_spin(self.robots[2], self.ball)
             case 'direct':
-                action.attacker_penalty_direct(self.robots[2], self.ball, left_side=not self.mray)
+                action.attacker_penalty_direct(self.robots[2])
             case 'switch':
                 action.attacker_penalty_switch(self.robots[2])
+            case 'block':
+                action.attacker_penalty_block(self.robots[2], self.robots[1], self.ball)
+            case 'new-spin':
+                action.attacker_penalty_new_spin(self.robots[2])
             case _:
                 print("Invalid tactic: " + current_tactic)
                 print("Using default tactic: spin")
@@ -80,11 +84,7 @@ class PenaltyHandler:
             case 'spin':
                 action.defender_penalty_spin(self.robots[0], self.ball, left_side=not self.mray)
             case 'spin-v':
-                action.defender_penalty_spin_proj_vel(self.robots[0], self.ball, left_side=not self.mray,
-                                                        friend1=self.robots[1],
-                                                        friend2=self.robots[2], enemy1=self.enemy_robots[0],
-                                                        enemy2=self.enemy_robots[1],
-                                                        enemy3=self.enemy_robots[2])
+                action.defender_penalty_spin_proj_vel(self.robots[0], self.ball, left_side=not self.mray)
             case 'direct':
                 action.defender_penalty(self.robots[0], self.ball, left_side=not self.mray)
             case _:

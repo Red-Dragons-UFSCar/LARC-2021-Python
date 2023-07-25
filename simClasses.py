@@ -105,8 +105,8 @@ class Obstacle(KinematicBody):
         distances.extend(enemies)
         distances.extend(friends)
 
-        distances.sort(key=lambda a: self.robot.calculate_distance(a))
-        obstacle = distances[0]
+        obstacle = min(distances, key=lambda a: self.robot.calculate_distance(a))
+
         self.set_obst(obstacle.get_coordinates().X, obstacle.get_coordinates().Y, obstacle.get_coordinates().rotation)
 
     def update2(self, ball, friends, enemies):

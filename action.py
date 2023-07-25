@@ -198,7 +198,8 @@ def calculate_arrival_angle_defender_spin(ball: simClasses.Ball, left_side):
     return arrival_angle
 
 
-def screen_out_ball(robot: simClasses.Robot, ball: simClasses.KinematicBody, static_point, left_side=True, upper_lim=200,
+def screen_out_ball(robot: simClasses.Robot, ball: simClasses.KinematicBody, static_point, left_side=True,
+                    upper_lim=200,
                     lower_lim=0):
     """Input: Robot object, ball object, point to project the ball, side of field (True = Left, False = Right), moviment limits(upper and lower), other robots objects (2 friend)
     Description: Project ball Y position to the selected X point.
@@ -524,26 +525,19 @@ def attack_penalty(robot):
     else:
         girar(robot, -10, -10)
 
+
 def attacker_penalty_switch(robot):
     girar(robot, -10, -10)
 
 
-def attacker_penalty_direct(robot, ball, left_side=True):
+def attacker_penalty_direct(robot: simClasses.Robot):
     """Input: Robot object, ball object, side of field (True = Left, False = Right), other robots objects (2 friend, 3 opponents)
     Description: Positions the robot to take the penalty, it is positioned and moves to go towards the corners of the goal.
     Output: None"""
-    friends = robot.get_friends()
-    arrival_angle = calculate_arrival_angle_attack_penalty(left_side, robot)
-
-    #robot.target.set_coordinates(ball._coordinates.X, ball._coordinates.Y, arrival_angle)
-    #linear_velocity, angular_velocity = calculate_velocities_defender(robot)
-
     if robot.teamYellow:
-        girar(robot,40,30)
+        girar(robot, 100, 100)
     else:
-        girar(robot,40,30)
-
-    #robot.sim_set_vel(linear_velocity, angular_velocity)
+        girar(robot, 100, 100)
 
 
 def calculate_arrival_angle_attack_penalty(left_side, robot):
@@ -561,8 +555,27 @@ def calculate_arrival_angle_attack_penalty(left_side, robot):
     return arrival_angle
 
 
-def defender_penalty_spin_proj_vel(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None):
+def attacker_penalty_block(robot, robot2, ball):
+    ball_coordinates = ball.get_coordinates()
+    robot1_coordinates = robot.get_coordinates()
+    robot2_coordinates = robot2.get_coordinates()
+    if ball_coordinates.Y > 72 or ball_coordinates.Y < 58:
+        if robot1_coordinates.Y > 65:
+            robot2.sim_set_vel(0, 0)
+        else:
+            attacker_penalty_direct(robot2)
 
+        attacker_penalty_direct(robot)
+
+
+def attacker_penalty_new_spin(robot):
+    if not robot.teamYellow:
+        girar(robot, 100, -100)
+    else:
+        girar(robot, -100, 100)
+
+
+def defender_penalty_spin_proj_vel(robot, ball, left_side=True):
     if abs(ball._velocities.X) < 0.01:
         v = 0
         w = 0
@@ -574,7 +587,7 @@ def defender_penalty_spin_proj_vel(robot, ball, left_side=True, friend1=None, fr
 
         if left_side:
             dx = ball._coordinates.X - 14
-            dy = dx*tan(phi)
+            dy = dx * tan(phi)
 
             proj_y = ball._coordinates.Y + dy
             proj_x = 14
@@ -583,13 +596,13 @@ def defender_penalty_spin_proj_vel(robot, ball, left_side=True, friend1=None, fr
             elif proj_y < 50:
                 proj_y = 50
             if proj_y > robot._coordinates.Y:
-                arrival_theta = pi/2
+                arrival_theta = pi / 2
             else:
-                arrival_theta = -pi/2
+                arrival_theta = -pi / 2
 
         else:
             dx = 156 - ball._coordinates.X
-            dy = dx*tan(theta)
+            dy = dx * tan(theta)
 
             proj_y = ball._coordinates.Y + dy
             proj_x = 156
@@ -598,9 +611,9 @@ def defender_penalty_spin_proj_vel(robot, ball, left_side=True, friend1=None, fr
             elif proj_y < 50:
                 proj_y = 50
             if proj_y > robot._coordinates.Y:
-                arrival_theta = pi/2
+                arrival_theta = pi / 2
             else:
-                arrival_theta = -pi/2
+                arrival_theta = -pi / 2
 
         robot.target.set_coordinates(proj_x, proj_y, arrival_theta)
 
@@ -622,8 +635,9 @@ def defender_penalty_spin_proj_vel(robot, ball, left_side=True, friend1=None, fr
 
     robot.sim_set_vel(v, w)
 
+
 def play_follower(robot_follower: simClasses.Robot, robot_leader: simClasses.Robot, ball: simClasses.Ball,
-             robot0: simClasses.Robot = None):
+                  robot0: simClasses.Robot = None):
     """Input: Robot object (All team members), ball object, other robots objects (3 opponents)
     Description: Defines the position of follower robot based on the leader position.
     Output: None"""
@@ -647,10 +661,12 @@ def play_follower(robot_follower: simClasses.Robot, robot_leader: simClasses.Rob
     robot_follower.sim_set_vel(linear_velocity, angular_velocity)
 
 
-def calculate_follower_velocities(robot0: simClasses.Robot, robot_follower: simClasses.Robot, robot_leader: simClasses.Robot):
+def calculate_follower_velocities(robot0: simClasses.Robot, robot_follower: simClasses.Robot,
+                                  robot_leader: simClasses.Robot):
     enemies = robot_follower.get_enemies()
     if robot0 is None and enemies[0] is None and enemies[1] is None and enemies[2] is None:
-        linear_velocity, angular_velocity = univec_controller(robot_follower, robot_follower.target, avoid_obst=False, n=16, d=2)
+        linear_velocity, angular_velocity = univec_controller(robot_follower, robot_follower.target, avoid_obst=False,
+                                                              n=16, d=2)
     else:  # Both friends to avoid
         robot_follower.obst.update()
         linear_velocity, angular_velocity = univec_controller(robot_follower, robot_follower.target, True,

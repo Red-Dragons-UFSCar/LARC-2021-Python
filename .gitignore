@@ -79,3 +79,4 @@ __pycache__
 .idea/inspectionProfiles/profiles_settings.xml
 .idea/other.xml
 .idea/.name
+/modelo.py
