@@ -1,6 +1,7 @@
 from numpy import cos,sin,arctan2,sqrt,sign,pi,delete,append,array,angle, deg2rad
 from behaviours import Univector
 from corners import targetInCorner, robotLockedCorner
+from face_selector import sideDecider_goalkeeper
 
 #% Function to approximate phi_v
 def approx(robot,target,avoidObst=True,obst=None,n=8,d=2, fieldIsHiperbolic=True):
@@ -37,6 +38,12 @@ def univecController(robot,target,avoidObst=True,obst=None,n=8,d=2,stopWhenArriv
     dl=0.000001          #? Constant to approximate phi_v
     k_w=1.8                #? Feedback constant (k_w=1 means no gain)
     k_p=1                #? Feedback constant (k_p=1 means no gain)
+
+    robotPos = (robot.xPos, robot.yPos)
+    targetPos = (target.xPos, target.yPos)
+
+    if robot.index == 0:
+        robot.face = sideDecider_goalkeeper(robotPos, robot.theta, targetPos, robot.index)
 
     #% Correção de ângulo caso o robô esteja jogando com a face de trás
     if robot.face == -1:
