@@ -252,19 +252,6 @@ class Strategy:
         if sqrt((self.ball.xPos-self.robot4.xPos)**2+(self.ball.yPos-self.robot4.yPos)**2) > 30:
             self.penaltyOffensive = False
 
-    def penaltyReto(self):
-        '''Strategy to convert penalty offensive situations'''
-        action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray)
-        action.screenOutBall(self.robot1, self.ball, 90, leftSide=not self.mray, upperLim=85, lowerLim=5)
-
-        action.girar(self.robot4, -200, 200)
-
-        action.shoot_penalty(self.robot3, self.ball, leftSide=not self.mray)
-
-
-        if sqrt((self.ball.xPos-self.robot4.xPos)**2+(self.ball.yPos-self.robot4.yPos)**2) > 30:
-            self.penaltyOffensive = False
-
     def basicStgDef2(self):
         action.defesa_atacantes(self.ball, self.robot0, self.robot1, self.robot2, self.robot3, self.robot4, 
                                 self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4)
