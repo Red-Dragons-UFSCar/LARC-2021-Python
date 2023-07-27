@@ -42,8 +42,8 @@ def univecController(robot,target,avoidObst=True,obst=None,n=8,d=2,stopWhenArriv
     robotPos = (robot.xPos, robot.yPos)
     targetPos = (target.xPos, target.yPos)
 
-    if robot.index == 0:
-        robot.face = sideDecider_goalkeeper(robotPos, robot.theta, targetPos, robot.index)
+    #if robot.index == 0:
+    #    robot.face = sideDecider_goalkeeper(robotPos, robot.theta, targetPos, robot.index)
 
     #% Correção de ângulo caso o robô esteja jogando com a face de trás
     if robot.face == -1:
