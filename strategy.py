@@ -246,8 +246,21 @@ class Strategy:
         '''Strategy to convert penalty offensive situations'''
         action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray)
         action.screenOutBall(self.robot1, self.ball, 90, leftSide=not self.mray, upperLim=85, lowerLim=5)
-
+        action.shoot_penalty(self.robot3, self.ball, leftSide=not self.mray)
         action.shoot_penalty(self.robot4, self.ball, leftSide=not self.mray)
+
+        if sqrt((self.ball.xPos-self.robot4.xPos)**2+(self.ball.yPos-self.robot4.yPos)**2) > 30:
+            self.penaltyOffensive = False
+
+    def penaltyReto(self):
+        '''Strategy to convert penalty offensive situations'''
+        action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray)
+        action.screenOutBall(self.robot1, self.ball, 90, leftSide=not self.mray, upperLim=85, lowerLim=5)
+
+        action.girar(self.robot4, -200, 200)
+
+        action.shoot_penalty(self.robot3, self.ball, leftSide=not self.mray)
+
 
         if sqrt((self.ball.xPos-self.robot4.xPos)**2+(self.ball.yPos-self.robot4.yPos)**2) > 30:
             self.penaltyOffensive = False
