@@ -636,15 +636,15 @@ def defesa_atacantes(ball, robot0, robot1, robot2, robot3, robot4, robot_enemy_0
     #verifica_area(robot3, True)
     #verifica_area(robot3, False)
 
-    if robot0.teamYellow and ball.xPos > 180 and ball.yPos > 35 and ball.yPos < 145:
+    if robot0.teamYellow and ball.xPos > 180 and ball.yPos > 50 and ball.yPos < 130:
         atacante_idle(robot3, True, True, ball)
         atacante_idle(robot4, False, True, ball)
     
-    if (not robot0.teamYellow) and ball.xPos < 70 and ball.yPos > 35 and ball.yPos < 145:
+    if (not robot0.teamYellow) and ball.xPos < 70 and ball.yPos > 50 and ball.yPos < 130:
         atacante_idle(robot3, True, True, ball)
         atacante_idle(robot4, False, True, ball)
     
-    if robot0.teamYellow and (ball.xPos < 180 or ball.yPos < 35 or ball.yPos > 145):
+    if robot0.teamYellow and (ball.xPos < 180 or ball.yPos < 50 or ball.yPos > 130):
         leaderSelector(robot3, robot4, ball)
 
         if robot3.isLeader:
@@ -654,7 +654,7 @@ def defesa_atacantes(ball, robot0, robot1, robot2, robot3, robot4, robot_enemy_0
             defenderSpin(robot4, ball, not robot3.teamYellow, robot1, robot2, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
             follower(robot3, robot4, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
     
-    if (not robot0.teamYellow) and (ball.xPos > 70 or ball.yPos < 35 or ball.yPos > 145):
+    if (not robot0.teamYellow) and (ball.xPos > 70 or ball.yPos < 50 or ball.yPos > 130):
         leaderSelector(robot3, robot4, ball)
 
         if robot3.isLeader:
@@ -722,11 +722,11 @@ def circumferencePointProjectionSolo(ballTheta,r,xgoal, ygoal):
 def circumferencePointProjection(robotTheta1, robotTheta2, ballTheta,r,xgoal, ygoal):
     #Verifica qual melhor formação para os dois robôs
     if robotTheta1 > robotTheta2:
-        ballTheta1 = ballTheta + 7*pi/180 # + 7 graus
-        ballTheta2 = ballTheta - 7*pi/180 # - 7 graus
+        ballTheta1 = ballTheta + 10*pi/180 # + 10 graus
+        ballTheta2 = ballTheta - 10*pi/180 # - 10 graus
     else:
-        ballTheta1 = ballTheta - 7*pi/180 # + 7 graus
-        ballTheta2 = ballTheta + 7*pi/180 # - 7 graus
+        ballTheta1 = ballTheta - 10*pi/180 # + 10 graus
+        ballTheta2 = ballTheta + 10*pi/180 # - 10 graus
 
     #print("robotTheta1 = %.2f" %robotTheta1 +" robotTheta2 = %.2f" %robotTheta2)
 
@@ -735,11 +735,6 @@ def circumferencePointProjection(robotTheta1, robotTheta2, ballTheta,r,xgoal, yg
     ytarget1 = ygoal + r * sin(ballTheta1)
     xtarget2 = xgoal + r * cos(ballTheta2)
     ytarget2 = ygoal + r * sin(ballTheta2)
-
-    xtarget1 = 15 if xtarget1 < 15 else xtarget1
-    xtarget2 = 15 if xtarget2 < 15 else xtarget2
-    xtarget1 = 235 if xtarget1 > 235 else xtarget1
-    xtarget2 = 235 if xtarget2 > 235 else xtarget2
 
     # Retorna as coordenadas da projeção
     return xtarget1, ytarget1, xtarget2, ytarget2
@@ -750,13 +745,12 @@ def adjustArrivalThetaWall(ballTheta, leftSide, robotTheta):
     else:
         arrivalTheta = ballTheta + pi/2
 
-    arrivalTheta = 3.10 if arrivalTheta > 3.10 and not leftSide else arrivalTheta
-    arrivalTheta = -3.10 if arrivalTheta < -3.10 and not leftSide else arrivalTheta
 
     return arrivalTheta
 
 def defenderWall(robot1, robot2, ball,leftSide=True):
     xgoal = 15 if leftSide else 235
+    raio = 30
 
     ballTheta=arctan2(ball.yPos-90,ball.xPos-xgoal)
     robotTheta1=arctan2(robot1.yPos-90,robot1.xPos-xgoal)
@@ -770,7 +764,7 @@ def defenderWall(robot1, robot2, ball,leftSide=True):
         if robotTheta2 < 0:
             robotTheta2 += 2*pi
 
-    xtarget1, ytarget1, xtarget2, ytarget2 = circumferencePointProjection(robotTheta1, robotTheta2, ballTheta, 40, xgoal, 90)
+    xtarget1, ytarget1, xtarget2, ytarget2 = circumferencePointProjection(robotTheta1, robotTheta2, ballTheta, raio, xgoal, 90)
 
     arrivalTheta1 = adjustArrivalThetaWall(ballTheta, ball, robotTheta1)
     arrivalTheta2 = adjustArrivalThetaWall(ballTheta, ball, robotTheta2)
