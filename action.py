@@ -636,15 +636,15 @@ def defesa_atacantes(ball, robot0, robot1, robot2, robot3, robot4, robot_enemy_0
     #verifica_area(robot3, True)
     #verifica_area(robot3, False)
 
-    if robot0.teamYellow and ball.xPos > 180 and ball.yPos > 50 and ball.yPos < 130:
+    if robot0.teamYellow and ball.xPos > 180 and ball.yPos > 35 and ball.yPos < 145:
         atacante_idle(robot3, True, True, ball)
         atacante_idle(robot4, False, True, ball)
     
-    if (not robot0.teamYellow) and ball.xPos < 70 and ball.yPos > 50 and ball.yPos < 130:
+    if (not robot0.teamYellow) and ball.xPos < 70 and ball.yPos > 35 and ball.yPos < 145:
         atacante_idle(robot3, True, True, ball)
         atacante_idle(robot4, False, True, ball)
     
-    if robot0.teamYellow and (ball.xPos < 180 or ball.yPos < 50 or ball.yPos > 130):
+    if robot0.teamYellow and (ball.xPos < 180 or ball.yPos < 35 or ball.yPos > 145):
         leaderSelector(robot3, robot4, ball)
 
         if robot3.isLeader:
@@ -654,7 +654,7 @@ def defesa_atacantes(ball, robot0, robot1, robot2, robot3, robot4, robot_enemy_0
             defenderSpin(robot4, ball, not robot3.teamYellow, robot1, robot2, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
             follower(robot3, robot4, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
     
-    if (not robot0.teamYellow) and (ball.xPos > 70 or ball.yPos < 50 or ball.yPos > 130):
+    if (not robot0.teamYellow) and (ball.xPos > 70 or ball.yPos < 35 or ball.yPos > 145):
         leaderSelector(robot3, robot4, ball)
 
         if robot3.isLeader:
