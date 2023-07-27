@@ -2,11 +2,11 @@ import time
 import argparse
 
 import fouls
-from bridge import (Actuator, Replacer, Vision, Referee)
+from bridge import (Actuator, Replacer, Vision)
 from simClasses import *
 from strategy import *
 
-from vss_communication import StrategyControl
+from vss_communication import StrategyControl, Referee
 
 import action
 
@@ -48,15 +48,15 @@ if __name__ == "__main__":
     else:
         mray = False
 
-
     # Initialize all clients (simulation)
     actuator = Actuator(mray, "127.0.0.1", 20011)
     # replacement = Replacer(mray, "224.5.23.2", 10004)
     # vision = Vision(mray, "224.0.0.1", 10002)
-    referee = Referee(mray, "224.5.23.2", 10003)
+    #referee = Referee(mray, "224.5.23.2", 10003)
+    referee = Referee("224.5.23.2", 10060, logger=False)
 
     # Intialize all clients (real)
-    client_control = StrategyControl()
+    client_control = StrategyControl(port=20020)
 
     # Initialize all  objects
     robots = []
@@ -90,6 +90,9 @@ if __name__ == "__main__":
         client_control.update()
         field, errorCode = client_control.get_data_Red()
 
+        referee.update()
+        data_ref, errorCodeRef = referee.get_data()
+
         #'''
         if errorCode == 0:
             data_our_bot = field["our_bots"]  # Save data from allied robots
@@ -113,11 +116,21 @@ if __name__ == "__main__":
             
             #action.shoot(robots[2], ball)
             #action.rectangle(robots[2])
-            #action.screen_out_ball(robots[0], ball, 130, True, upper_lim = 90, lower_lim= 50)
-            action.screen_out_ball(robots[2], ball, 110, True, upper_lim = 100, lower_lim= 30)
+            #action.screen_out_ball(robots[2], ball, 110, True, upper_lim = 100, lower_lim= 30)
             #action.defender_spin(robots[2], ball)
             #'''
+            action.rectangle(robots[1])
             # synchronize code execution based on runtime and the camera FPS
+            if data_ref["foul"] == 6:
+                print("GAME ON")
+                #strategy.coach2()
+                #action.screen_out_ball(robots[0], ball, 40, True, upper_lim = 90, lower_lim= 50)
+                action.rectangle(robots[1])
+            else:
+                print("GAME OFF")
+                #robots[0].sim_set_vel(0, 0)
+                #robots[1].sim_set_vel(0, 0)
+                #robots[2].sim_set_vel(0, 0)
             if v >= 30:
                 incremento = incremento*(-1)
             elif v <= -30:

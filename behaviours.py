@@ -7,7 +7,7 @@ class Univector:
 
     def __init__(self):
         self.d_e = 11#6        # Predefined radius that decides the size of the spiral.
-        self.k_r = 11#3        # Smoothing constant for vector field
+        self.k_r = 6#3        # Smoothing constant for vector field
         self.delta = 5#3.5    # Variance gaussian parameter
         self.k_o = 0.5      # Proportional constant of obstacle velocity
         self.d_min = 3.5    # Minimum distance what the field becomes pure

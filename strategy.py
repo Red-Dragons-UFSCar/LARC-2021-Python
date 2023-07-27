@@ -216,20 +216,32 @@ class Strategy:
         Output: None."""
         if not self.mray:
             if self.ball._coordinates.X < 40 and 30 < self.ball._coordinates.Y < 110:  # If the ball has inside of defense area
-                action.defender_penalty(self.robots[0], self.ball,
+                if self.robots[0].calculate_distance(self.ball)<12:
+                    if self.robots[0]._coordinates.Y < self.ball._coordinates.Y:
+                        self.robots[0].sim_set_vel(0, -20)
+                    else:
+                        self.robots[0].sim_set_vel(0, 20)
+                else:
+                    action.defender_penalty(self.robots[0], self.ball,
                                              left_side=not self.mray)  # Goalkeeper move ball away
                 self.two_attackers()
             else:
                 self.two_attackers()
-                action.screen_out_ball(self.robots[0], self.ball, 16, left_side=not self.mray, upper_lim=84,
+                action.screen_out_ball(self.robots[0], self.ball, 22, left_side=not self.mray, upper_lim=84,
                                        lower_lim=42)  # Goalkeeper stays on the goal
         else:  # The same ideia, but for other team
             if self.ball._coordinates.X > 130 and 30 < self.ball._coordinates.Y < 110:
-                action.defender_penalty(self.robots[0], self.ball, left_side=not self.mray)
+                if self.robots[0].calculate_distance(self.ball)<12:
+                    if self.robots[0]._coordinates.Y > self.ball._coordinates.Y:
+                        self.robots[0].sim_set_vel(0, -20)
+                    else:
+                        self.robots[0].sim_set_vel(0, 20)
+                else:
+                    action.defender_penalty(self.robots[0], self.ball, left_side=not self.mray)
                 self.two_attackers()
             else:
                 self.two_attackers()
-                action.screen_out_ball(self.robots[0], self.ball, 16, left_side=not self.mray, upper_lim=84,
+                action.screen_out_ball(self.robots[0], self.ball, 22, left_side=not self.mray, upper_lim=84,
                                        lower_lim=42)
 
         # Verification if robot has stopped

@@ -3,6 +3,7 @@ from numpy import cos, sin, arctan2, sqrt, sign, pi, delete, append, array
 from behaviours import Univector
 from corners import handle_edge_behaviour
 
+from face_selector import sideDecider_goalkeeper
 
 def approx(robot, target, avoid_obst=True, obst=None, n=8, d=2, field_is_hiperbolic=True):
     """Input: Robot object, Target object, Flag to activate Obstacle Avoidance, Obstacle object,
@@ -45,7 +46,7 @@ def calculate_phi_v(robot, target):
     return phi_V
 
 def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_when_arrive=False, double_face=True,
-                      field_is_hiperbolic=True):
+                      field_is_hiperbolic=True, screen_out=False):
     """Input: Robot object, Target object, Flag to activate Obstacle Avoidance, Obstacle object, Constants n and d of Univector,
        Flag to activate deceleration when approaching target, Flag to activate face swap, Flag to activate Hiperbolic Field
     Description: Function to control the robot with or without obstacle avoidance
@@ -87,7 +88,7 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
                     cos(stp_theta - des_theta)) / dl
     #phi_v = calculate_phi_v(robot, target)
     phi_v = 0
-    theta_e = which_face(robot, target, des_theta, double_face) # Angle error
+    theta_e = which_face(robot, target, des_theta, double_face, screen_out=screen_out) # Angle error
 
     # Controller velocities v1, v2, v3 estimation
 
@@ -125,7 +126,7 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
 
 
 # TODO #3 Check the need for flagTrocaFace - lock the face swap in obstacle avoidance
-def which_face(robot, target, des_theta, double_face):
+def which_face(robot, target, des_theta, double_face, screen_out=False):
     """Input: Robot object, Target object, Desired angle, Flag to activate face swap
     Description: Defines de better face to robot movement and estimate angle error
     Output: theta_e -> Angle error (float)"""
@@ -135,7 +136,8 @@ def which_face(robot, target, des_theta, double_face):
         theta_e = arctan2(sin(des_theta - robot_coordinates.rotation), cos(des_theta - robot_coordinates.rotation))  # Error estimation with current face
     else:
         theta_e = arctan2(sin(des_theta - robot_coordinates.rotation + pi), cos(des_theta - robot_coordinates.rotation + pi))  # Error estimation with current face
-
+    if robot.index == 0:
+        robot.flagKeepFace = True
     if (abs(theta_e) > pi / 2 + pi / 12) and (
             not robot.flagTrocaFace) and double_face:  # If the angle is convenient for face swap
         if robot.flagKeepFace:
@@ -149,6 +151,13 @@ def which_face(robot, target, des_theta, double_face):
                 robot.flagKeepFace = True
             else:
                 robot.contKeepFace += 1
+    if screen_out:
+        coordinates = robot.get_coordinates()
+        RobotPos = (coordinates.X, coordinates.Y)
+        angle = coordinates.rotation
+        coordinatesTarget = robot.target.get_coordinates()
+        TargetPos = (coordinatesTarget.X, coordinatesTarget.Y)
+        robot.face = sideDecider_goalkeeper(RobotPos, angle, TargetPos, robot.index)
     return theta_e
 
 def pid(robot, des_theta):
@@ -180,10 +189,23 @@ def pid(robot, des_theta):
     return v, w
 
 def pid3(robot, des_theta):
+    #Controlador v=20
     Kp = 1.6#1.6
-    Kd = 0.05
+    Kd = 0.1#0.05
     Ki = 0.0
     T0 = 1/60
+
+    # Controlador v=25
+    #Kp = 1.3
+    #Kd = 0.075
+    #Ki = 0.0
+    #T0 = 1/60
+
+    # Controlador v=30
+    #Kp = 1.4
+    #Kd = 0.1
+    #Ki = 0.0
+    #T0 = 1/60
 
     q0 = Kp + Kd/T0 + Ki*T0
     q1 = -Kp -2*Kd/T0
@@ -214,7 +236,7 @@ def pid3(robot, des_theta):
     return v, w
 
 def pid2(robot, des_theta):
-    Kp = 10
+    Kp = 8
     Ki = 0
     Kd = 2
 

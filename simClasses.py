@@ -197,9 +197,9 @@ class Robot(KinematicBody):
         self.vL = 0  # ? Left wheel velocity (cm/s) => updated on simClasses.py -> simSetVel()
         self.vR = 0  # ? Right wheel velocity (cm/s) =>  updated on simClasses.py -> simSetVel()
         if self.index == 0:  # ! Robot max velocity (cm/s)
-            self.vMax = 30  # 35
+            self.vMax = 20  # 35
         else:
-            self.vMax = 30
+            self.vMax = 20
         #self.rMax = 3 * self.vMax  # ! Robot max rotation velocity (rad*cm/s)
         self.rMax = 0.8*20  # ! Robot max rotation velocity (rad*cm/s)
         self.L = 7.5  # ? Base length of the robot (cm)

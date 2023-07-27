@@ -128,7 +128,7 @@ def check_forward_advance_possible(ball: simClasses.Ball, distance_ball_robot, r
                 y_projection = robot_coordinates.Y + distance_ball_robot * sin(robot._coordinates.rotation)
                 distance_ball_projection = sqrt(
                     (ball_coordinates.X - x_projection) ** 2 + (ball_coordinates.Y - y_projection) ** 2)
-                if (robot.index == 2 or robot.index == 1) and (distance_ball_projection < 20):
+                if (robot.index == 2 or robot.index == 1) and (distance_ball_projection < 15):
                     print("zuum")
                     return True
 
@@ -235,11 +235,11 @@ def calculate_velocities_screenout(robot: simClasses.Robot):
     friends = robot.get_friends()
     if friends[0] is None and friends[1] is None:  # No friends to avoid
         linear_velocity, angular_velocity = univec_controller(robot, robot.target, avoid_obst=False,
-                                                              stop_when_arrive=True)  # Calculate linear and angular velocity
+                                                              stop_when_arrive=True, screen_out=True)  # Calculate linear and angular velocity
     else:  # Both friends to avoid
         robot.obst.update()
         linear_velocity, angular_velocity = univec_controller(robot, robot.target, True, robot.obst,
-                                                              stop_when_arrive=True)
+                                                              stop_when_arrive=True, screen_out=True)
     return linear_velocity, angular_velocity
 
 
