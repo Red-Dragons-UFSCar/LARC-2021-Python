@@ -750,7 +750,7 @@ def adjustArrivalThetaWall(ballTheta, leftSide, robotTheta):
 
 def defenderWall(robot1, robot2, ball,leftSide=True):
     xgoal = 15 if leftSide else 235
-    raio = 30
+    raio = 32
 
     ballTheta=arctan2(ball.yPos-90,ball.xPos-xgoal)
     robotTheta1=arctan2(robot1.yPos-90,robot1.xPos-xgoal)
