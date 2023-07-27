@@ -26,7 +26,11 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade1 = Entity(x=95, y=45,a=0, index=1)
                 entidade2 = Entity(x=95, y=145,a=0, index=2)
                 entidade3 = Entity(x=110, y=95,a=0, index=3)
-                entidade4 = Entity(x=190.5, y=90,a=335, index=4)
+                rand = random.random()
+                if rand > 1/2:
+                    entidade4 = Entity(x=190.5, y=90,a=335, index=4)
+                else:
+                    entidade4 = Entity(x=189.5, y=90,a=25, index=4)
                 """r = random.uniform(0,1)
                 if r <0.5:
                     entidade4 = Entity(x=180, y=70,a=50, index=4)
@@ -47,7 +51,7 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade1 = Entity(x=53.96, y=99.03,a=-70.01, index=1)
                 entidade2 = Entity(x=50.66, y=108.10,a=-70.01, index=2)
                 entidade3 = Entity(x=155, y=150,a=0, index=3)
-                entidade4 = Entity(x=145, y=80,a=0, index=4)
+                entidade4 = Entity(x=70, y=150,a=-25, index=4)
             elif ref_data["quad"] == 2:
                 entidade0 = Entity(x=22, y=90,a=0, index=0)
                 entidade1 = Entity(x=45.38, y=116.01,a=-42.51, index=1)
@@ -65,7 +69,7 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade1 = Entity(x=50.66, y=71.89,a=-109.98, index=1)
                 entidade2 = Entity(x=53.96, y=80.96,a=-109.98, index=2)
                 entidade3 = Entity(x=155, y=30,a=0, index=3)
-                entidade4 = Entity(x=145, y=100,a=0, index=4)
+                entidade4 = Entity(x=70, y=30,a=25, index=4)
             replacement.place_all([entidade0, entidade1, entidade2, entidade3, entidade4])
 
         elif ref_data["foul"] == 4:
@@ -92,6 +96,11 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade2 = Entity(x=155, y=145,a=180, index=2)
                 entidade3 = Entity(x=135, y=95,a=180, index=3)
                 entidade4 = Entity(x=59.5, y=90,a=205, index=4)
+                rand = random.random()
+                if rand > 1/2:
+                    entidade4 = Entity(x=59.5, y=90,a=205, index=4)
+                else:
+                    entidade4 = Entity(x=59.5, y=90,a=155, index=4)
                 """r = random.uniform(0,1)
                 if r <0.5:
                     entidade4 = Entity(x=70, y=70,a=130, index=4)
@@ -123,13 +132,13 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade1 = Entity(x=199.33, y=108.10,a=250.01, index=1)
                 entidade2 = Entity(x=196.03, y=99.03,a=250.01, index=2)
                 entidade3 = Entity(x=95, y=150,a=180, index=3)
-                entidade4 = Entity(x=105, y=80,a=180, index=4)
+                entidade4 = Entity(x=180, y=150,a=205, index=4)
             elif ref_data["quad"] == 3:
                 entidade0 = Entity(x=228, y=90,a=0, index=0)
                 entidade1 = Entity(x=196.03, y=80.96,a=289.98, index=1)
                 entidade2 = Entity(x=199.33, y=71.89,a=289.98, index=2)
                 entidade3 = Entity(x=95, y=30,a=0, index=3)
-                entidade4 = Entity(x=105, y=100,a=0, index=4)
+                entidade4 = Entity(x=180, y=30,a=155, index=4)
             elif ref_data["quad"] == 4:
                 entidade0 = Entity(x=228, y=90,a=0, index=0)
                 entidade1 = Entity(x=204.61, y=63.98,a=317.48, index=1)
