@@ -636,13 +636,18 @@ def defesa_atacantes(ball, robot0, robot1, robot2, robot3, robot4, robot_enemy_0
     #verifica_area(robot3, True)
     #verifica_area(robot3, False)
 
+    if robot3.yPos > robot4.yPos:
+        up = True
+    else:
+        up = False
+
     if robot0.teamYellow and ball.xPos > 180 and ball.yPos > 50 and ball.yPos < 130:
-        atacante_idle(robot3, True, True, ball)
-        atacante_idle(robot4, False, True, ball)
+        atacante_idle(robot3, up, True, ball)
+        atacante_idle(robot4, not up, True, ball)
     
     if (not robot0.teamYellow) and ball.xPos < 70 and ball.yPos > 50 and ball.yPos < 130:
-        atacante_idle(robot3, True, True, ball)
-        atacante_idle(robot4, False, True, ball)
+        atacante_idle(robot3, up, True, ball)
+        atacante_idle(robot4, not up, True, ball)
     
     if robot0.teamYellow and (ball.xPos < 180 or ball.yPos < 50 or ball.yPos > 130):
         leaderSelector(robot3, robot4, ball)
