@@ -878,35 +878,13 @@ def cruzamento(ball, robot2, robot3, alvo):
 
 def breakWall(robot, ball, quadrant, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None, enemy4=None, enemy5=None, leftSide=True):
     r = 30
-    if quadrant == 1:
-        xtarget = 235 + r * cos(3*pi/4)
-        ytarget = 90 + r * sin(3*pi/4)      
-        arrivalTheta = arctan2(ytarget - 90, xtarget - 235)
-        robot.obst.update2(robot, ball, friend1, friend2, enemy1, enemy2, enemy3, enemy4, enemy5)
-    elif quadrant == 2:
-        xtarget = 15 + r * cos(pi/4)
-        ytarget = 90 + r * sin(pi/4)      
-        arrivalTheta = arctan2(ytarget - 90, xtarget - 15)
-        robot.obst.update2(robot, ball, friend1, friend2, enemy1, enemy2, enemy3, enemy4, enemy5)
-    elif quadrant == 3:
-        xtarget = 15 + r * cos(7*pi/4)
-        ytarget = 90 + r * sin(7*pi/4)      
-        arrivalTheta = arctan2(ytarget - 90, xtarget - 15)
-        robot.obst.update2(robot, ball, friend1, friend2, enemy1, enemy2, enemy3, enemy4, enemy5)
-    elif quadrant == 4:
-        xtarget = 235 + r * cos(5*pi/4)
-        ytarget = 90 + r * sin(5*pi/4)      
-        arrivalTheta = arctan2(ytarget - 90, xtarget - 235)
-        robot.obst.update2(robot, ball, friend1, friend2, enemy1, enemy2, enemy3, enemy4, enemy5)
-    elif quadrant == 0:
-        xgoal = 235 if leftSide else 15
-        side = 1 if leftSide else 0
-        xtarget = xgoal + r * cos(pi*side)
-        ytarget = 90 + r * sin(pi*side)      
-        arrivalTheta = 90
-        robot.obst.update2(robot, ball, friend1, friend2, enemy1, enemy2, enemy3, enemy4, enemy5)
+    xgoal = 235 if leftSide else 15
+    side = 1 if leftSide else 0
+    xtarget = xgoal + r * cos(pi*side)
+    ytarget = 90 + r * sin(pi*side)      
+    arrivalTheta = 90
+    robot.obst.update2(robot, ball, friend1, friend2, enemy1, enemy2, enemy3, enemy4, enemy5)
         
-    print("~Bloqueando defesa no quadrante " + str(quadrant))
     robot.target.update(xtarget, ytarget, arrivalTheta)
     v,w=univecController(robot,robot.target,True, robot.obst, doubleFace=True, stopWhenArrive = True)
     robot.simSetVel(v,w)

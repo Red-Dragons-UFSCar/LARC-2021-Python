@@ -174,18 +174,7 @@ class Strategy:
         action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
         action.defenderWall(self.robot1, self.robot2,self.ball, leftSide=not self.mray)
 
-    def breakWallStgAtt(self):            
-        if self.mray and self.ball.xPos < 80 and self.ball.yPos < 35 and self.quadrant != 2 or self.quadrant == 3:
-            self.quadrant = 3
-        if self.mray and self.ball.xPos < 80 and self.ball.yPos > 145 and self.quadrant != 3 or self.quadrant == 2:
-            self.quadrant = 2
-        if not self.mray and self.ball.xPos > 170 and self.ball.yPos < 35 and self.quadrant != 1 or self.quadrant == 4:
-            self.quadrant = 4
-        if not self.mray and self.ball.xPos > 170 and self.ball.yPos > 145 and self.quadrant != 4 or self.quadrant == 1:
-            self.quadrant = 1
-        if not self.mray and (self.ball.xPos <= 170 or self.ball.yPos <= 145 or self.ball.yPos >= 35) or self.mray and (self.ball.xPos > 80 or self.ball.yPos >= 35 or self.ball.yPos <= 145) or self.quadrant == 0:
-            self.quadrant = 0
-        
+    def breakWallStgAtt(self):           
         if not self.mray and self.ball.xPos > 205 and self.ball.yPos > 65 and self.ball.yPos < 115 or self.mray and self.ball.xPos < 45 and self.ball.yPos > 65 and self.ball.yPos < 115:
             action.shoot(self.robot4, self.ball, leftSide=not self.mray)
         else:
