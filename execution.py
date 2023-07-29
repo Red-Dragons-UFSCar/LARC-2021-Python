@@ -5,6 +5,8 @@ from corners import handle_edge_behaviour
 
 from face_selector import sideDecider_goalkeeper
 
+import action
+
 def approx(robot, target, avoid_obst=True, obst=None, n=8, d=2, field_is_hiperbolic=True):
     """Input: Robot object, Target object, Flag to activate Obstacle Avoidance, Obstacle object,
        Constants n and d of Univector, Flag to activate Hiperbolic Field
@@ -53,7 +55,6 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
     Output: v -> Linear Velocity (float)
         w -> Angular Velocity (float)"""
     handle_edge_behaviour(robot)  # Checks if the robot is in some corner
-    #double_face=False
 
     navigate = Univector()  # Defines the navigation algorithm
     dl = 0.000001  # Constant to approximate phi_v
@@ -138,8 +139,9 @@ def which_face(robot, target, des_theta, double_face, screen_out=False):
         theta_e = arctan2(sin(des_theta - robot_coordinates.rotation + pi), cos(des_theta - robot_coordinates.rotation + pi))  # Error estimation with current face
     if robot.index == 0:
         robot.flagKeepFace = True
-    if (abs(theta_e) > pi / 2 + pi / 12) and (
-            not robot.flagTrocaFace) and double_face:  # If the angle is convenient for face swap
+    #screen_out = False
+    if ( (abs(theta_e) > pi / 2 + pi / 12) or action.CornerAvoid(robot)) and (not robot.flagTrocaFace) and double_face:  # If the angle is convenient for face swap
+    #if (  action.CornerAvoid(robot)) and (not robot.flagTrocaFace) and double_face:  # If the angle is convenient for face swap
         if robot.flagKeepFace:
             robot.face = robot.face * (-1)  # Swaps face
             robot_coordinates.rotation = arctan2(sin(robot_coordinates.rotation + pi), cos(robot_coordinates.rotation + pi))  # Angle re-estimate
@@ -174,8 +176,8 @@ def pid(robot, des_theta):
 
     #print("Erro: ", theta_e*180/pi)
     Kp = 1.2
-    Ki = 0.01
-    Kd = 0
+    Ki = 0.02
+    Kd = 0.1
     saturacao = 6
     w = Kp*theta_e + Ki*robot.int_theta_e + Kd*de
     if w > saturacao:
@@ -190,16 +192,16 @@ def pid(robot, des_theta):
 
 def pid3(robot, des_theta):
     #Controlador v=20
-    Kp = 1.6#1.6
-    Kd = 0.1#0.05
-    Ki = 0.0
-    T0 = 1/60
+    #Kp = 1.4#1.4#1.6
+    #Kd = 0.09#0.1#0.05
+    #Ki = 0
+    #T0 = 1/60
 
     # Controlador v=25
-    #Kp = 1.3
-    #Kd = 0.075
-    #Ki = 0.0
-    #T0 = 1/60
+    Kp = 1.0##1.4#1.6
+    Kd = 0.1#0.1#0.05
+    Ki = 0
+    T0 = 1/60
 
     # Controlador v=30
     #Kp = 1.4

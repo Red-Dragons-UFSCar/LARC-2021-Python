@@ -114,12 +114,12 @@ class Strategy:
         Output: None."""
         ball_coordinates = self.ball.get_coordinates()
         if self.mray:
-            if ball_coordinates.X > 85:
+            if ball_coordinates.X > 75:
                 self.stg_def_v2()
             else:
                 self.stg_att_v2()
         else:
-            if ball_coordinates.X > 85:
+            if ball_coordinates.X > 75:
                 self.stg_att_v2()
             else:
                 self.stg_def_v2()
@@ -135,7 +135,7 @@ class Strategy:
             else:
                 self.basic_stg_att()
         else:
-            if ball_coordinates.x > 85:
+            if ball_coordinates.X > 85:
                 self.basic_stg_att()
             else:
                 self.basic_stg_def_2()
@@ -151,7 +151,7 @@ class Strategy:
                 action.defender_penalty(self.robots[0], self.ball, left_side=not self.mray)  # Goalkeeper move ball away
                 action.screen_out_ball(self.robots[1], self.ball, 55, left_side=not self.mray)
             else:
-                action.shoot(self.robots[1], self.ball, left_side=not self.mray)  # Defender chases ball
+                action.defender_spin(self.robots[1], self.ball, left_side=not self.mray)  # Defender chases ball
                 action.screen_out_ball(self.robots[0], self.ball, 14, left_side=not self.mray, upper_lim=81,
                                        lower_lim=42)  # Goalkeeper keeps in goal
         else:  # The same idea for other team
@@ -159,7 +159,7 @@ class Strategy:
                 action.defender_penalty(self.robots[0], self.ball, left_side=not self.mray)
                 action.screen_out_ball(self.robots[1], self.ball, 55, left_side=not self.mray)
             else:
-                action.shoot(self.robots[1], self.ball, left_side=not self.mray)
+                action.defender_spin(self.robots[1], self.ball, left_side=not self.mray)
                 action.screen_out_ball(self.robots[0], self.ball, 14, left_side=not self.mray, upper_lim=81,
                                        lower_lim=42)
 
@@ -173,7 +173,7 @@ class Strategy:
         action.defender_spin(self.robots[2], self.ball, left_side=not self.mray)  # Attacker behavior
         action.screen_out_ball(self.robots[1], self.ball, 60, left_side=not self.mray, upper_lim=120,
                                lower_lim=10)  # Defender behavior
-        action.screen_out_ball(self.robots[0], self.ball, 14, left_side=not self.mray, upper_lim=81,
+        action.screen_out_ball(self.robots[0], self.ball, 22, left_side=not self.mray, upper_lim=81,
                                lower_lim=42)  # Goalkeeper behavior
 
     def basic_stg_def_2(self):
@@ -187,7 +187,7 @@ class Strategy:
                 action.screen_out_ball(self.robots[1], self.ball, 55, left_side=not self.mray)
             else:
                 action.defender_spin(self.robots[1], self.ball, left_side=not self.mray)  # Defender chases ball
-                action.screen_out_ball(self.robots[0], self.ball, 14, left_side=not self.mray, upper_lim=81,
+                action.screen_out_ball(self.robots[0], self.ball, 22, left_side=not self.mray, upper_lim=81,
                                        lower_lim=42)  # Goalkeeper keeps in goal
         else:  # The same idea for other team
             if self.ball._coordinates.X > 130 and 30 < self.ball._coordinates.Y < 110:
@@ -195,7 +195,7 @@ class Strategy:
                 action.screen_out_ball(self.robots[1], self.ball, 55, left_side=not self.mray)
             else:
                 action.defender_spin(self.robots[1], self.ball, left_side=not self.mray)
-                action.screen_out_ball(self.robots[0], self.ball, 14, left_side=not self.mray, upper_lim=81,
+                action.screen_out_ball(self.robots[0], self.ball, 22, left_side=not self.mray, upper_lim=81,
                                        lower_lim=42)
 
         action.screen_out_ball(self.robots[2], self.ball, 110, left_side=not self.mray, upper_lim=120,
@@ -257,7 +257,7 @@ class Strategy:
         Description: Offence part of followleader method, one robot leads chasing ball, another supports, goalkeeper blocks goal.
         Output: None."""
         self.two_attackers()
-        action.screen_out_ball(self.robots[0], self.ball, 16, left_side=not self.mray, upper_lim=84, lower_lim=42)
+        action.screen_out_ball(self.robots[0], self.ball, 22, left_side=not self.mray, upper_lim=84, lower_lim=42)
         self.robots[0].contStopped = 0
 
     def penalty_mode_offensive_spin(self):

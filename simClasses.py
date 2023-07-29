@@ -228,6 +228,8 @@ class Robot(KinematicBody):
         self.flagKeepFace = False
         self.contKeepFace = 0
 
+        self.contWall = 0
+
     def arrive(self):
         """Input: None.
         Description: Returns True if the distance between the target and the robot is less than 3cm - False otherwise

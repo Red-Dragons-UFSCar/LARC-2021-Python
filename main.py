@@ -110,7 +110,7 @@ if __name__ == "__main__":
 
             #print(ball.get_coordinates().X)
             #strategy.handle_game_on()
-            #strategy.coach2()
+            #strategy.coach()
             #action.defender_spin(robots[2], ball, left_side=not mray)  # Attacker behavior
             #robots[2].sim_set_vel(20, 0.5)
             
@@ -119,18 +119,24 @@ if __name__ == "__main__":
             #action.screen_out_ball(robots[2], ball, 110, True, upper_lim = 100, lower_lim= 30)
             #action.defender_spin(robots[2], ball)
             #'''
-            action.rectangle(robots[1])
+            #action.rectangle(robots[1])
+
+            #action.CornerAvoid(robots[2])
             # synchronize code execution based on runtime and the camera FPS
             if data_ref["foul"] == 6:
                 print("GAME ON")
-                #strategy.coach2()
+                strategy.coach()
                 #action.screen_out_ball(robots[0], ball, 40, True, upper_lim = 90, lower_lim= 50)
-                action.rectangle(robots[1])
+                #action.rectangle(robots[2])
+                #action.defender_spin(robots[2], ball)
             else:
                 print("GAME OFF")
-                #robots[0].sim_set_vel(0, 0)
-                #robots[1].sim_set_vel(0, 0)
-                #robots[2].sim_set_vel(0, 0)
+                robots[0].sim_set_vel(0, 0)
+                robots[1].sim_set_vel(0, 0)
+                robots[2].sim_set_vel(0, 0)
+                robots[0].face = 1
+                robots[1].face = 1
+                robots[2].face = 1 
             if v >= 30:
                 incremento = incremento*(-1)
             elif v <= -30:

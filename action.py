@@ -97,7 +97,8 @@ def defender_spin(robot: simClasses.Robot, ball: simClasses.Ball, left_side=True
      for the anemys goal(This is used as a main move strategy for the robots)
     Output: None"""
     ball_coordinates = ball.get_coordinates()
-    arrival_angle = calculate_arrival_angle_defender_spin(ball, left_side)
+    #arrival_angle = calculate_arrival_angle_defender_spin(ball, left_side)
+    arrival_angle = calculate_arrival_angle_alternate(ball, left_side)
     robot.target.set_coordinates(ball_coordinates.X, ball_coordinates.Y, arrival_angle)
 
     linear_velocity, angular_velocity = calculate_velocities(ball, robot)
@@ -111,25 +112,28 @@ def defender_spin(robot: simClasses.Robot, ball: simClasses.Ball, left_side=True
         robot.sim_set_vel(linear_velocity, angular_velocity)
         #robot.sim_set_vel(0, 0)
         return
-    print("Dei zuum")
-    robot.sim_set_vel2(50 * robot.face, 50 * robot.face)  # Send the velocity of right and left wheel
+    robot.sim_set_vel2(30 * robot.face, 30 * robot.face)  # Send the velocity of right and left wheel
 
 
 def check_forward_advance_possible(ball: simClasses.Ball, distance_ball_robot, robot: simClasses.Robot):
     robot_coordinates = robot.get_coordinates()
     ball_coordinates = ball.get_coordinates()
     if distance_ball_robot < 30:
+        print("Distancia OK")
 
         if check_flag_velocity(ball, robot):
+            print("Check OK")
             x_goal_projection = calculate_x_goal_projection(ball, robot)
             y_goal_projection = calculate_y_goal_projection(robot, x_goal_projection)
             if 45 < y_goal_projection < 85:
+                print("Projecao OK")
                 x_projection = robot_coordinates.X + distance_ball_robot * cos(robot._coordinates.rotation)
                 y_projection = robot_coordinates.Y + distance_ball_robot * sin(robot._coordinates.rotation)
                 distance_ball_projection = sqrt(
                     (ball_coordinates.X - x_projection) ** 2 + (ball_coordinates.Y - y_projection) ** 2)
-                if (robot.index == 2 or robot.index == 1) and (distance_ball_projection < 15):
-                    print("zuum")
+                print("Distancia: ", distance_ball_projection)
+                if (robot.index == 2 or robot.index == 1) and (distance_ball_projection < 7):
+                    print("ZUUUUUUUUUUUUUM")
                     return True
 
     return False
@@ -671,18 +675,18 @@ def project_coordinates(robot_leader):
     robot_leader_coordinates = robot_leader.get_coordinates()
     if robot_leader_coordinates.Y > 65:
         if robot_leader_coordinates.X > 75:
-            proj_x = robot_leader_coordinates.X - 15
-            proj_y = robot_leader_coordinates.Y - 30
+            proj_x = robot_leader_coordinates.X - (15+15)
+            proj_y = robot_leader_coordinates.Y - (30+15)
         else:
-            proj_x = robot_leader_coordinates.X + 15
-            proj_y = robot_leader_coordinates.Y - 15
+            proj_x = robot_leader_coordinates.X + (15+15)
+            proj_y = robot_leader_coordinates.Y - (15+15)
     else:
         if robot_leader_coordinates.X > 75:
-            proj_x = robot_leader_coordinates.X - 15
-            proj_y = robot_leader_coordinates.Y + 30
+            proj_x = robot_leader_coordinates.X - (15+15)
+            proj_y = robot_leader_coordinates.Y + (30+15)
         else:
-            proj_x = robot_leader_coordinates.X + 15
-            proj_y = robot_leader_coordinates.Y + 15
+            proj_x = robot_leader_coordinates.X + (15+15)
+            proj_y = robot_leader_coordinates.Y + (15+15)
     return proj_x, proj_y
 
 
@@ -814,3 +818,59 @@ def rectangle(robot: simClasses.Robot):
         angular_velocity = 0
 
     robot.sim_set_vel(linear_velocity, angular_velocity)
+
+
+def CornerAvoid(robot:simClasses.Robot):
+    xUperLimit = 145
+    xLowerLimit = 25
+
+    yUperLimit = 110
+    yLowerLimit = 20
+
+    if robot.face == 1:
+        robotAngle = robot._coordinates.rotation# Radianos
+    else:
+        robotAngle = arctan2(sin(robot._coordinates.rotation + pi), 
+                             cos(robot._coordinates.rotation + pi))
+    robotPos = (robot._coordinates.X,robot._coordinates.Y) # X, Y
+    
+    border = False
+
+    # Condicao para estar preso na parede do lado esquerdo
+    if robotPos[0]<=xLowerLimit and ((robotAngle> deg2rad(180-30)) or (robotAngle< deg2rad(-180+30))):
+        #print("Preso no lado esquerdo")
+        border = True
+
+    # Condicao para estar preso na parede do lado direito
+    elif robotPos[0]>=xUperLimit and (robotAngle>deg2rad(-30) and robotAngle<deg2rad(30)):
+        #print("Preso no lado Direito")
+        border = True
+
+    # Condicao para estar preso na parede de baixo
+    elif robotPos[1]<=yLowerLimit and (robotAngle<deg2rad(-90+30) and robotAngle>deg2rad(-90-30)):
+        #print("Preso na parede de Baixo")
+        border = True
+
+    # Condicao para estar preso na parede de cima
+    elif robotPos[1]>=yUperLimit and (robotAngle>deg2rad(90-30) and robotAngle<deg2rad(+90+30)):
+        #print("Preso na parede de Cima")
+        border = True
+    
+    if border:
+        #print("Entrei")
+        if robot.contWall > 15:
+            #print("TROQUE IMEDIATAMENTE")
+            return True
+        else:
+            #print("Contei")
+            robot.contWall+=1
+            
+    else:
+        robot.contWall=0
+        return False
+
+
+
+    return
+
+angulo = deg2rad(-160)
