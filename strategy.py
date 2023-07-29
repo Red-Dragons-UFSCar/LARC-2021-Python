@@ -30,14 +30,14 @@ class Strategy:
         else:
             if self.mray:
                 if self.ball.xPos > 125:
-                    self.wallStgDef()
+                    self.breakWallStgAtt()
                 else:
-                    self.wallStgAtt()
+                    self.breakWallStgAtt()
             else:
                 if self.ball.xPos > 125:
-                    self.wallStgAtt()
+                    self.breakWallStgAtt()
                 else:
-                    self.wallStgDef()
+                    self.breakWallStgAtt()
 
     def basicStgAtt2(self):
         if not self.mray:
@@ -174,13 +174,7 @@ class Strategy:
         action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
         action.defenderWall(self.robot1, self.robot2,self.ball, leftSide=not self.mray)
 
-    def breakWallStgAtt(self):
-        if self.mray and self.ball.xPos > 130 or not self.mray and self.ball.xPos < 120 or self.quadrant == 0:
-            self.quadrant = 0
-            action.ataque(self.ball, self.robot3, self.robot4, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4)
-            action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
-            action.defenderWall(self.robot1, self.robot2,self.ball, leftSide=not self.mray)
-        
+    def breakWallStgAtt(self):            
         if self.mray and self.ball.xPos < 80 and self.ball.yPos < 35 and self.quadrant != 2 or self.quadrant == 3:
             self.quadrant = 3
         if self.mray and self.ball.xPos < 80 and self.ball.yPos > 145 and self.quadrant != 3 or self.quadrant == 2:
@@ -189,14 +183,22 @@ class Strategy:
             self.quadrant = 4
         if not self.mray and self.ball.xPos > 170 and self.ball.yPos > 145 and self.quadrant != 4 or self.quadrant == 1:
             self.quadrant = 1
-
-        if self.quadrant != 0:
-            action.ataque(self.ball, self.robot2, self.robot3, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4)
-            action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
-            action.defenderWallSolo(self.robot1, self.ball, leftSide=not self.mray)
+        if not self.mray and (self.ball.xPos <= 170 or self.ball.yPos <= 145 or self.ball.yPos >= 35) or self.mray and (self.ball.xPos > 80 or self.ball.yPos >= 35 or self.ball.yPos <= 145) or self.quadrant == 0:
+            self.quadrant = 0
+        
+        if not self.mray and self.ball.xPos > 205 and self.ball.yPos > 65 and self.ball.yPos < 115 or self.mray and self.ball.xPos < 45 and self.ball.yPos > 65 and self.ball.yPos < 115:
+            action.shoot(self.robot4, self.ball, leftSide=not self.mray)
+        else:
             action.breakWall(self.robot4, self.ball, self.quadrant,self.robot0, self.robot1, self.robotEnemy0, self.robotEnemy1,
-                                                                                 self.robotEnemy2, self.robotEnemy3, self.robotEnemy4,
-                                                                                 leftSide=not self.mray)
+                                                                                self.robotEnemy2, self.robotEnemy3, self.robotEnemy4,
+                                                                                leftSide=not self.mray)
+        
+        if self.mray and self.ball.xPos > 210 and self.ball.yPos > 65 and self.ball.yPos < 115 or not self.mray and self.ball.xPos < 40 and self.ball.yPos > 65 and self.ball.yPos < 115:
+            action.defenderPenalty(self.robot3, self.ball, leftSide=not self.mray)
+        else:
+            action.defenderWall(self.robot1, self.robot2,self.ball, leftSide=not self.mray)
+
+        action.ataque(self.ball, self.robot0, self.robot3, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4)
 
     #Ainda não funciona direito
     def agressiveBreakWallStgAtt(self):
