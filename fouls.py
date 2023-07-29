@@ -51,25 +51,25 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade1 = Entity(x=46.51, y=95.54,a=-70.01, index=1)
                 entidade2 = Entity(x=42.71, y=105.99,a=-70.01, index=2)
                 entidade3 = Entity(x=155, y=150,a=0, index=3)
-                entidade4 = Entity(x=195, y=85,a=0, index=4)
+                entidade4 = Entity(x=185, y=80,a=0, index=4)
             elif ref_data["quad"] == 2:
                 entidade0 = Entity(x=60, y=90,a=0, index=0)
                 entidade1 = Entity(x=42.71, y=74.00,a=-109.98, index=1)
                 entidade2 = Entity(x=46.51, y=84.45,a=-109.98, index=2)
                 entidade3 = Entity(x=45, y=150,a=0, index=3)
-                entidade4 = Entity(x=195, y=90,a=0, index=4)
+                entidade4 = Entity(x=185, y=90,a=0, index=4)
             elif ref_data["quad"] == 3:
                 entidade0 = Entity(x=60, y=90,a=0, index=0)
                 entidade1 = Entity(x=46.51, y=95.54,a=-70.01, index=1)
                 entidade2 = Entity(x=42.71, y=105.99,a=-70.01, index=2)
                 entidade3 = Entity(x=45, y=30,a=0, index=3)
-                entidade4 = Entity(x=195, y=90,a=0, index=4)
+                entidade4 = Entity(x=185, y=90,a=0, index=4)
             elif ref_data["quad"] == 4:
                 entidade0 = Entity(x=60, y=90,a=0, index=0)
                 entidade1 = Entity(x=42.71, y=74.00,a=-109.98, index=1)
                 entidade2 = Entity(x=46.51, y=84.45,a=-109.98, index=2)
                 entidade3 = Entity(x=155, y=30,a=0, index=3)
-                entidade4 = Entity(x=195, y=95,a=0, index=4)
+                entidade4 = Entity(x=185, y=100,a=0, index=4)
             replacement.place_all([entidade0, entidade1, entidade2, entidade3, entidade4])
 
         elif ref_data["foul"] == 4:
@@ -126,25 +126,25 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade1 = Entity(x=203.48, y=84.45,a=289.98, index=1)
                 entidade2 = Entity(x=207.28, y=74.00,a=289.98, index=2)
                 entidade3 = Entity(x=205, y=150,a=0, index=3)
-                entidade4 = Entity(x=170, y=70,a=0, index=4)
+                entidade4 = Entity(x=65, y=80,a=0, index=4)
             elif ref_data["quad"] == 2:
                 entidade0 = Entity(x=190, y=90,a=0, index=0)
                 entidade1 = Entity(x=207.28, y=105.99,a=250.01, index=1)
                 entidade2 = Entity(x=203.48, y=95.54,a=250.01, index=2)
                 entidade3 = Entity(x=95, y=150,a=180, index=3)
-                entidade4 = Entity(x=180, y=150,a=205, index=4)
+                entidade4 = Entity(x=65, y=150,a=205, index=4)
             elif ref_data["quad"] == 3:
                 entidade0 = Entity(x=190, y=90,a=0, index=0)
                 entidade1 = Entity(x=203.48, y=84.45,a=289.98, index=1)
                 entidade2 = Entity(x=207.28, y=74.00,a=289.98, index=2)
                 entidade3 = Entity(x=95, y=30,a=0, index=3)
-                entidade4 = Entity(x=180, y=30,a=155, index=4)
+                entidade4 = Entity(x=65, y=30,a=155, index=4)
             elif ref_data["quad"] == 4:
                 entidade0 = Entity(x=190, y=90,a=0, index=0)
                 entidade1 = Entity(x=207.28, y=105.99,a=250.01, index=1)
                 entidade2 = Entity(x=203.48, y=95.54,a=250.01, index=2)
                 entidade3 = Entity(x=205, y=30,a=0, index=3)
-                entidade4 = Entity(x=170, y=110,a=180, index=4)
+                entidade4 = Entity(x=65, y=100,a=180, index=4)
             replacement.place_all([entidade0, entidade1, entidade2, entidade3, entidade4])
 
 
