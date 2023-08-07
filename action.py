@@ -25,6 +25,17 @@ def shoot(robot,ball,leftSide=True,friends=[],enemys=[]):
 
     robot.simSetVel(v,w)
 
+def shoot_penalty(robot,ball,leftSide=True,friends=[],enemys=[]):
+    if leftSide:
+        arrivalTheta=arctan2(52-ball.yPos,235-ball.xPos) #? Angle between the ball and point (150,65)
+    else:
+        arrivalTheta=arctan2(52-ball.yPos,15-ball.xPos) #? Angle between the ball and point (0,65)
+    #robot.target.update(ball.xPos,ball.yPos,0)
+    robot.target.update(ball.xPos,ball.yPos,arrivalTheta)
+
+    v,w=univecController(robot,robot.target,avoidObst=False,n=16, d=2)
+    robot.simSetVel(v*5,w*5)
+
 def defenderSpin2(robot,ball,leftSide=True,friends=[],enemys=[]):
     if leftSide:
         arrivalTheta=arctan2(90-ball.yPos,235-ball.xPos) #? Angle between the ball and point (150,65)
