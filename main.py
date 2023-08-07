@@ -2,6 +2,7 @@ from bridge import (Actuator, Replacer, Vision, Referee,
                         NUM_BOTS, convert_angle, Entity)
 
 from math import pi, fmod, atan2, fabs
+from action import defenderWall, atacante_lider,ataque,defenderPenalty,defesa_atacantes
 import sys
 
 from simClasses import *
@@ -76,6 +77,7 @@ if __name__ == "__main__":
         # Atualiza em cada objeto do campo os dados da visão
         robot0.simGetPose(data_our_bot[0])
         robot1.simGetPose(data_our_bot[1])
+        
         robot2.simGetPose(data_our_bot[2])
         robot3.simGetPose(data_our_bot[3])
         robot4.simGetPose(data_our_bot[4])
@@ -85,6 +87,11 @@ if __name__ == "__main__":
         robotEnemy3.simGetPose(data_their_bots[3])
         robotEnemy4.simGetPose(data_their_bots[4])
         ball.simGetPose(data_ball)
+
+        #strategy.coach()
+        #defenderWall(robot1,robot2,ball)
+        
+
 
         if ref_data["game_on"]:
             # Se o modo de jogo estiver em "Game on"
@@ -104,8 +111,8 @@ if __name__ == "__main__":
 
         elif ref_data["foul"] != 7:
             if ref_data["foul"] != 5: # Mudando a flag exceto em caso de Stop
-                strategy.penaltyOffensive = False
-                strategy.penaltyDefensive = False
+                Strategy.penaltyOffensive = False
+                Strategy.penaltyDefensive = False
             fouls.replacement_fouls(replacement,ref_data,mray)
             actuator.stop()
 
