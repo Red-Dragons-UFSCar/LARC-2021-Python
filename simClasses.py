@@ -234,7 +234,7 @@ class Robot(KinematicBody):
         """Input: None.
         Description: Returns True if the distance between the target and the robot is less than 3cm - False otherwise
         Output: True or False."""
-        if self.calculate_distance(self.target) <= 7:
+        if self.calculate_distance(self.target) <= 10:
             return True
         else:
             return False

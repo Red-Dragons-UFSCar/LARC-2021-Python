@@ -55,7 +55,6 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
     Output: v -> Linear Velocity (float)
         w -> Angular Velocity (float)"""
     handle_edge_behaviour(robot)  # Checks if the robot is in some corner
-
     navigate = Univector()  # Defines the navigation algorithm
     dl = 0.000001  # Constant to approximate phi_v
     k_w = 1.7  # Feedback constant for angle error (k_w=1 means no gain)
@@ -140,7 +139,7 @@ def which_face(robot, target, des_theta, double_face, screen_out=False):
     if robot.index == 0:
         robot.flagKeepFace = True
     #screen_out = False
-    if ( (abs(theta_e) > pi / 2 + pi / 12) or action.CornerAvoid(robot)) and (not robot.flagTrocaFace) and double_face:  # If the angle is convenient for face swap
+    if ( (abs(theta_e) > pi / 2 + pi / 12) or action.CornerAvoid(robot)) and (not robot.flagTrocaFace) and double_face and not screen_out:  # If the angle is convenient for face swap
     #if (  action.CornerAvoid(robot)) and (not robot.flagTrocaFace) and double_face:  # If the angle is convenient for face swap
         if robot.flagKeepFace:
             robot.face = robot.face * (-1)  # Swaps face
@@ -198,8 +197,8 @@ def pid3(robot, des_theta):
     #T0 = 1/60
 
     # Controlador v=25
-    Kp = 1.0##1.4#1.6
-    Kd = 0.1#0.1#0.05
+    Kp = 1.8##1.4#1.6   #2       #1.7   #1.8
+    Kd = 0.35#0.1#0.05   #0.5    #0.4   #0.35
     Ki = 0
     T0 = 1/60
 
@@ -234,7 +233,7 @@ def pid3(robot, des_theta):
     robot.u_k1 = uk
 
     w = w#*robot.face
-    v = 20*robot.face#*((1-w/saturacao)*0.5 + 0.5)
+    v = 40*robot.face#*((1-w/saturacao)*0.5 + 0.5)
     return v, w
 
 def pid2(robot, des_theta):

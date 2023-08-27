@@ -135,7 +135,7 @@ class Strategy:
             else:
                 self.basic_stg_att()
         else:
-            if ball_coordinates.X > 85:
+            if ball_coordinates.X > 75:
                 self.basic_stg_att()
             else:
                 self.basic_stg_def_2()
@@ -189,6 +189,7 @@ class Strategy:
                 action.defender_spin(self.robots[1], self.ball, left_side=not self.mray)  # Defender chases ball
                 action.screen_out_ball(self.robots[0], self.ball, 22, left_side=not self.mray, upper_lim=81,
                                        lower_lim=42)  # Goalkeeper keeps in goal
+                action.go_to_point(self.robots[2], 105, 65, pi/2)
         else:  # The same idea for other team
             if self.ball._coordinates.X > 130 and 30 < self.ball._coordinates.Y < 110:
                 action.defender_penalty_spin(self.robots[0], self.ball, left_side=not self.mray)
@@ -197,9 +198,11 @@ class Strategy:
                 action.defender_spin(self.robots[1], self.ball, left_side=not self.mray)
                 action.screen_out_ball(self.robots[0], self.ball, 22, left_side=not self.mray, upper_lim=81,
                                        lower_lim=42)
+                action.go_to_point(self.robots[2], 65, 65, pi/2)
 
-        action.screen_out_ball(self.robots[2], self.ball, 110, left_side=not self.mray, upper_lim=120,
-                               lower_lim=10)  # Attacker stays in midfield
+        #action.screen_out_ball(self.robots[2], self.ball, 110, left_side=not self.mray, upper_lim=120,
+        #                       lower_lim=10)  # Attacker stays in midfield
+        
 
         # Verification if robot has stopped
         if ((abs(self.robots[0]._coordinates.rotation) < deg2rad(10)) or (

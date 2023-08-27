@@ -99,6 +99,7 @@ def defender_spin(robot: simClasses.Robot, ball: simClasses.Ball, left_side=True
     ball_coordinates = ball.get_coordinates()
     #arrival_angle = calculate_arrival_angle_defender_spin(ball, left_side)
     arrival_angle = calculate_arrival_angle_alternate(ball, left_side)
+    arrival_angle=0
     robot.target.set_coordinates(ball_coordinates.X, ball_coordinates.Y, arrival_angle)
 
     linear_velocity, angular_velocity = calculate_velocities(ball, robot)
@@ -112,23 +113,28 @@ def defender_spin(robot: simClasses.Robot, ball: simClasses.Ball, left_side=True
         robot.sim_set_vel(linear_velocity, angular_velocity)
         #robot.sim_set_vel(0, 0)
         return
-    robot.sim_set_vel2(30 * robot.face, 30 * robot.face)  # Send the velocity of right and left wheel
+    robot.sim_set_vel2(80 * robot.face, 80 * robot.face)  # Send the velocity of right and left wheel
 
 
 def check_forward_advance_possible(ball: simClasses.Ball, distance_ball_robot, robot: simClasses.Robot):
     robot_coordinates = robot.get_coordinates()
     ball_coordinates = ball.get_coordinates()
-    if distance_ball_robot < 30:
+    if distance_ball_robot < 20:
         print("Distancia OK")
 
         if check_flag_velocity(ball, robot):
             print("Check OK")
             x_goal_projection = calculate_x_goal_projection(ball, robot)
             y_goal_projection = calculate_y_goal_projection(robot, x_goal_projection)
+            if robot.face == 1:
+                theta = robot_coordinates.rotation
+            else:
+                theta = arctan2(sin(robot_coordinates.rotation + pi),
+                        cos(robot_coordinates.rotation + pi))  # Angle between the ball and point (0,65)
             if 45 < y_goal_projection < 85:
                 print("Projecao OK")
-                x_projection = robot_coordinates.X + distance_ball_robot * cos(robot._coordinates.rotation)
-                y_projection = robot_coordinates.Y + distance_ball_robot * sin(robot._coordinates.rotation)
+                x_projection = robot_coordinates.X + distance_ball_robot * cos(theta)
+                y_projection = robot_coordinates.Y + distance_ball_robot * sin(theta)
                 distance_ball_projection = sqrt(
                     (ball_coordinates.X - x_projection) ** 2 + (ball_coordinates.Y - y_projection) ** 2)
                 print("Distancia: ", distance_ball_projection)
@@ -141,7 +147,12 @@ def check_forward_advance_possible(ball: simClasses.Ball, distance_ball_robot, r
 
 def calculate_y_goal_projection(robot: simClasses.Robot, x_goal_projection):
     robot_coordinates = robot.get_coordinates()
-    y_goal_projection = tan(robot_coordinates.rotation) * x_goal_projection + robot_coordinates.Y
+    if robot.face == 1:
+        theta = robot_coordinates.rotation
+    else:
+        theta = arctan2(sin(robot_coordinates.rotation + pi),
+                        cos(robot_coordinates.rotation + pi))
+    y_goal_projection = tan(theta) * x_goal_projection + robot_coordinates.Y
     return y_goal_projection
 
 
@@ -178,13 +189,14 @@ def try_corner_spin_defender_spin(ball: simClasses.Ball, robot: simClasses.Robot
             and southern hemisphere, in the North hemisphere the direction is clockwise
             and the South hemisphere is anti-clockwise.
             '''
-            if robot_coordinates.Y > 65:
-                linear_velocity = 0
-                angular_velocity = -30
-            else:
-                linear_velocity = 0
-                angular_velocity = 30
-        else:
+            if robot._coordinates.X < ball._coordinates.X:
+                if robot_coordinates.Y > 65:
+                    linear_velocity = 0
+                    angular_velocity = -30
+                else:
+                    linear_velocity = 0
+                    angular_velocity = 30
+        elif robot._coordinates.X < ball._coordinates.X:
             if robot_coordinates.Y > 65:
                 linear_velocity = 0
                 angular_velocity = 30
@@ -442,21 +454,22 @@ def defender_penalty_spin(robot: simClasses.Robot, ball: simClasses.Ball, left_s
             # if robot.arrive():
             linear_velocity = 0
             if robot._coordinates.Y > 65:
-                angular_velocity = 30
-            else:
                 angular_velocity = -30
+            else:
+                angular_velocity = 30
         else:
             linear_velocity = 0
             if robot._coordinates.Y > 65:
-                angular_velocity = -30
-            else:
                 angular_velocity = 30
+            else:
+                angular_velocity = -30
 
     robot.sim_set_vel(linear_velocity, angular_velocity)
 
 
 def calculate_velocities_defender(robot):
     friends = robot.get_friends()
+    print("Defender Spin")
     if friends[0] is None and friends[1] is None:  # No friends to avoid
         linear_velocity, angular_velocity = univec_controller(robot, robot.target, avoid_obst=False, n=16, d=2)
     else:  # Both friends to avoid
@@ -872,5 +885,14 @@ def CornerAvoid(robot:simClasses.Robot):
 
 
     return
+
+def go_to_point(robot:simClasses.Robot, x:float, y:float, theta:float):
+    robot.target.set_coordinates(x,y,theta)
+    linear_velocity, angular_velocity = calculate_velocities(robot.target, robot)
+
+    if robot.arrive():
+        stop(robot)
+    else:
+        robot.sim_set_vel(linear_velocity, angular_velocity)
 
 angulo = deg2rad(-160)
