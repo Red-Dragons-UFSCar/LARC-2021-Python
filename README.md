@@ -30,12 +30,12 @@ make
 
 # Execução
 
-Para executar nosso código, no terminal, você deverá executar o código main.py, passando os parâmetros de time escolhido (*blue* ou *yellow*). Por exemplo:
+Para executar nosso código, no terminal, você deverá executar o código main.py, passando os parâmetros de time escolhido (*blue* ou *yellow*) e a estratégia escolhida (*wallDeffenseDefault*, *blockingWallDeffense* ou *default5v5*). Por exemplo:
 
 ```sh
-python3 main.py blue
+python3 main.py blue wallDeffenseDefault
 ```
 
 ```sh
-python3 main.py yellow
+python3 main.py yellow wallDeffenseDefault
 ```
