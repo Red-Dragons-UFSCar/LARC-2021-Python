@@ -20,24 +20,46 @@ class Strategy:
         self.quadrant = 0
         self.alvo = 0
 
-    def coach(self):
+    def coach(self, selectedStrategy):
         """"Picks a strategy depending on the status of the field"""
         # For the time being, the only statuses considered are which side of the field the ball is in
         if self.penaltyDefensive == True:
             self.penaltyModeDefensive()
         elif self.penaltyOffensive == True:
             self.penaltyReto()
-        else:
-            if self.mray:
-                if self.ball.xPos > 125:
-                    self.breakWallStgAtt()
-                else:
-                    self.breakWallStgAtt()
+        else: # If the game is not in penalty mode
+            if selectedStrategy == "blockingWallDeffense":
+                self.breakWallStgAtt()
+            elif selectedStrategy == "wallDeffenseDefault":
+                self.wallDeffenseDefault()
+            elif selectedStrategy == "default5v5":
+                self.basicStg()
             else:
-                if self.ball.xPos > 125:
-                    self.breakWallStgAtt()
-                else:
-                    self.breakWallStgAtt()
+                self.basicStg()
+
+    def basicStg(self):
+        if self.mray:
+            if self.ball.xPos > 125:
+                self.basicStgAtt()
+            else:
+                self.basicStgDef()
+        else:
+            if self.ball.xPos > 125:
+                self.basicStgDef()
+            else:
+                self.basicStgAtt()
+
+    def wallDeffenseDefault(self):
+        if self.mray:
+            if self.ball.xPos > 125:
+                self.wallStgAtt()
+            else:
+                self.wallStgDef()
+        else:
+            if self.ball.xPos > 125:
+                self.wallStgDef()
+            else:
+                self.wallStgAtt()
 
     def basicStgAtt2(self):
         if not self.mray:

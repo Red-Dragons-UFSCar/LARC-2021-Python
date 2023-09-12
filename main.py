@@ -7,14 +7,14 @@ import sys
 
 from simClasses import *
 import action
-import fouls
-
+from fouls_handler import FoulsHandler
 import time
 
 from strategy import *
 
 if __name__ == "__main__":
 
+    # Check if team was selected
     try:
         team = sys.argv[1]
     except:
@@ -36,11 +36,29 @@ if __name__ == "__main__":
     else:
         mray = False
 
+    # Choose strategy
+    try:
+        selectedStrategy = sys.argv[2]
+        currentFouls = FoulsHandler(selectedStrategy)
+    except:
+        print("[ERRO]")
+        print("Digite como parâmetro a estratégia que você ira jogar!")
+        print("Exemplo: python3 main.py yellow wallDeffenseDefault")
+        print("\n=== Estratégias disponíveis ===\nwallDeffenseDefault\nblockingWallDeffense\ndefault5v5")
+        sys.exit()
+    if selectedStrategy != "wallDeffenseDefault" and selectedStrategy != "blockingWallDeffense" and selectedStrategy != "default5v5":
+        print("[ERRO]")
+        print("Digite como parâmetro a estratégia disponível que você ira jogar!")
+        print("Exemplo: python3 main.py yellow wallDeffenseDefault")
+        print("\n=== Estratégias disponíveis ===\nwallDeffenseDefault\nblockingWallDeffense\ndefault5v5")
+        sys.exit()
+
+
     # Initialize all clients
     actuator = Actuator(mray, "127.0.0.1", 20011)
-    replacement = Replacer(mray, "224.5.23.2", 10006)
-    vision = Vision(mray, "224.0.0.1", 10042)
-    referee = Referee(mray, "224.5.23.2", 10047)
+    replacement = Replacer(mray, "224.5.23.2", 10004)
+    vision = Vision(mray, "224.0.0.1", 10002)
+    referee = Referee(mray, "224.5.23.2", 10003)
 
     # Initialize all  objects
     robot0 = Robot(0, actuator, mray)
@@ -90,30 +108,36 @@ if __name__ == "__main__":
 
         #strategy.coach()
         #defenderWall(robot1,robot2,ball)
+
+        """
+        ESTRATÉGIAS DISPONÍVEIS PARA UTILIZAR EM selectedStrategy LOGO ABAIXO:
+        wallDeffenseDefault     ==>     Parede Vermelha padrão com ataque padrão
+        blockingWallDeffense    ==>     Parede Vermelha sem o goleiro e com ataque de bloqueio de defesa inimiga
+        default5v5              ==>     Código original do Joao padrão com defesa e ataque padrões
+        """
+
+
         
-
-
         if ref_data["game_on"]:
-            # Se o modo de jogo estiver em "Game on"
-            strategy.coach()
+            strategy.coach(selectedStrategy)
 
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (not mray):
             #Detectando penalti defensivo
             strategy.penaltyDefensive = True
             actuator.stop()
-            fouls.replacement_fouls(replacement,ref_data,mray)
+            currentFouls.replacement_fouls(replacement,ref_data,mray)
 
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (mray):
             #Detectando penalti ofensivo
             strategy.penaltyOffensive = True
             actuator.stop()
-            fouls.replacement_fouls(replacement,ref_data,mray)
+            currentFouls.replacement_fouls(replacement,ref_data,mray)
 
         elif ref_data["foul"] != 7:
             if ref_data["foul"] != 5: # Mudando a flag exceto em caso de Stop
                 Strategy.penaltyOffensive = False
                 Strategy.penaltyDefensive = False
-            fouls.replacement_fouls(replacement,ref_data,mray)
+            currentFouls.replacement_fouls(replacement,ref_data,mray)
             actuator.stop()
 
         else:
