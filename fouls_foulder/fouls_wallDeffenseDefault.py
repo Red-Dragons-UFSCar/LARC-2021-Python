@@ -1,6 +1,8 @@
 from numpy import arctan2,pi,sqrt,cos,sin,array,matmul,amin,where,zeros,delete,append,int32,deg2rad
 from bridge import (Actuator, Replacer, Vision, Referee,NUM_BOTS, convert_angle, Entity)
 import random
+from action import Robot2Position, SendRobotPosition
+from simClasses import Ball
 
 def replacement_fouls(replacement, ref_data, mray):
     '''
@@ -162,3 +164,101 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade3 = Entity(x=130, y=120,a=180, index=3)
                 entidade4 = Entity(x=135, y=80,a=135, index=4)
             replacement.place_all([entidade0, entidade1, entidade2, entidade3, entidade4])
+
+def automatic_replacement(ref_data, mray, strategy, robot0, robot1, robot2, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4):
+    ball = Ball()
+    list_r0 = []
+    list_r1 = []
+    list_r2 = []
+    list_r3 = []
+    list_r4 = []
+    print(ref_data)
+
+    if mray == False:
+        if ref_data["foul"] == 1:
+            if ref_data["yellow"] == True: # Defensivo
+                list_r0 = SendRobotPosition(mray, ref_data, robot0.index, strategy)
+                list_r1 = SendRobotPosition(mray, ref_data, robot1.index, strategy)
+                list_r2 = SendRobotPosition(mray, ref_data, robot2.index, strategy)
+                list_r3 = SendRobotPosition(mray, ref_data, robot3.index, strategy)
+                list_r4 = SendRobotPosition(mray, ref_data, robot4.index, strategy) 
+            else: # Ofensivo
+                list_r0 = SendRobotPosition(mray, ref_data, robot0.index, strategy)
+                list_r1 = SendRobotPosition(mray, ref_data, robot1.index, strategy)
+                list_r2 = SendRobotPosition(mray, ref_data, robot2.index, strategy)
+                list_r3 = SendRobotPosition(mray, ref_data, robot3.index, strategy)
+                rand = random.random()
+                if rand > 1/2:
+                    list_r4 = SendRobotPosition(mray, ref_data, robot4.index, strategy, 'if') 
+
+                else:
+                    list_r4 = SendRobotPosition(mray, ref_data, robot4.index, strategy, 'else') 
+                """r = random.uniform(0,1)
+                if r <0.5:
+                    entidade4 = Entity(x=180, y=70,a=50, index=4)
+                else:
+                    entidade4 = Entity(x=180, y=110,a=-50, index=4)"""
+            Robot2Position(robot0, ball, robot1, robot2, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4, list_r0, list_r1, list_r2, list_r3, list_r4)
+
+        elif ref_data["foul"] == 3:
+            list_r0 = SendRobotPosition(mray, ref_data, robot0.index, strategy)
+            list_r1 = SendRobotPosition(mray, ref_data, robot1.index, strategy)
+            list_r2 = SendRobotPosition(mray, ref_data, robot2.index, strategy)
+            list_r3 = SendRobotPosition(mray, ref_data, robot3.index, strategy)
+            list_r4 = SendRobotPosition(mray, ref_data, robot4.index, strategy) 
+
+            Robot2Position(robot0, ball, robot1, robot2, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4, list_r0, list_r1, list_r2, list_r3, list_r4)
+
+        elif ref_data["foul"] == 4:
+            print("kickoff")
+            list_r0 = SendRobotPosition(mray, ref_data, robot0.index, strategy)
+            list_r1 = SendRobotPosition(mray, ref_data, robot1.index, strategy)
+            list_r2 = SendRobotPosition(mray, ref_data, robot2.index, strategy)
+            list_r3 = SendRobotPosition(mray, ref_data, robot3.index, strategy)
+            list_r4 = SendRobotPosition(mray, ref_data, robot4.index, strategy) 
+
+            Robot2Position(robot0, ball, robot1, robot2, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4, list_r0, list_r1, list_r2, list_r3, list_r4)
+
+    if mray == True:
+        if ref_data["foul"] == 1:
+            if ref_data["yellow"] == True: # Ofensivo
+                list_r0 = SendRobotPosition(mray, ref_data, robot0.index, strategy)
+                list_r1 = SendRobotPosition(mray, ref_data, robot1.index, strategy)
+                list_r2 = SendRobotPosition(mray, ref_data, robot2.index, strategy)
+                list_r3 = SendRobotPosition(mray, ref_data, robot3.index, strategy)
+                rand = random.random()
+                if rand > 1/2:
+                    list_r4 = SendRobotPosition(mray, ref_data, robot4.index, strategy, 'if') 
+
+                else:
+                    list_r4 = SendRobotPosition(mray, ref_data, robot4.index, strategy, 'else') 
+                """r = random.uniform(0,1)
+                if r <0.5:
+                    entidade4 = Entity(x=180, y=70,a=50, index=4)
+                else:
+                    entidade4 = Entity(x=180, y=110,a=-50, index=4)"""
+            else:
+                list_r0 = SendRobotPosition(mray, ref_data, robot0.index, strategy)
+                list_r1 = SendRobotPosition(mray, ref_data, robot1.index, strategy)
+                list_r2 = SendRobotPosition(mray, ref_data, robot2.index, strategy)
+                list_r3 = SendRobotPosition(mray, ref_data, robot3.index, strategy)
+                list_r4 = SendRobotPosition(mray, ref_data, robot4.index, strategy) 
+            Robot2Position(robot0, ball, robot1, robot2, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4, list_r0, list_r1, list_r2, list_r3, list_r4)
+
+        elif ref_data["foul"] == 3:
+            list_r0 = SendRobotPosition(mray, ref_data, robot0.index, strategy)
+            list_r1 = SendRobotPosition(mray, ref_data, robot1.index, strategy)
+            list_r2 = SendRobotPosition(mray, ref_data, robot2.index, strategy)
+            list_r3 = SendRobotPosition(mray, ref_data, robot3.index, strategy)
+            list_r4 = SendRobotPosition(mray, ref_data, robot4.index, strategy) 
+
+            Robot2Position(robot0, ball, robot1, robot2, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4, list_r0, list_r1, list_r2, list_r3, list_r4)
+
+        elif ref_data["foul"] == 4:
+            list_r0 = SendRobotPosition(mray, ref_data, robot0.index, strategy)
+            list_r1 = SendRobotPosition(mray, ref_data, robot1.index, strategy)
+            list_r2 = SendRobotPosition(mray, ref_data, robot2.index, strategy)
+            list_r3 = SendRobotPosition(mray, ref_data, robot3.index, strategy)
+            list_r4 = SendRobotPosition(mray, ref_data, robot4.index, strategy) 
+
+            Robot2Position(robot0, ball, robot1, robot2, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4, list_r0, list_r1, list_r2, list_r3, list_r4)

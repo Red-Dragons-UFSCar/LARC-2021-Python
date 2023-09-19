@@ -2,6 +2,132 @@ from numpy import pi,cos,sin,tan,arctan2,sqrt ,matmul,array, deg2rad, rad2deg
 import math
 from execution import univecController, whichFace
 from behaviours import Univector
+import json
+
+def SendRobotPosition(mray, ref_data, number_robot, file, if_else = None):
+    """
+    FREE_KICK = 0
+    PENALTY_KICK = 1
+    GOAL_KICK = 2
+    FREE_BALL = 3
+    KICKOFF = 4 
+    STOP = 5
+    GAME_ON = 6
+    HALT = 7    
+    """
+    file_name = "fouls_foulder/positions/" + file + '.json'
+    
+    with open(file_name) as f:
+        data = json.load(f)
+
+    side = ''
+    offensive_defensive_quadrant = ''
+    list_robot = ['robot0', 'robot1', 'robot2', 'robot3', 'robot4']
+
+    if mray == True:
+        side = 'yellow'
+    else:
+        side = 'blue'
+
+    #Setting the game current foul
+    current_foul = str(ref_data["foul"])
+
+    #Setting Offensive or Defensive strategy
+    if ref_data["quad"] == 0:
+        if not mray and ref_data["yellow"]:
+            offensive_defensive_quadrant = 'defensive'
+        elif not mray and not ref_data["yellow"]:
+            offensive_defensive_quadrant = 'offensive'
+        if mray and ref_data["yellow"]:
+            offensive_defensive_quadrant = 'offensive'
+        elif mray and not ref_data["yellow"]:
+            offensive_defensive_quadrant = 'defensive'
+
+    #Setting the quadrant
+    elif ref_data["quad"] == 1:
+        offensive_defensive_quadrant = 'quad1'
+    elif ref_data["quad"] == 2:
+        offensive_defensive_quadrant = 'quad2'
+    elif ref_data["quad"] == 3:
+        offensive_defensive_quadrant = 'quad3'
+    else:
+        offensive_defensive_quadrant = 'quad4'
+
+    #Setting the goal kick strategy. strategy = if or else
+    """
+    if current_foul == '1' and if_else != None:
+        if if_else == 'if':
+            strategy = 'if'
+        elif if_else == 'else':
+            strategy = 'else'
+    
+    """
+
+    if current_foul == '1' and if_else != None:
+        return data[side][current_foul][offensive_defensive_quadrant][if_else][list_robot[number_robot]]
+
+    return data[side][current_foul][offensive_defensive_quadrant][list_robot[number_robot]]
+
+def Robot2Position(robot, ball, friend1, friend2, friend3, friend4, enemy0, enemy1, enemy2, enemy3, enemy4, list_r0, list_r1, list_r2, list_r3, list_r4):
+    #Recebendo as informações corretamente
+    robot.target.update(list_r0[0], list_r0[1], deg2rad(list_r0[2])) #xpos, ypos, theta
+    friend1.target.update(list_r1[0], list_r1[1], deg2rad(list_r1[2])) #xpos, ypos, theta
+    friend2.target.update(list_r2[0], list_r2[1], deg2rad(list_r2[2])) #xpos, ypos, theta
+    friend3.target.update(list_r3[0], list_r3[1], deg2rad(list_r3[2])) #xpos, ypos, theta
+    friend4.target.update(list_r4[0], list_r4[1], deg2rad(list_r4[2])) #xpos, ypos, theta
+
+    #Robot, friend1 e friend2 funcionando corretamente
+    if not robot.arrive():
+        robot.vMax = 20
+        #v, w = univecController(robot, robot.target, avoid_obst=False) # Calculate linear and angular velocity
+        robot.obst.update2(robot, ball, friend3, friend4, enemy0, enemy1, enemy2, enemy3, enemy4)
+        v, w = univecController(robot, robot.target, True, robot.obst, n=4, d=4)
+        robot.simSetVel(v, w)
+    else:
+        robot.vMax = 50
+        robot.simSetVel(0, 0)
+        #print("Robo 1 chegou")
+
+    if not friend1.arrive():
+        friend1.vMax = 20
+        friend1.obst.update2(friend1, ball, friend3, friend4, enemy0, enemy1, enemy2, enemy3, enemy4)
+        v, w = univecController(friend1, friend1.target, True, friend1.obst, n=4, d=4)
+        friend1.simSetVel(v, w)
+    else:
+        friend1.vMax = 50
+        friend1.simSetVel(0, 0)
+        #print("Robo 2 chegou")
+
+    if not friend2.arrive():
+        friend2.vMax = 20
+        friend2.obst.update2(friend2, ball, friend3, friend4, enemy0, enemy1, enemy2, enemy3, enemy4)
+        v, w = univecController(friend2, friend2.target, True, friend2.obst, n=4, d=4)
+        friend2.simSetVel(v, w)
+    else:
+        friend2.vMax = 50
+        friend2.simSetVel(0, 0)
+        #print("Robo 3 chegou")
+
+    #Tentativa 1, para os dois novos robos.
+    if not friend3.arrive():
+        friend3.vMax = 20
+        friend3.obst.update2(friend3, ball, friend1, friend4, enemy0, enemy1, enemy2, enemy3, enemy4)
+        v, w = univecController(friend3, friend3.target, True, friend3.obst, n=4, d=4)
+        friend3.simSetVel(v, w)
+    else:
+        friend3.vMax = 50
+        friend3.simSetVel(0, 0)
+
+    if not friend4.arrive():
+        friend4.vMax = 20
+        friend4.obst.update2(friend4, ball, friend3, friend1, enemy0, enemy1, enemy2, enemy3, enemy4)
+        v, w = univecController(friend4, friend4.target, True, friend4.obst, n=4, d=4)
+        friend4.simSetVel(v, w)
+    else:
+        friend4.vMax = 50
+        friend4.simSetVel(0, 0)
+
+    return True
 
 #% Basic Actions
 def stop(robot):
