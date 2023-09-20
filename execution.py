@@ -81,11 +81,11 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
         else:                                                                       # Use of the old field
             des_theta = navigate.n_vec_field(robot, target, n, d, have_face=False)  # Desired angle w/ go-to-goal
     robot.univector_angle = des_theta
-    # Controller estimation
 
+    # Controller estimation
     stp_theta = approx(robot, target, avoid_obst, obst, n, d, field_is_hiperbolic) # Desired angle prediction
-    phi_v = arctan2(sin(stp_theta - des_theta),     # Difference between the prediction and current angle
-                    cos(stp_theta - des_theta)) / dl
+    #phi_v = arctan2(sin(stp_theta - des_theta),     # Difference between the prediction and current angle
+    #                cos(stp_theta - des_theta)) / dl
     #phi_v = calculate_phi_v(robot, target)
     phi_v = 0
     theta_e = which_face(robot, target, des_theta, double_face, screen_out=screen_out) # Angle error
@@ -111,17 +111,13 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
         v = min(abs(v1), abs(v2), abs(v3))  # Controller velocities v and w
         w = v * phi_v + k_w * sign(theta_e) * sqrt(abs(theta_e))
 
-    v, w = pid3(robot, des_theta)
+    v, w = pid(robot, des_theta)
     # Some code to store the past position, orientation and velocity
 
     #robot.v=v
     robot.pastPose = delete(robot.pastPose, 0, 1)  # Deleting the first column
     robot.pastPose = append(robot.pastPose, array(
         [[round(robot._coordinates.X)], [round(robot._coordinates.Y)], [round(float(robot._coordinates.rotation))], [round(float(v))]]), 1)
-
-    #print("v1: ", v1)
-    #print("v2: ", v2)
-    #print("v3: ", v3)
     return v, w
 
 
@@ -130,7 +126,7 @@ def which_face(robot, target, des_theta, double_face, screen_out=False):
     """Input: Robot object, Target object, Desired angle, Flag to activate face swap
     Description: Defines de better face to robot movement and estimate angle error
     Output: theta_e -> Angle error (float)"""
-    #double_face = False
+    double_face=False
     robot_coordinates = robot.get_coordinates()
     if robot.face == 1:
         theta_e = arctan2(sin(des_theta - robot_coordinates.rotation), cos(des_theta - robot_coordinates.rotation))  # Error estimation with current face
@@ -162,51 +158,11 @@ def which_face(robot, target, des_theta, double_face, screen_out=False):
     return theta_e
 
 def pid(robot, des_theta):
-    robot_coordinates = robot.get_coordinates()
-    #robot.face = -1
-    if robot.face==1:
-        theta_e = arctan2(sin(des_theta - robot_coordinates.rotation), cos(des_theta - robot_coordinates.rotation))  # Error estimation with current face
-    else:
-        theta_e = arctan2(sin(des_theta - robot_coordinates.rotation+pi), cos(des_theta - robot_coordinates.rotation+pi))  # Error estimation with current face
-    #theta_e = arctan2(sin(des_theta - robot_coordinates.rotation+pi), cos(des_theta - robot_coordinates.rotation+pi))  # Error estimation with current face
-    de = (theta_e- robot.last_theta)
-    robot.theta_e = theta_e
-    robot.int_theta_e += robot.theta_e
-
-    #print("Erro: ", theta_e*180/pi)
-    Kp = 1.2
-    Ki = 0.02
-    Kd = 0.1
-    saturacao = 6
-    w = Kp*theta_e + Ki*robot.int_theta_e + Kd*de
-    if w > saturacao:
-        w = saturacao
-    elif w < -saturacao:
-        w = -saturacao
-    print("Face: ", robot.face)
-    w = w#*robot.face
-    v = 30*robot.face
-    robot.last_theta = theta_e
-    return v, w
-
-def pid3(robot, des_theta):
-    #Controlador v=20
-    #Kp = 1.4#1.4#1.6
-    #Kd = 0.09#0.1#0.05
-    #Ki = 0
-    #T0 = 1/60
-
-    # Controlador v=25
-    Kp = 1.8##1.4#1.6   #2       #1.7   #1.8
-    Kd = 0.35#0.1#0.05   #0.5    #0.4   #0.35
+    #Kp = 1.8##1.4#1.6   #2       #1.7   #1.8
+    Kp = 3.0
+    Kd = 0.0#0.1#0.05   #0.5    #0.4   #0.35
     Ki = 0
     T0 = 1/60
-
-    # Controlador v=30
-    #Kp = 1.4
-    #Kd = 0.1
-    #Ki = 0.0
-    #T0 = 1/60
 
     q0 = Kp + Kd/T0 + Ki*T0
     q1 = -Kp -2*Kd/T0
@@ -221,7 +177,7 @@ def pid3(robot, des_theta):
     uk = robot.u_k1 + q0*theta_e + q1*robot.e_k1 + q2*robot.e_k2
 
     w = uk
-    saturacao = 6
+    saturacao = 10
 
     if w > saturacao:
         w = saturacao
@@ -232,11 +188,12 @@ def pid3(robot, des_theta):
     robot.e_k1 = theta_e
     robot.u_k1 = uk
 
-    w = w#*robot.face
-    v = 40*robot.face#*((1-w/saturacao)*0.5 + 0.5)
+    w = w
+    v = 40*robot.face
     return v, w
 
 def pid2(robot, des_theta):
+    # Precisa testar pra ver se funciona mesmo
     Kp = 8
     Ki = 0
     Kd = 2

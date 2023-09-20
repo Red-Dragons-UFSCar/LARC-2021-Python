@@ -27,11 +27,11 @@ def shoot(robot: simClasses.Robot, ball: simClasses.Ball, left_side=True):
 
 
 # TODO dar um jeito nessas funções extraídas
-def calculate_velocities(ball: simClasses.Ball, robot: simClasses.Robot):
+def calculate_velocities(ball: simClasses.Ball, robot: simClasses.Robot, double_face=True):
     """Calculates the angular and linear velocities with the univec_controller function"""
     if robot.get_friends()[0] is None and robot.get_friends()[1] is None:  # No friends to avoid
         linear_velocity, angular_velocity = univec_controller(robot, robot.target, avoid_obst=False, n=16,
-                                                              d=2, double_face=True)  # Calculate linear and angular velocity
+                                                              d=2, double_face=double_face)  # Calculate linear and angular velocity
 
     else:  # Both friends to avoid
         robot.obst.update2(ball, robot.get_friends(), robot.get_enemies())
@@ -120,10 +120,10 @@ def check_forward_advance_possible(ball: simClasses.Ball, distance_ball_robot, r
     robot_coordinates = robot.get_coordinates()
     ball_coordinates = ball.get_coordinates()
     if distance_ball_robot < 20:
-        print("Distancia OK")
+        #print("Distancia OK")
 
         if check_flag_velocity(ball, robot):
-            print("Check OK")
+            #print("Check OK")
             x_goal_projection = calculate_x_goal_projection(ball, robot)
             y_goal_projection = calculate_y_goal_projection(robot, x_goal_projection)
             if robot.face == 1:
@@ -132,12 +132,12 @@ def check_forward_advance_possible(ball: simClasses.Ball, distance_ball_robot, r
                 theta = arctan2(sin(robot_coordinates.rotation + pi),
                         cos(robot_coordinates.rotation + pi))  # Angle between the ball and point (0,65)
             if 45 < y_goal_projection < 85:
-                print("Projecao OK")
+                #print("Projecao OK")
                 x_projection = robot_coordinates.X + distance_ball_robot * cos(theta)
                 y_projection = robot_coordinates.Y + distance_ball_robot * sin(theta)
                 distance_ball_projection = sqrt(
                     (ball_coordinates.X - x_projection) ** 2 + (ball_coordinates.Y - y_projection) ** 2)
-                print("Distancia: ", distance_ball_projection)
+                #print("Distancia: ", distance_ball_projection)
                 if (robot.index == 2 or robot.index == 1) and (distance_ball_projection < 7):
                     print("ZUUUUUUUUUUUUUM")
                     return True
@@ -794,7 +794,7 @@ def select_leader(robot1: simClasses.Robot, robot2: simClasses.Robot, ball: simC
     strategy_controller.set_leader_time(leader_time)
     return leader, follower
 
-def rectangle(robot: simClasses.Robot):
+def rectangle(robot: simClasses.Robot, double_face=False):
     posicoes_x = [47.5, 122.5, 122.5, 47.5]
     posicoes_y = [25, 25, 105, 105]
     posicoes_angulo = [-90*pi/180, 0, 90*pi/180, 180*pi/180]
@@ -806,27 +806,27 @@ def rectangle(robot: simClasses.Robot):
     if robot.calculate_distance(robot.target) < 5:
         robot.stateRetangle += 1
     
-    print("Indice alvo: ", robot.stateRetangle%4)
+    #print("Indice alvo: ", robot.stateRetangle%4)
 
-    linear_velocity, angular_velocity = calculate_velocities(robot.target, robot)
+    linear_velocity, angular_velocity = calculate_velocities(robot.target, robot, double_face)
 
     coordinates = robot.get_coordinates()
 
-    print(coordinates.rotation )
+    #print(coordinates.rotation )
     if coordinates.Y < 7.5 and -pi/2 -pi/12 < coordinates.rotation < -pi/2 +pi/12:
-        print("AAAAAAAAAAA")
+        print("[PRESO] Baixo")
         linear_velocity = -30*robot.face
         angular_velocity = 0
     elif coordinates.Y > 122 and pi/2 -pi/15 < coordinates.rotation < pi/2 +pi/15:
-        print("BBBBBBBBBB")
+        print("[PRESO] Cima")
         linear_velocity = -30*robot.face
         angular_velocity = 0
     elif coordinates.X > 150 and -pi/15 < coordinates.rotation < +pi/15:
-        print("CCCCCCCCC")
+        print("[PRESO] Esquerda")
         linear_velocity = -30*robot.face
         angular_velocity = 0
     elif coordinates.X < 20 and (pi-pi/15 < coordinates.rotation or coordinates.rotation > -pi+pi/15):
-        print("DDDDDDDDD")
+        print("[PRESO] Direita")
         linear_velocity = -30*robot.face
         angular_velocity = 0
 

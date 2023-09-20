@@ -6,14 +6,16 @@ from bridge import (Actuator, Replacer, Vision)
 from simClasses import *
 from strategy import *
 
+from numpy import sin, cos, arctan2, pi
+
 from vss_communication import StrategyControl, Referee
 
 import action
 
-import pandas as pd
+COM_REF = False
 
-vetor_angulo = []
-vetor_tempo = []
+# IDs dos robôs em ordem 0, 1 e 2 na visão da cin
+id_robots = [0, 9, 5]
 
 t_start = time.time()
 t1 = time.time()
@@ -53,18 +55,20 @@ if __name__ == "__main__":
     # replacement = Replacer(mray, "224.5.23.2", 10004)
     # vision = Vision(mray, "224.0.0.1", 10002)
     #referee = Referee(mray, "224.5.23.2", 10003)
-    referee = Referee("224.5.23.2", 10060, logger=False)
+    #referee = Referee("224.5.23.2", 10060, logger=False)
 
     # Intialize all clients (real)
-    client_control = StrategyControl(port=20020)
+    #client_control = StrategyControl(port=20020)
+    client_control = StrategyControl(ip='224.5.23.2', port=10015, logger=False, pattern='ssl', convert_coordinates=True)  # Criação do objeto do controle e estratégia
+    referee = Referee("224.5.23.2", 10003, logger=False)
 
     # Initialize all  objects
     robots = []
     for i in range(args.num_robots):
         robot = Robot(i, client_control, mray)
         robots.append(robot)
-
-    #robots = [robots[2], robots[1], robots[0]]
+        # Substituindo o indice para sincronizar com a eletronica
+        robots[i].index = i
 
     enemy_robots = []
     for i in range(args.num_robots):
@@ -79,50 +83,44 @@ if __name__ == "__main__":
 
     list_strategies = [args.strategy, args.op, args.dp, args.aop, args.adp]
     strategy = Strategy(robots, enemy_robots, ball, mray, list_strategies)
-    v = 0.2
-    incremento = 0.3
 
     # Main infinite loop
     t1 = time.time()
     while True:
-        
-        
-        client_control.update()
+        t1 = time.time()  # Inicio do tempo de execução
+
+        client_control.update(mray)  # Atualiza os dados da visão
         field, errorCode = client_control.get_data_Red()
 
-        referee.update()
+        referee.update()  # Atualiza os dados do referee
         data_ref, errorCodeRef = referee.get_data()
 
         #'''
-        if errorCode == 0:
-            data_our_bot = field["our_bots"]  # Save data from allied robots
-            data_their_bots = field["their_bots"]  # Save data from enemy robots
-            data_ball = field["ball"]  # Save the ball data
+        data_our_bot = field["our_bots"]  # Save data from allied robots
+        data_their_bots = field["their_bots"]  # Save data from enemy robots
+        data_ball = field["ball"]  # Save the ball data
 
-            # Updates vision data on each field object
+        # Necessário testar ainda em campo real
+        # Updates vision data on each field object
+        #for index, robot in enumerate(robots):
+            #robot.set_simulator_data(data_our_bot[index])
+
+        for i in range(len(data_our_bot)):  # Separação de dados recebidos da visão
             for index, robot in enumerate(robots):
-                robot.set_simulator_data(data_our_bot[index])
-            
-            for index, robot in enumerate(enemy_robots):
-                robot.set_simulator_data(data_their_bots[index])
-
+                if data_our_bot[i]["robot_id"] == id_robots[index]:  # Se o id do robô recebido é igual ao robô desejado (Código Cin)
+                    data_our_bot[i]["robot_id"] = id_robots.index(data_our_bot[i]["robot_id"])  # Adequação de ID dos robôs
+                    data_our_bot[i]["orientation"] = arctan2(sin(data_our_bot[i]["orientation"] + pi), cos(data_our_bot[i]["orientation"] + pi))  # Adequação de orientação dos robôs
+                    robot.set_simulator_data(data_our_bot[i])
+                    break
+        
+        for i in range(len(data_ball)):
             ball.set_simulator_data(data_ball)
+        
+        # Testar ainda
+        #for index, robot in enumerate(enemy_robots):
+            #robot.set_simulator_data(data_their_bots[index])
 
-            #print(ball.get_coordinates().X)
-            #strategy.handle_game_on()
-            #strategy.coach()
-            #action.defender_spin(robots[2], ball, left_side=not mray)  # Attacker behavior
-            #robots[2].sim_set_vel(20, 0.5)
-            
-            #action.shoot(robots[2], ball)
-            #action.rectangle(robots[2])
-            #action.screen_out_ball(robots[2], ball, 110, True, upper_lim = 100, lower_lim= 30)
-            #action.defender_spin(robots[2], ball)
-            #'''
-            #action.rectangle(robots[1])
-
-            #action.CornerAvoid(robots[2])
-            # synchronize code execution based on runtime and the camera FPS
+        if COM_REF:
             if data_ref["foul"] == 6:
                 print("GAME ON")
                 strategy.coach()
@@ -137,12 +135,12 @@ if __name__ == "__main__":
                 robots[0].face = 1
                 robots[1].face = 1
                 robots[2].face = 1 
-            if v >= 30:
-                incremento = incremento*(-1)
-            elif v <= -30:
-                incremento = incremento*(-1)
-            v = v + incremento
-            #robots[2].sim_set_vel(0, v        print("Fim")
-            t2 = time.time()
-            #if t2 - t1 < 1 / 60:
-                #time.sleep(1 / 60 - (t2 - t1))
+        else:
+            action.rectangle(robots[2])
+            #action.defender_spin(robots[2], ball)
+            print(robots[2]._coordinates.Y)
+        
+        t2 = time.time()  # Fim do tempo de execução
+        # synchronize code execution based on runtime and the camera FPS
+        if (t2 - t1) < 1 / 60:
+            time.sleep(1 / 60 - (t2 - t1))
