@@ -387,6 +387,75 @@ Description: Defines the strategy of 2 attackers, who is the leader and what eac
 Output: None
 '''
 
+def angulo_Bola(robot, ball):
+    if robot.teamYellow:
+        y = 90 - ball.yPos
+        x = ball.xPos - 15
+    else:
+        y = 90 - ball.yPos
+        x = 250 - (ball.xPos + 15)
+
+    theta = arctan2(y, x)
+    
+    if robot.teamYellow and ball.yPos < 90:
+        theta = pi - theta
+    if robot.teamYellow and ball.yPos > 90:
+        theta = -pi - theta
+
+    return theta
+
+
+def new_leaderSelector(robot1, robot2, ball):
+
+    '''
+    Calculate the distan of both robots to the ball
+    '''
+    dist1 = sqrt((robot1.xPos - ball.xPos) ** 2 + (robot1.yPos - ball.yPos) ** 2)
+    dist2 = sqrt((robot2.xPos - ball.xPos) ** 2 + (robot2.yPos - ball.yPos) ** 2)
+    
+    ballTheta = angulo_Bola(robot1, ball)
+    angDiff1 = abs(abs(ballTheta) - abs(robot1.theta))
+    angDiff2 = abs(abs(ballTheta) - abs(robot2.theta))
+    #distDiff = abs(dist1 - dist2)
+
+    #calculando heuristicas através da multiplicação do angulo e da distância
+    heur1 = dist1 * angDiff1
+    heur2 = dist2 * angDiff2    
+
+    if heur2 < heur1:
+        if robot1.isLeader is None and robot2.isLeader is None:
+            robot2.isLeader = True
+            robot1.isLeader = False
+            robot2.holdLeader += 1
+
+        else:
+            if robot2.isLeader:
+                robot2.holdLeader += 1
+            else:
+                if robot1.holdLeader > 60:
+                    robot2.isLeader = True
+                    robot1.isLeader = False
+                    robot1.holdLeader = 0
+                    robot2.holdLeader += 1
+                else:
+                    robot1.holdLeader += 1
+    else:
+        if robot1.isLeader is None and robot2.isLeader is None:
+            robot1.isLeader = True
+            robot2.isLeader = False
+            robot1.holdLeader += 1
+        else:
+            if robot1.isLeader:
+                robot1.holdLeader += 1
+            else:
+                if robot2.holdLeader > 60:
+                    robot1.isLeader = True
+                    robot2.isLeader = False
+                    robot1.holdLeader += 1
+                    robot2.holdLeader = 0
+                else:
+                    robot2.holdLeader += 1
+
 def leaderSelector(robot1, robot2, ball):
 
     '''
