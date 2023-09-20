@@ -53,10 +53,20 @@ if __name__ == "__main__":
         print("\n=== Estratégias disponíveis ===\nwallDeffenseDefault\nblockingWallDeffense\ndefault5v5")
         sys.exit()
 
+    #Choose replacer or auto_replacer
+    try:
+        selectedReplacer = sys.argv[3]
+    except:
+        selectedReplacer = "replacer"
+    if selectedReplacer != "replacer" and selectedReplacer != "auto":
+        print("[ERRO]")
+        print("Digite auto para posicionamento automático")
+        print("Caso nada seja digitado será utilizado sem posicionamento automático")
+        sys.exit()
 
     # Initialize all clients
     actuator = Actuator(mray, "127.0.0.1", 20011)
-    #replacement = Replacer(mray, "224.5.23.2", 10004)
+    replacement = Replacer(mray, "224.5.23.2", 10004)
     vision = Vision(mray, "224.0.0.1", 10042)
     referee = Referee(mray, "224.5.23.2", 10047)
 
@@ -132,33 +142,39 @@ if __name__ == "__main__":
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (not mray):
             #Detectando penalti defensivo
             strategy.penaltyDefensive = True
-            #actuator.stop()
-            #currentFouls.replacement_fouls(replacement,ref_data,mray)
-            currentFouls.automatic_replacement(ref_data, mray, selectedStrategy, robot0, robot1, robot2, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4)
-        
+            if selectedReplacer == "auto":
+                currentFouls.automatic_replacement(ref_data, mray, selectedStrategy, robot0, robot1, robot2, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4)
+            else:
+                actuator.stop()
+                currentFouls.replacement_fouls(replacement,ref_data,mray)
+            
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (mray):
             #Detectando penalti ofensivo
             strategy.penaltyOffensive = True
-            #actuator.stop()
-            #currentFouls.replacement_fouls(replacement,ref_data,mray)
-            currentFouls.automatic_replacement(ref_data, mray, selectedStrategy, robot0, robot1, robot2, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4)
+            if selectedReplacer == "auto":
+                currentFouls.automatic_replacement(ref_data, mray, selectedStrategy, robot0, robot1, robot2, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4)
+            else:
+                actuator.stop()
+                currentFouls.replacement_fouls(replacement,ref_data,mray)
         
         elif ref_data["foul"] != 7:
             if ref_data["foul"] != 5: # Mudando a flag exceto em caso de Stop
                 Strategy.penaltyOffensive = False
                 Strategy.penaltyDefensive = False
-            #currentFouls.replacement_fouls(replacement,ref_data,mray)
-            #actuator.stop()
-            if ref_data["foul"] == 5 and current_ref != -1:
-                print("arruma stop")
-                ref_data["foul"] = current_ref
-                ref_data["yellow"] = current_team_foul
-                ref_data["quad"] = current_quad
+            if selectedReplacer == "auto":
+                if ref_data["foul"] == 5 and current_ref != -1:
+                    print("arruma stop")
+                    ref_data["foul"] = current_ref
+                    ref_data["yellow"] = current_team_foul
+                    ref_data["quad"] = current_quad
+                    currentFouls.automatic_replacement(ref_data, mray, selectedStrategy, robot0, robot1, robot2, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4)
+                    ref_data["foul"] = 5
+                    ref_data["quad"] = 0
+                #actuator.stop()
                 currentFouls.automatic_replacement(ref_data, mray, selectedStrategy, robot0, robot1, robot2, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4)
-                ref_data["foul"] = 5
-                ref_data["quad"] = 0
-            #actuator.stop()
-            currentFouls.automatic_replacement(ref_data, mray, selectedStrategy, robot0, robot1, robot2, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4)
+            else:
+                currentFouls.replacement_fouls(replacement,ref_data,mray)
+                actuator.stop()
         else:
             actuator.stop()
 
