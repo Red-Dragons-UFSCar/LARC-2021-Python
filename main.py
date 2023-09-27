@@ -127,6 +127,11 @@ if __name__ == "__main__":
             actuator.stop()
             currentFouls.replacement_fouls(replacement,ref_data,mray)
 
+        elif ref_data["foul"] == 2 and ref_data["yellow"] == (mray):
+            strategy.penaltyDefensive = True
+            actuator.stop()
+            currentFouls.replacement_fouls(replacement,ref_data,mray)
+
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (mray):
             #Detectando penalti ofensivo
             strategy.penaltyOffensive = True
