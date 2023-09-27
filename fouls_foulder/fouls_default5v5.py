@@ -38,12 +38,13 @@ def replacement_fouls(replacement, ref_data, mray):
                         entidade4 = Entity(x=180, y=110,a=-50, index=4)"""
                 replacement.place_all([entidade0, entidade1, entidade2, entidade3, entidade4])
 
-        #TODO FOULS: Revisar as posições futuramente do goalKick
-        #elif ref_data["foul"] == 2:
-            #entidade0 = Entity(x=50, y=100,a=0, index=0)
-            #entidade1 = Entity(x=50, y=60,a=0, index=1)
-            #entidade2 = Entity(x=50, y=20,a=0, index=2)
-            #replacement.place_all([entidade0, entidade1, entidade2])
+        elif ref_data["foul"] == 2:
+            entidade0 = Entity(x=23, y=87,a=45, index=0)
+            entidade1 = Entity(x=70, y=135,a=-70.01, index=1)
+            entidade2 = Entity(x=70, y=145,a=-70.01, index=2)
+            entidade3 = Entity(x=120, y=150,a=0, index=3)
+            entidade4 = Entity(x=70, y=30,a=-25, index=4)
+            replacement.place_all([entidade0, entidade1, entidade2, entidade3, entidade4])
 
         elif ref_data["foul"] == 3:
             if ref_data["quad"] == 1:
@@ -114,11 +115,13 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade4 = Entity(x=95, y=120,a=0, index=4)
             replacement.place_all([entidade0, entidade1, entidade2, entidade3, entidade4])
 
-        #elif ref_data["foul"] == 2:
-            #entidade0 = Entity(x=50, y=100,a=0, index=0)
-            #entidade1 = Entity(x=50, y=60,a=0, index=1)
-            #entidade2 = Entity(x=50, y=20,a=0, index=2)
-            #replacement.place_all([entidade0, entidade1, entidade2])
+        elif ref_data["foul"] == 2:
+            entidade0 = Entity(x=226, y=93,a=225, index=0)
+            entidade1 = Entity(x=190, y=54,a=289.98, index=1)
+            entidade2 = Entity(x=190, y=44,a=289.98, index=2)
+            entidade3 = Entity(x=205, y=150,a=0, index=3)
+            entidade4 = Entity(x=170, y=70,a=0, index=4)
+            replacement.place_all([entidade0, entidade1, entidade2, entidade3, entidade4])  
 
         elif ref_data["foul"] == 3:
             if ref_data["quad"] == 1:
