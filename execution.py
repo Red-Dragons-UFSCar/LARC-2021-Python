@@ -1,4 +1,4 @@
-from numpy import cos, sin, arctan2, sqrt, sign, pi, delete, append, array
+from numpy import cos, sin, arctan2, sqrt, sign, pi, delete, append, array, exp
 
 from behaviours import Univector
 from corners import handle_edge_behaviour
@@ -54,6 +54,7 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
     Description: Function to control the robot with or without obstacle avoidance
     Output: v -> Linear Velocity (float)
         w -> Angular Velocity (float)"""
+    avoid_obst=True
     handle_edge_behaviour(robot)  # Checks if the robot is in some corner
     navigate = Univector()  # Defines the navigation algorithm
     dl = 0.000001  # Constant to approximate phi_v
@@ -68,18 +69,20 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
 
     # Navigation: Go-to-Goal + Avoid Obstacle Vector Field
     robot.last_univector_angle = robot.univector_angle
+    #robot.set_wall_obstacle()
+    obst = robot.obst
     if avoid_obst: # If obstacle avoidance is activated
         if field_is_hiperbolic:                                             # Use of the Hyperbolic field
+            #print(obst._coordinates.X)
             des_theta = navigate.univec_field_h(robot, target, obst)        # Desired angle w/ go-to-goal and avoid obstacle vector field
         else:                                                               # Use of the old field
             des_theta = navigate.univec_field_n(robot, target, obst, n, d)  # Desired angle w/ go-to-goal and avoid obstacle vector field
-
     # Navigation: Go-to-Goal Vector Field
     else:
         if field_is_hiperbolic:                                                     # Use of the Hyperbolic field
             des_theta = navigate.hip_vec_field(robot, target)                       # Desired angle w/ go-to-goal
         else:                                                                       # Use of the old field
-            des_theta = navigate.n_vec_field(robot, target, n, d, have_face=False)  # Desired angle w/ go-to-goal
+            des_theta = navigate.n_vec_field(robot, target, n, d, have_face=False)  # Desired angle w/ go-to-goal   
     robot.univector_angle = des_theta
 
     # Controller estimation
@@ -126,15 +129,15 @@ def which_face(robot, target, des_theta, double_face, screen_out=False):
     """Input: Robot object, Target object, Desired angle, Flag to activate face swap
     Description: Defines de better face to robot movement and estimate angle error
     Output: theta_e -> Angle error (float)"""
-    double_face=False
+    #double_face=False
     robot_coordinates = robot.get_coordinates()
     if robot.face == 1:
         theta_e = arctan2(sin(des_theta - robot_coordinates.rotation), cos(des_theta - robot_coordinates.rotation))  # Error estimation with current face
     else:
         theta_e = arctan2(sin(des_theta - robot_coordinates.rotation + pi), cos(des_theta - robot_coordinates.rotation + pi))  # Error estimation with current face
-    if robot.index == 0:
-        robot.flagKeepFace = True
-    #screen_out = False
+    #if robot.index == 0:
+        #robot.flagKeepFace = True
+    screen_out = False
     if ( (abs(theta_e) > pi / 2 + pi / 12) or action.CornerAvoid(robot)) and (not robot.flagTrocaFace) and double_face and not screen_out:  # If the angle is convenient for face swap
     #if (  action.CornerAvoid(robot)) and (not robot.flagTrocaFace) and double_face:  # If the angle is convenient for face swap
         if robot.flagKeepFace:
@@ -144,24 +147,29 @@ def which_face(robot, target, des_theta, double_face, screen_out=False):
             robot.flagKeepFace = False
             robot.contKeepFace = 0
         else:
-            if robot.contKeepFace > 15:
+            if robot.contKeepFace > 60:
                 robot.flagKeepFace = True
             else:
                 robot.contKeepFace += 1
-    if screen_out:
-        coordinates = robot.get_coordinates()
-        RobotPos = (coordinates.X, coordinates.Y)
-        angle = coordinates.rotation
-        coordinatesTarget = robot.target.get_coordinates()
-        TargetPos = (coordinatesTarget.X, coordinatesTarget.Y)
-        robot.face = sideDecider_goalkeeper(RobotPos, angle, TargetPos, robot.index)
+    #if screen_out:
+    #    coordinates = robot.get_coordinates()
+    #    RobotPos = (coordinates.X, coordinates.Y)
+    #    angle = coordinates.rotation
+    #    coordinatesTarget = robot.target.get_coordinates()
+    #    TargetPos = (coordinatesTarget.X, coordinatesTarget.Y)
+    #    robot.face = sideDecider_goalkeeper(RobotPos, angle, TargetPos, robot.index)
     return theta_e
 
 def pid(robot, des_theta):
-    #Kp = 1.8##1.4#1.6   #2       #1.7   #1.8
-    Kp = 3.0
-    Kd = 0.0#0.1#0.05   #0.5    #0.4   #0.35
-    Ki = 0
+
+    #Kp = 3.5
+    #Kd = 0.1
+    #Ki = 0.0
+    #T0 = 1/60
+
+    Kp = 3.5
+    Kd = 0.075
+    Ki = 0.0
     T0 = 1/60
 
     q0 = Kp + Kd/T0 + Ki*T0
@@ -177,7 +185,7 @@ def pid(robot, des_theta):
     uk = robot.u_k1 + q0*theta_e + q1*robot.e_k1 + q2*robot.e_k2
 
     w = uk
-    saturacao = 10
+    saturacao = 20
 
     if w > saturacao:
         w = saturacao
@@ -188,8 +196,56 @@ def pid(robot, des_theta):
     robot.e_k1 = theta_e
     robot.u_k1 = uk
 
+    #w = w
+    #v = 40*robot.face
+
+    # Adaptação 1
+    #'''
+    def sigmoid(x):
+        return 1/(1+exp(-x))
     w = w
-    v = 40*robot.face
+    if robot.calculate_distance(robot.target) < 10:
+        limiar = 0.05*saturacao
+    else:
+        limiar = 0.2*saturacao
+
+    if robot.calculate_distance(robot.target) < 20:
+        fator = (max((1-abs(w)/(saturacao/2)), 0))
+        #fator = sigmoid(fator*12-6)
+    #elif robot.calculate_distance(robot.target) < 40:
+    #    fator = (max((1-abs(w)/(saturacao/1.5)), 0))
+    #    fator = sigmoid(fator*12-6)
+    else:
+        fator = 1
+
+    if w > limiar:
+        v = 50*robot.face*fator
+    else:
+        v = 50*robot.face*fator
+    #'''
+
+    ## Adaptação 2
+    '''
+    def sigmoid(x):
+        return 1/(1+exp(-x))
+    
+    w = w
+    if robot.calculate_distance(robot.target) < 10:
+        limiar = 0.05*saturacao
+    else:
+        limiar = 0.2*saturacao
+
+    if robot.calculate_distance(robot.target) < 20:
+        fator = (max((1-abs(theta_e)/(pi)), 0))
+        #fator = sigmoid(fator*12-6)
+    else:
+        fator = 1
+
+    if w > limiar:
+        v = 50*robot.face*fator
+    else:
+        v = 50*robot.face*fator
+    '''
     return v, w
 
 def pid2(robot, des_theta):

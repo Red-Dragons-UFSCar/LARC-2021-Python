@@ -28,14 +28,18 @@ def shoot(robot: simClasses.Robot, ball: simClasses.Ball, left_side=True):
 
 # TODO dar um jeito nessas funções extraídas
 def calculate_velocities(ball: simClasses.Ball, robot: simClasses.Robot, double_face=True):
+    friends = [None, None]
+    #friends = robot.get_friends()
     """Calculates the angular and linear velocities with the univec_controller function"""
-    if robot.get_friends()[0] is None and robot.get_friends()[1] is None:  # No friends to avoid
+    if friends[0] is None and friends[1] is None:  # No friends to avoid
         linear_velocity, angular_velocity = univec_controller(robot, robot.target, avoid_obst=False, n=16,
                                                               d=2, double_face=double_face)  # Calculate linear and angular velocity
-
     else:  # Both friends to avoid
-        robot.obst.update2(ball, robot.get_friends(), robot.get_enemies())
-        linear_velocity, angular_velocity = univec_controller(robot, robot.target, avoid_obst=False, obst=robot.obst, n=4, d=4, double_face=True)
+        #robot.obst.update2(ball, robot.get_friends(), robot.get_enemies())
+        robot.obst.update()
+        linear_velocity, angular_velocity = univec_controller(robot, robot.target, avoid_obst=True, obst=robot.obst, n=4, d=4, double_face=True)
+        print("X: ", robot.obst._coordinates.X, end=' ')
+        print("Y: ", robot.obst._coordinates.Y)
     return linear_velocity, angular_velocity
 
 
@@ -99,7 +103,14 @@ def defender_spin(robot: simClasses.Robot, ball: simClasses.Ball, left_side=True
     ball_coordinates = ball.get_coordinates()
     #arrival_angle = calculate_arrival_angle_defender_spin(ball, left_side)
     arrival_angle = calculate_arrival_angle_alternate(ball, left_side)
-    arrival_angle=0
+
+    # Teste para cantos
+    if ball_coordinates.Y > 120:
+        arrival_angle = 45*pi/180
+    elif ball_coordinates.Y < 10:
+        arrival_angle = -45*pi/180
+
+    #arrival_angle=0
     robot.target.set_coordinates(ball_coordinates.X, ball_coordinates.Y, arrival_angle)
 
     linear_velocity, angular_velocity = calculate_velocities(ball, robot)
@@ -113,7 +124,8 @@ def defender_spin(robot: simClasses.Robot, ball: simClasses.Ball, left_side=True
         robot.sim_set_vel(linear_velocity, angular_velocity)
         #robot.sim_set_vel(0, 0)
         return
-    robot.sim_set_vel2(80 * robot.face, 80 * robot.face)  # Send the velocity of right and left wheel
+    robot.sim_set_vel2(100 * robot.face, 100 * robot.face)  # Send the velocity of right and left wheel
+    #robot.sim_set_vel(linear_velocity, angular_velocity)
 
 
 def check_forward_advance_possible(ball: simClasses.Ball, distance_ball_robot, robot: simClasses.Robot):
@@ -138,7 +150,7 @@ def check_forward_advance_possible(ball: simClasses.Ball, distance_ball_robot, r
                 distance_ball_projection = sqrt(
                     (ball_coordinates.X - x_projection) ** 2 + (ball_coordinates.Y - y_projection) ** 2)
                 #print("Distancia: ", distance_ball_projection)
-                if (robot.index == 2 or robot.index == 1) and (distance_ball_projection < 7):
+                if (robot.index == 2 or robot.index == 1) and (distance_ball_projection < 4):
                     print("ZUUUUUUUUUUUUUM")
                     return True
 
@@ -248,11 +260,13 @@ def screen_out_ball(robot: simClasses.Robot, ball: simClasses.KinematicBody, sta
 
 
 def calculate_velocities_screenout(robot: simClasses.Robot):
-    friends = robot.get_friends()
+    #friends = robot.get_friends()
+    friends=[None, None]
     if friends[0] is None and friends[1] is None:  # No friends to avoid
         linear_velocity, angular_velocity = univec_controller(robot, robot.target, avoid_obst=False,
                                                               stop_when_arrive=True, screen_out=True)  # Calculate linear and angular velocity
     else:  # Both friends to avoid
+        print("To desviando")
         robot.obst.update()
         linear_velocity, angular_velocity = univec_controller(robot, robot.target, True, robot.obst,
                                                               stop_when_arrive=True, screen_out=True)
@@ -795,13 +809,38 @@ def select_leader(robot1: simClasses.Robot, robot2: simClasses.Robot, ball: simC
     return leader, follower
 
 def rectangle(robot: simClasses.Robot, double_face=False):
-    posicoes_x = [47.5, 122.5, 122.5, 47.5]
-    posicoes_y = [25, 25, 105, 105]
-    posicoes_angulo = [-90*pi/180, 0, 90*pi/180, 180*pi/180]
+    '''
+        4          3
 
-    robot.target.set_coordinates(posicoes_x[robot.stateRetangle%4], 
-                                 posicoes_y[robot.stateRetangle%4], 
-                                 posicoes_angulo[robot.stateRetangle%4])
+        1          2
+    '''
+    #posicoes_x = [47.5, 122.5, 122.5, 47.5]
+    #posicoes_y = [25, 25, 105, 105]
+    #posicoes_angulo = [-90*pi/180, 0, 90*pi/180, 180*pi/180]
+
+    '''
+        1             5
+               2/6       4
+        7             3
+    '''
+    #posicoes_x = [47.5, 85, 122.5, 142, 122.5, 85, 47.5]
+    #posicoes_y = [105, 65, 25, 65, 105, 65, 25]
+    #posicoes_angulo = [90*pi/180, -45*pi/180, 0, 90*pi/180, 180*pi/180, -135*pi/180, -135*pi/180]
+
+    '''
+        2             3/6
+                    
+        1/4             5
+    '''
+    posicoes_x = [47.5, 47.5, 122.5, 47.5, 122.5, 122.5]
+    posicoes_y = [25, 105, 105, 25, 25, 105]
+    posicoes_angulo = [-135*pi/180, 90*pi/180, 0, -135*pi/180, 0*pi/180, 90*pi/180]
+
+    n_points = len(posicoes_x)
+
+    robot.target.set_coordinates(posicoes_x[robot.stateRetangle%n_points], 
+                                 posicoes_y[robot.stateRetangle%n_points], 
+                                 posicoes_angulo[robot.stateRetangle%n_points])
     
     if robot.calculate_distance(robot.target) < 5:
         robot.stateRetangle += 1

@@ -7,7 +7,7 @@ def handle_edge_behaviour(robot: simClasses.Robot):
     edge = detect_edge(robot)
     if edge != -1:
         correct_edge_navigation(robot, edge)
-        correct_on_edge_arrival_angle(robot, edge)
+        #correct_on_edge_arrival_angle(robot, edge)
     else:
         robot.spin = False
 
@@ -51,8 +51,8 @@ def correct_edge_navigation(robot: simClasses.Robot, edge):
             robot.spin = False
             return
     robot.spin = True
-    target.set_coordinates(target_coordinates.X + x_correction, target_coordinates.Y + y_correction,
-                           target_coordinates.rotation)
+    #target.set_coordinates(target_coordinates.X + x_correction, target_coordinates.Y + y_correction,
+    #                       target_coordinates.rotation)
 
 
 def correct_on_edge_arrival_angle(robot: simClasses.Robot, edge):

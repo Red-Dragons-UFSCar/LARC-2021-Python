@@ -135,7 +135,7 @@ class Strategy:
             else:
                 self.basic_stg_att()
         else:
-            if ball_coordinates.X > 75:
+            if ball_coordinates.X > 85:
                 self.basic_stg_att()
             else:
                 self.basic_stg_def_2()
@@ -182,23 +182,42 @@ class Strategy:
         Output: None."""
         if not self.mray:
             if self.ball._coordinates.X < 40 and 30 < self.ball._coordinates.Y < 110:  # If the ball has inside of defense area
-                action.defender_penalty_spin(self.robots[0], self.ball,
+                if self.robots[0].calculate_distance(self.ball)<12:
+                    if self.robots[0]._coordinates.Y < self.ball._coordinates.Y:
+                        self.robots[0].sim_set_vel(0, -20)
+                    else:
+                        self.robots[0].sim_set_vel(0, 20)
+                else:
+                    action.defender_penalty(self.robots[0], self.ball,
                                              left_side=not self.mray)  # Goalkeeper move ball away
                 action.screen_out_ball(self.robots[1], self.ball, 55, left_side=not self.mray)
+
             else:
                 action.defender_spin(self.robots[1], self.ball, left_side=not self.mray)  # Defender chases ball
                 action.screen_out_ball(self.robots[0], self.ball, 22, left_side=not self.mray, upper_lim=81,
                                        lower_lim=42)  # Goalkeeper keeps in goal
-                action.go_to_point(self.robots[2], 105, 65, pi/2)
+            if self.ball._coordinates.Y > 65:
+                action.go_to_point(self.robots[2], 110, 45, pi/2)
+            else:
+                action.go_to_point(self.robots[2], 110, 85, pi/2)
+            #action.screen_out_ball(self.robots[2], self.ball, 110, left_side=not self.mray)
+            #action.go_to_point(self.robots[2], 105, 65, pi/2)
         else:  # The same idea for other team
-            if self.ball._coordinates.X > 130 and 30 < self.ball._coordinates.Y < 110:
-                action.defender_penalty_spin(self.robots[0], self.ball, left_side=not self.mray)
+            if self.ball._coordinates.X > 135 and 30 < self.ball._coordinates.Y < 110:
+                if self.robots[0].calculate_distance(self.ball)<12:
+                    if self.robots[0]._coordinates.Y > self.ball._coordinates.Y:
+                        self.robots[0].sim_set_vel(0, -20)
+                    else:
+                        self.robots[0].sim_set_vel(0, 20)
+                else:
+                    action.defender_penalty(self.robots[0], self.ball, left_side=not self.mray)
                 action.screen_out_ball(self.robots[1], self.ball, 55, left_side=not self.mray)
             else:
                 action.defender_spin(self.robots[1], self.ball, left_side=not self.mray)
                 action.screen_out_ball(self.robots[0], self.ball, 22, left_side=not self.mray, upper_lim=81,
                                        lower_lim=42)
-                action.go_to_point(self.robots[2], 65, 65, pi/2)
+            action.screen_out_ball(self.robots[2], self.ball, 110, left_side=not self.mray)
+            #action.go_to_point(self.robots[2], 65, 65, pi/2)
 
         #action.screen_out_ball(self.robots[2], self.ball, 110, left_side=not self.mray, upper_lim=120,
         #                       lower_lim=10)  # Attacker stays in midfield

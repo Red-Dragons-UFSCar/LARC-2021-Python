@@ -108,12 +108,18 @@ class Obstacle(KinematicBody):
         enemies = self.robot.get_enemies()
         friends = self.robot.get_friends()
         distances = []
-        distances.extend(enemies)
+        #distances.extend(enemies)
         distances.extend(friends)
 
         distances.sort(key=lambda a: self.robot.calculate_distance(a))
         obstacle = distances[0]
         self.set_obst(obstacle.get_coordinates().X, obstacle.get_coordinates().Y, obstacle.get_coordinates().rotation)
+        # for obst in friends:
+        #     print("Indice: ", obst.index, end='   ')
+        #     print("Cor: ", obst.teamYellow, end='   ')
+        #     print("X: ", obst._coordinates.X, end=' ')
+        #     print("Y: ", obst._coordinates.Y)
+
 
     def update2(self, ball, friends, enemies):
         """Input: ball, robot's friends and enemies list
@@ -138,6 +144,12 @@ class Obstacle(KinematicBody):
         # Setting current obstacle
         self.set_obst(obstacles[0].get_coordinates().X, obstacles[0].get_coordinates().Y,
                       obstacles[0].get_coordinates().rotation)
+        
+        #for obstacle in obstacles:
+            #print("Indice: ", obstacle.index, end='   ')
+            #print("Cor: ", obstacle.teamYellow, end='   ')
+            #print("X: ", obstacle._coordinates.X)
+            
 
 
 class Ball(KinematicBody):
@@ -211,6 +223,7 @@ class Robot(KinematicBody):
         self._friends = []
         self.pastPose = zeros(12).reshape(4,
                                           3)
+        self.contZum = 0
         
         # PID1
         self.last_univector_angle = 0
@@ -270,15 +283,18 @@ class Robot(KinematicBody):
         self.vR = v + 0.5 * self.L * w
         self.vL = v - 0.5 * self.L * w
         
-        
+        #print(self.vR)
         #self.actuator.send(self.index, v1, v2)
-        self.actuator.send_mensage(self.index,self.teamYellow,self.vR,self.vL)
+        #self.actuator.send_mensage(self.index,self.teamYellow,self.vR,self.vL)
+        
 
     def sim_set_vel2(self, v1, v2):
         """Input: Wheels velocity data.
         Description: Sends velocity data to simulator to move the robots.
         Output: None."""
-        self.actuator.send_mensage(self.index,self.teamYellow, v1, v2)
+        self.vR = v1
+        self.vL = v2
+        #self.actuator.send_mensage(self.index,self.teamYellow, v1, v2)
         #self.actuator.send(self.index, v1, v2)
 
     def set_friends(self, friends):
@@ -299,3 +315,39 @@ class Robot(KinematicBody):
 
     def get_target(self) -> Target:
         return self.target
+    
+    def set_wall_obstacle(self):
+        obj1 = Obstacle(None)
+        obj2 = Obstacle(None)
+        obj3 = Obstacle(None)
+        obj4 = Obstacle(None)
+        
+        #Travado em X, acompanhando em Y
+        #Direita
+        obj1.set_obst(162, self._coordinates.Y, 0)
+        #Esquerda
+        obj2.set_obst(-2, self._coordinates.Y, 0)
+        
+        #Travado em Y, acompanhando em X
+        #cima
+        obj3.set_obst(self._coordinates.X, 132, 0)
+        #baixo
+        obj4.set_obst(self._coordinates.X, -2, 0)
+
+        dict_obst = {obj1: 0, obj2: 0, obj3:0 , obj4: 0}
+        for obst in dict_obst:
+            dict_obst[obst] = self.calculate_distance(obst)
+        objeto_menor_distancia = None
+        menor_distancia = None
+
+        for obst, distancia in dict_obst.items():
+            if objeto_menor_distancia is None or distancia < menor_distancia:
+                objeto_menor_distancia = obst
+                menor_distancia = distancia
+        #print(dict_obst)
+        self.obst.set_obst(objeto_menor_distancia._coordinates.X, objeto_menor_distancia._coordinates.Y, 0)
+        #print("Obstaculo definido")
+        #print("x: ", self.obst._coordinates.X, end=' ')
+        #print("y: ", self.obst._coordinates.Y, end=' ')
+        #print("o: ", self.obst._coordinates.rotation)
+        return objeto_menor_distancia, menor_distancia
