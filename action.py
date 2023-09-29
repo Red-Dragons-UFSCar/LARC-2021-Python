@@ -124,7 +124,7 @@ def defender_spin(robot: simClasses.Robot, ball: simClasses.Ball, left_side=True
         robot.sim_set_vel(linear_velocity, angular_velocity)
         #robot.sim_set_vel(0, 0)
         return
-    robot.sim_set_vel2(100 * robot.face, 100 * robot.face)  # Send the velocity of right and left wheel
+    robot.sim_set_vel2(50 * robot.face, 50 * robot.face)  # Send the velocity of right and left wheel
     #robot.sim_set_vel(linear_velocity, angular_velocity)
 
 
@@ -194,6 +194,7 @@ def try_corner_spin_defender_spin(ball: simClasses.Ball, robot: simClasses.Robot
     # TODO arrumar isso urgente
     # Check if the flag spin is true and if distance is lower than a threshold
     robot_coordinates = robot.get_coordinates()
+    w = 16
     if robot.spin and distance_ball_robot < 10:
         if not robot.teamYellow:
             '''
@@ -204,17 +205,17 @@ def try_corner_spin_defender_spin(ball: simClasses.Ball, robot: simClasses.Robot
             if robot._coordinates.X < ball._coordinates.X:
                 if robot_coordinates.Y > 65:
                     linear_velocity = 0
-                    angular_velocity = -30
+                    angular_velocity = -w
                 else:
                     linear_velocity = 0
-                    angular_velocity = 30
+                    angular_velocity = w
         elif robot._coordinates.X < ball._coordinates.X:
             if robot_coordinates.Y > 65:
                 linear_velocity = 0
-                angular_velocity = 30
+                angular_velocity = w
             else:
                 linear_velocity = 0
-                angular_velocity = -30
+                angular_velocity = -w
     return linear_velocity, angular_velocity
 
 
@@ -253,7 +254,7 @@ def screen_out_ball(robot: simClasses.Robot, ball: simClasses.KinematicBody, sta
     else:
         linear_velocity, angular_velocity = calculate_velocities_screenout(robot)
 
-    if robot.calculate_distance(robot.target) < 10:
+    if robot.calculate_distance(robot.target) < 5:
         linear_velocity = 0
 
     robot.sim_set_vel(linear_velocity, angular_velocity)

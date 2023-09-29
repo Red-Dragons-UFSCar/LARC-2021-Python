@@ -167,8 +167,9 @@ def pid(robot, des_theta):
     #Ki = 0.0
     #T0 = 1/60
 
-    Kp = 3.5
-    Kd = 0.075
+    # v = 60
+    Kp = 4
+    Kd = 0.02
     Ki = 0.0
     T0 = 1/60
 
@@ -211,19 +212,33 @@ def pid(robot, des_theta):
 
     if robot.calculate_distance(robot.target) < 20:
         fator = (max((1-abs(w)/(saturacao/2)), 0))
-        #fator = sigmoid(fator*12-6)
-    #elif robot.calculate_distance(robot.target) < 40:
-    #    fator = (max((1-abs(w)/(saturacao/1.5)), 0))
-    #    fator = sigmoid(fator*12-6)
+        fator = sigmoid(fator*12-6)
+    elif robot.calculate_distance(robot.target) < 40:
+        fator = (max((1-abs(w)/(saturacao/1.5)), 0))
+        fator = sigmoid(fator*12-6)
     else:
         fator = 1
+    fator=1
 
     if w > limiar:
-        v = 50*robot.face*fator
+        v = 30*robot.face*fator
     else:
-        v = 50*robot.face*fator
+        v = 30*robot.face*fator
     #'''
 
+    vmin = 30
+    vmax = 60
+
+    dmin = 10
+    dmax = 60
+
+    if robot.calculate_distance(robot.target) < dmin:
+        v = vmin*robot.face
+    elif robot.calculate_distance(robot.target) > dmax:
+        v = vmax*robot.face
+    else:
+        v = vmin*robot.face + (robot.calculate_distance(robot.target)-dmin)/(dmax-dmin) *(vmax-vmin)*robot.face
+    print(v)
     ## Adaptação 2
     '''
     def sigmoid(x):
@@ -246,6 +261,7 @@ def pid(robot, des_theta):
     else:
         v = 50*robot.face*fator
     '''
+    #v = 30*robot.face
     return v, w
 
 def pid2(robot, des_theta):

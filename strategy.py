@@ -182,7 +182,7 @@ class Strategy:
         Output: None."""
         if not self.mray:
             if self.ball._coordinates.X < 40 and 30 < self.ball._coordinates.Y < 110:  # If the ball has inside of defense area
-                if self.robots[0].calculate_distance(self.ball)<12:
+                if self.robots[0].calculate_distance(self.ball)<9:
                     if self.robots[0]._coordinates.Y < self.ball._coordinates.Y:
                         self.robots[0].sim_set_vel(0, -20)
                     else:
@@ -204,7 +204,7 @@ class Strategy:
             #action.go_to_point(self.robots[2], 105, 65, pi/2)
         else:  # The same idea for other team
             if self.ball._coordinates.X > 135 and 30 < self.ball._coordinates.Y < 110:
-                if self.robots[0].calculate_distance(self.ball)<12:
+                if self.robots[0].calculate_distance(self.ball)<9:
                     if self.robots[0]._coordinates.Y > self.ball._coordinates.Y:
                         self.robots[0].sim_set_vel(0, -20)
                     else:

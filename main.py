@@ -110,11 +110,13 @@ if __name__ == "__main__":
 
     def getData(ball, robots):
         client_control.update(mray)
-        field = client_control.get_data_Red()
+        field = client_control.get_data()
 
-        data_our_bot = field[0]["our_bots"]  # Salva os dados dos robôs aliados
-        data_their_bots = field[0]["their_bots"]  # Salva os dados dos robôs inimigos
+        data_our_bot = field[0]["robots_blue"]  # Salva os dados dos robôs aliados
+        data_their_bots = field[0]["robots_yellow"]  # Salva os dados dos robôs inimigos
         data_ball = field[0]["ball"]  # Salva os dados da bola
+
+        print(data_our_bot)
 
         data_our_bot2 = []
         for i in range(len(data_our_bot)):
@@ -122,7 +124,6 @@ if __name__ == "__main__":
                 data_our_bot2.append(data_our_bot[i])
         
         data_our_bot = data_our_bot2
-        #print(data_our_bot)
 
         for i in range(len(data_our_bot)):  # Separação de dados recebidos da visão
             for index, robot in enumerate(robots):
@@ -190,11 +191,10 @@ if __name__ == "__main__":
         if COM_REF:
             if data_ref["foul"] == 6:
                 print("GAME ON")
-                #strategy.coach()
+                strategy.coach()
                 #action.screen_out_ball(robots[2], ball, 85, True, upper_lim = 90, lower_lim= 50)
-                #print(data_our_bot)
                 #action.rectangle(robots[2])
-                action.defender_spin(robots[2], ball)
+                #action.defender_spin(robots[0], ball)
             else:
                 print("GAME OFF")
                 robots[0].sim_set_vel(0, 0)
@@ -227,9 +227,9 @@ if __name__ == "__main__":
         dirMot1_Robo3 = verifyDirection(vl_3)
         dirMot2_Robo3 = verifyDirection(vr_3)
 
-        if( not (vl_3 == 100 and vr_3 == 100) ):
-            vl_3 = min(vl_3, 80)
-            vr_3 = min(vr_3, 80)
+        #if( not (vl_3 == 100 and vr_3 == 100) ):
+        #    vl_3 = min(vl_3, 80)
+        #    vr_3 = min(vr_3, 80)
 
         # Palavra de Bytes de direção
         direcao1 = dirMot1_Robo1<<6 | dirMot2_Robo1<<4 | dirMot1_Robo2<<2 | dirMot2_Robo2
