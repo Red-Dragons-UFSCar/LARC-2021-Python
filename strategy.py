@@ -34,32 +34,51 @@ class Strategy:
                 self.wallDeffenseDefault()
             elif selectedStrategy == "default5v5":
                 self.basicStg()
+            elif selectedStrategy == "tripleAttack":
+                self.tripleAttack()
             else:
                 self.basicStg()
 
     def basicStg(self):
         if self.mray:
-            if self.ball.xPos > 125:
+            if self.ball.xPos < 125:
                 self.basicStgAtt()
             else:
                 self.basicStgDef()
         else:
-            if self.ball.xPos > 125:
+            if self.ball.xPos < 125:
                 self.basicStgDef()
             else:
                 self.basicStgAtt()
 
     def wallDeffenseDefault(self):
         if self.mray:
-            if self.ball.xPos > 125:
+            if self.ball.xPos < 125:
                 self.wallStgAtt()
             else:
                 self.wallStgDef()
         else:
-            if self.ball.xPos > 125:
+            if self.ball.xPos < 125:
                 self.wallStgDef()
             else:
                 self.wallStgAtt()
+
+    def tripleAttack(self):
+        if self.mray:
+            if self.ball.xPos < 125:
+                self.tripleStgAtt()
+            else:
+                self.basicStgDef()
+        else:
+            if self.ball.xPos < 125:
+                self.basicStgDef()
+            else:
+                self.tripleAttack()
+
+    def tripleStgAtt(self):
+        action.triple_ataque(self.ball, self.robot2, self.robot3, self.robot4, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4)
+        action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
+        action.screenOutBall(self.robot1, self.ball, 105, leftSide=not self.mray, upperLim=175, lowerLim=95)
 
     def basicStgAtt2(self):
         if not self.mray:

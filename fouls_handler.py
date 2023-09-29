@@ -21,3 +21,9 @@ def FoulsHandler(selectedStrategy):
             return currentFouls
         except:
             print("Erro ao importar o módulo de fouls")
+    elif selectedStrategy == "tripleAttack":
+        try:
+            currentFouls = importlib.import_module('fouls_foulder.fouls_wallDeffenseDefault')
+            return currentFouls
+        except:
+            print("Erro ao importar o módulo de fouls")

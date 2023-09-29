@@ -37,6 +37,8 @@ if __name__ == "__main__":
         mray = False
 
     # Choose strategy
+
+    strategyList = ['wallDeffenseDefault', 'blockingWallDeffense', 'default5v5', 'tripleAttack']
     try:
         selectedStrategy = sys.argv[2]
         currentFouls = FoulsHandler(selectedStrategy)
@@ -44,15 +46,14 @@ if __name__ == "__main__":
         print("[ERRO]")
         print("Digite como parâmetro a estratégia que você ira jogar!")
         print("Exemplo: python3 main.py yellow wallDeffenseDefault")
-        print("\n=== Estratégias disponíveis ===\nwallDeffenseDefault\nblockingWallDeffense\ndefault5v5")
+        print("\n=== Estratégias disponíveis ===\nwallDeffenseDefault\nblockingWallDeffense\ndefault5v5\ntripleAttack")
         sys.exit()
-    if selectedStrategy != "wallDeffenseDefault" and selectedStrategy != "blockingWallDeffense" and selectedStrategy != "default5v5":
+    if selectedStrategy not in strategyList:
         print("[ERRO]")
         print("Digite como parâmetro a estratégia disponível que você ira jogar!")
         print("Exemplo: python3 main.py yellow wallDeffenseDefault")
         print("\n=== Estratégias disponíveis ===\nwallDeffenseDefault\nblockingWallDeffense\ndefault5v5")
         sys.exit()
-
 
     # Initialize all clients
     actuator = Actuator(mray, "127.0.0.1", 20011)
@@ -116,6 +117,7 @@ if __name__ == "__main__":
         default5v5              ==>     Código original do Joao padrão com defesa e ataque padrões
         """
 
+        #action.triple_ataque(ball, robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4)
 
         
         if ref_data["game_on"]:
@@ -147,6 +149,7 @@ if __name__ == "__main__":
 
         else:
             actuator.stop()
+        
 
         t2 = time.time()
         if t2-t1<1/60:

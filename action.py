@@ -500,6 +500,81 @@ def leaderSelector(robot1, robot2, ball):
                 else:
                     robot2.holdLeader += 1
 
+#triple_leaederSelector
+def triple_leaderSelector(robot1, robot2, robot3, ball):
+    dist1 = sqrt((robot1.xPos - ball.xPos) ** 2 + (robot1.yPos - ball.yPos) ** 2)
+    dist2 = sqrt((robot2.xPos - ball.xPos) ** 2 + (robot2.yPos - ball.yPos) ** 2)
+    dist3 = sqrt((robot3.xPos - ball.xPos) ** 2 + (robot3.yPos - ball.yPos) ** 2)
+
+    if dist1 < dist2 and dist1 < dist3: # Strategy if robot 2 is closer to the ball
+        if robot1.isLeader is None and robot2.isLeader is None and robot3.isLeader is None:
+            robot1.isLeader = True
+            robot2.isLeader = False
+            robot3.isLeader = False
+            robot1.holdLeader += 1
+
+        else:
+            if robot1.isLeader:
+                robot1.holdLeader += 1
+            else:
+                if robot2.holdLeader > 60 or robot3.holdLeader > 60:
+                    robot1.isLeader = True
+                    robot2.isLeader = False
+                    robot3.isLeader = False
+                    robot1.holdLeader += 1
+                    robot2.holdLeader = 0
+                    robot3.holdLeader = 0
+                elif robot2.holdLeader > 0:
+                    robot2.holdLeader += 1
+                elif robot3.holdLeader > 0:
+                    robot3.holdLeader += 1
+
+    if dist2 < dist1 and dist2 < dist3: # Strategy if robot 2 is closer to the ball
+        if robot1.isLeader is None and robot2.isLeader is None and robot3.isLeader is None:
+            robot1.isLeader = False
+            robot2.isLeader = True
+            robot3.isLeader = False
+            robot2.holdLeader += 1
+
+        else:
+            if robot2.isLeader:
+                robot2.holdLeader += 1
+            else:
+                if robot1.holdLeader > 60 or robot3.holdLeader > 60:
+                    robot2.isLeader = True
+                    robot1.isLeader = False
+                    robot3.isLeader = False
+                    robot1.holdLeader = 0
+                    robot3.holdLeader = 0
+                    robot2.holdLeader += 1
+                elif robot1.holdLeader > 0:
+                    robot1.holdLeader += 1
+                elif robot3.holdLeader > 0:
+                    robot3.holdLeader += 1
+
+    if dist3 < dist2 and dist3 < dist1: # Strategy if robot 2 is closer to the ball
+        if robot1.isLeader is None and robot2.isLeader is None and robot3.isLeader is None:
+            robot1.isLeader = False
+            robot2.isLeader = False
+            robot3.isLeader = True
+            robot3.holdLeader += 1
+
+        else:
+            if robot3.isLeader:
+                robot3.holdLeader += 1
+            else:
+                if robot1.holdLeader > 60 or robot2.holdLeader > 60:
+                    robot1.isLeader = False
+                    robot2.isLeader = False
+                    robot3.isLeader = True
+                    robot1.holdLeader = 0
+                    robot2.holdLeader = 0
+                    robot3.holdLeader += 1
+                elif robot1.holdLeader > 0:
+                    robot1.holdLeader += 1
+                elif robot2.holdLeader > 0:
+                    robot2.holdLeader += 1
+
 def mirror_follower(robot_follower, robot_leader, ball, robot0=None, robot_enemy_0=None, robot_enemy_1=None, robot_enemy_2=None, robot_enemy_3=None, robot_enemy_4=None):
 
     '''
@@ -850,6 +925,100 @@ def ataque(ball, robot1, robot2, robot_enemy_0, robot_enemy_1, robot_enemy_2, ro
             defenderSpin(robot2, ball, left_side=not robot1.teamYellow, friend1=robot1, friend2=robot1, 
                     enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2, enemy4=robot_enemy_3, enemy5=robot_enemy_4)
             mirror_follower(robot1, robot2, ball)
+
+def triple_ataque(ball, robot1, robot2, robot3, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4):
+
+    if (not robot1.teamYellow) and ball.xPos < 150 and ball.yPos > 50 and ball.yPos < 130:
+        defenderSpin(robot1, ball, left_side=not robot1.teamYellow, friend1=robot3, friend2=robot2, 
+                    enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2, enemy4=robot_enemy_3, enemy5=robot_enemy_4)
+        defenderSpin(robot2, ball, left_side=not robot1.teamYellow, friend1=robot1, friend2=robot3, 
+                    enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2, enemy4=robot_enemy_3, enemy5=robot_enemy_4)
+        defenderSpin(robot3, ball, left_side=not robot1.teamYellow, friend1=robot2, friend2=robot1, 
+                    enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2, enemy4=robot_enemy_3, enemy5=robot_enemy_4)
+        
+    elif robot1.teamYellow and ball.xPos < 70 and ball.yPos > 50 and ball.yPos < 130:
+        defenderSpin(robot1, ball, left_side=not robot1.teamYellow, friend1=robot2, friend2=robot3, 
+                    enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2, enemy4=robot_enemy_3, enemy5=robot_enemy_4)
+        defenderSpin(robot2, ball, left_side=not robot1.teamYellow, friend1=robot1, friend2=robot3, 
+                    enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2, enemy4=robot_enemy_3, enemy5=robot_enemy_4)
+        defenderSpin(robot3, ball, left_side=not robot1.teamYellow, friend1=robot2, friend2=robot1, 
+                    enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2, enemy4=robot_enemy_3, enemy5=robot_enemy_4)
+    else:
+        triple_leaderSelector(robot1, robot2, robot3, ball)
+
+        if robot1.isLeader:
+            defenderSpin(robot1, ball, left_side=not robot1.teamYellow, friend1=robot2, friend2=robot3, 
+                    enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2, enemy4=robot_enemy_3, enemy5=robot_enemy_4)
+            mirror_follower(robot2, robot1, ball)
+            robot3_idle(robot3, robot1, robot2, ball)
+        if robot2.isLeader:
+            defenderSpin(robot2, ball, left_side=not robot1.teamYellow, friend1=robot1, friend2=robot3, 
+                    enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2, enemy4=robot_enemy_3, enemy5=robot_enemy_4)
+            mirror_follower(robot1, robot2, ball)
+            robot3_idle(robot3, robot1, robot2, ball)
+        if robot3.isLeader:
+            defenderSpin(robot3, ball, left_side=not robot1.teamYellow, friend1=robot1, friend2=robot2, 
+                    enemy1=robot_enemy_0, enemy2=robot_enemy_1, enemy3=robot_enemy_2, enemy4=robot_enemy_3, enemy5=robot_enemy_4)
+            idle_ataque(robot2, ball)
+            mirror_follower(robot1, robot2, ball)
+
+def robot3_idle(robot, robot1, robot2, ball):
+    
+    if robot.teamYellow:
+        xPos = robot1.xPos + 25
+    else:
+        xPos = robot1.xPos - 25
+
+    yPos = (robot1.yPos + robot2.yPos)/2
+
+    dist = sqrt((robot.xPos - xPos) ** 2 + (robot.yPos - yPos) ** 2)
+    arrival_theta = arctan2(ball.yPos - robot.yPos, ball.xPos - robot.xPos)
+    robot.target.update(xPos, yPos, arrival_theta)
+
+    if dist<10:
+        stop(robot)
+    else:
+        v, w = univecController(robot, robot.target, avoidObst=False, n=16, d=2)
+        robot.simSetVel(v, w)
+
+
+def idle_ataque(robot, ball, robot0=None, robot_enemy_0=None, robot_enemy_1=None, robot_enemy_2=None, robot_enemy_3=None, robot_enemy_4=None):
+
+    '''
+    Defines the position of the follower based on the leader position, the position is a mirror position based on the leader
+    '''
+
+    if robot.teamYellow:
+        proj_x = ball.xPos - 15
+    else:
+        proj_x = ball.xPos + 15
+
+    if proj_x >= 220:
+        proj_x = 220
+    
+    if proj_x <= 30:
+        proj_x = 30
+
+    proj_y = 45
+
+    '''
+    Calculate distante between the follower and the projected point
+    '''
+    dist = sqrt((robot.xPos - proj_x) ** 2 + (robot.yPos - proj_y) ** 2)
+    arrival_theta = arctan2(ball.yPos - robot.yPos, ball.xPos - robot.xPos)
+    robot.target.update(proj_x, proj_y, arrival_theta)
+
+    if dist < 10: # Check if the robot is close to the projected point and stops the robot
+        stop(robot)
+    else:
+        # No friends to avoid
+        if robot0 is None and robot_enemy_0 is None and robot_enemy_1 is None and robot_enemy_2 is None:
+            v, w = univecController(robot, robot.target, avoidObst=False, n=16, d=2)
+        else:  # Both friends to avoid
+            robot.obst.update2(robot, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
+            v, w = univecController(robot, robot.target, True, robot.obst, n=4, d=4)
+
+        robot.simSetVel(v, w)
 
 def ataque2(ball, robot1, robot2, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4):
 
