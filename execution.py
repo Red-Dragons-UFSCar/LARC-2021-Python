@@ -238,7 +238,6 @@ def pid(robot, des_theta):
         v = vmax*robot.face
     else:
         v = vmin*robot.face + (robot.calculate_distance(robot.target)-dmin)/(dmax-dmin) *(vmax-vmin)*robot.face
-    print(v)
     ## Adaptação 2
     '''
     def sigmoid(x):

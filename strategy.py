@@ -25,6 +25,8 @@ class Strategy:
         self.penalty_handler = penalty_handler.PenaltyHandler(self, self.robots, self.enemy_robots, self.ball,
                                                               self.mray)
         self.goal_already_happened = False
+        self.flagDefenderAttack = False
+        self.sideKeepPosition = 0
 
     def handle_game_on(self):
         if self.goal_already_happened:
@@ -123,7 +125,184 @@ class Strategy:
                 self.stg_att_v2()
             else:
                 self.stg_def_v2()
+    
+    def coach_fisico(self):
+        self.robot_goalkeeper = self.robots[0]
+        self.robot_defender = self.robots[1]
+        self.robot_attacker = self.robots[2]
 
+        self.lim_def_area_x = 35
+        self.lim_def_area_y_s = 110
+        self.lim_def_area_y_i = 30
+        
+        self.goalkeeper()
+        self.defender()
+        self.attacker()
+
+    def goalkeeper(self):
+        ball_coordinates = self.ball.get_coordinates()
+        self.mray = False
+        if not self.mray:
+            if ball_coordinates.X < self.lim_def_area_x and self.lim_def_area_y_i < ball_coordinates.Y < self.lim_def_area_y_s:  # If the ball has inside of defense area
+                if self.robot_goalkeeper.calculate_distance(self.ball)<9:
+                    if self.robot_goalkeeper._coordinates.Y < self.ball._coordinates.Y:
+                        self.robot_goalkeeper.sim_set_vel(0, -20)
+                    else:
+                        self.robot_goalkeeper.sim_set_vel(0, 20)
+                else:
+                    action.defender_penalty(self.robot_goalkeeper, self.ball,left_side=not self.mray)  # Goalkeeper move ball away
+            else:
+                action.screen_out_ball(self.robot_goalkeeper, self.ball, 20, left_side=not self.mray, upper_lim=85,
+                                       lower_lim=40)  # Goalkeeper keeps in goal
+        else:  # The same idea for other team
+            if ball_coordinates.X > 160-self.lim_def_area_x and self.lim_def_area_y_i < ball_coordinates.Y < self.lim_def_area_y_s:  # If the ball has inside of defense area
+                if self.robot_goalkeeper.calculate_distance(self.ball)<9:
+                    if self.robot_goalkeeper._coordinates.Y < self.ball._coordinates.Y:
+                        self.robot_goalkeeper.sim_set_vel(0, 20)
+                    else:
+                        self.robot_goalkeeper.sim_set_vel(0, -20)
+                else:
+                    action.defender_penalty(self.robot_goalkeeper, self.ball,left_side=not self.mray)  # Goalkeeper move ball away
+            else:
+                action.screen_out_ball(self.robot_goalkeeper, self.ball, 20, left_side=not self.mray, upper_lim=81,
+                                       lower_lim=42)
+        self.mray = True
+                
+    def defender_standard(self):
+        ball_coordinates = self.ball.get_coordinates()
+        if not self.mray:
+            if ball_coordinates.X < 85: 
+                if ball_coordinates.X < self.lim_def_area_x and self.lim_def_area_y_i < ball_coordinates.Y < self.lim_def_area_y_s:  # If the ball has inside of defense area
+                    action.screen_out_ball(self.robot_defender, self.ball, 55, left_side=not self.mray)
+                else:
+                    action.defender_spin(self.robot_defender, self.ball, left_side=not self.mray)  # Defender chases ball
+            else:
+                action.screen_out_ball(self.robot_defender, self.ball, 60, left_side=not self.mray, upper_lim=120, lower_lim=10)  # Defender behavior
+        
+        else:  # The same idea for other team
+            if ball_coordinates.X > 65:
+                if ball_coordinates.X < 160-self.lim_def_area_x and self.lim_def_area_y_i < ball_coordinates.Y < self.lim_def_area_y_s:  # If the ball has inside of defense area
+                    action.screen_out_ball(self.robot_defender, self.ball, 55, left_side=not self.mray)
+                else:
+                    action.defender_spin(self.robot_defender, self.ball, left_side=not self.mray)  # Defender chases ball
+            else:
+                action.screen_out_ball(self.robot_defender, self.ball, 60, left_side=not self.mray, upper_lim=120, lower_lim=10)  # Defender behavior
+    
+    def defender(self):
+        ball_coordinates = self.ball.get_coordinates() # Coordenadas da bola
+        attacker_coordinates = self.robot_attacker.get_coordinates()
+        
+        if not self.mray: # Lado esquerdo
+            if ball_coordinates.X < 85:  # Defendendo
+                # Se a bola está na área de defesa
+                if ball_coordinates.X < self.lim_def_area_x and self.lim_def_area_y_i < ball_coordinates.Y < self.lim_def_area_y_s:  # If the ball has inside of defense area
+                    action.screen_out_ball(self.robot_defender, self.ball, 55, left_side=not self.mray)
+                else:
+                    action.defender_spin(self.robot_defender, self.ball, left_side=not self.mray)  # Defender chases ball
+            else:   # Atacando
+                # Condicoes para avançar o robo zagueiro
+                if ball_coordinates.X < 107.5 and self.flagDefenderAttack: # Retorno do zagueiro
+                    self.flagDefenderAttack = False
+                elif ball_coordinates.X > 112.5 and not self.flagDefenderAttack: # Avanço do zagueiro
+                    self.flagDefenderAttack = True
+
+                # Definicão da posição de espera na intermediaria
+                if ball_coordinates.X < 112.5:
+                    if ball_coordinates.Y > 65:
+                        self.sideKeepPosition = 0
+                    else:
+                        self.sideKeepPosition = 1
+                
+                # Se ele for para o ataque
+                if self.flagDefenderAttack:
+                    # Condição de bola na area de atuacao
+                    area = (ball_coordinates.X > 125) and (ball_coordinates.Y > 40) and (ball_coordinates.Y < 90)
+                    attacker_area = (attacker_coordinates.X > 125) and (attacker_coordinates.Y > 50) and (attacker_coordinates.Y < 80)
+                    if area and not attacker_area: # Se a bola está na área
+                        action.defender_spin(self.robot_defender, self.ball, left_side=not self.mray)  # Defender chases ball
+                    else: # Mantem posicao de espera
+                        if self.sideKeepPosition==0:
+                            action.go_to_point(self.robot_defender, 112.5, 25, 0)
+                        else:
+                            action.go_to_point(self.robot_defender, 112.5, 105, 0)
+                    
+                    if (ball_coordinates.Y > 100) and self.sideKeepPosition == 1:
+                        self.sideKeepPosition = 0
+                    elif (ball_coordinates.Y < 30) and self.sideKeepPosition == 0:
+                        self.sideKeepPosition = 1
+                    
+                else: # Se ele se mantem na defesa
+                    action.screen_out_ball(self.robot_defender, self.ball, 60, left_side=not self.mray, upper_lim=120, lower_lim=10)  # Defender behavior
+            print(self.sideKeepPosition)
+
+        else:  # The same idea for other team
+            if ball_coordinates.X > 85:  # Defendendo
+                # Se a bola está na área de defesa
+                if ball_coordinates.X > 160 - self.lim_def_area_x and self.lim_def_area_y_i < ball_coordinates.Y < self.lim_def_area_y_s:  # If the ball has inside of defense area
+                    action.screen_out_ball(self.robot_defender, self.ball, 55, left_side=not self.mray)
+                else:
+                    action.defender_spin(self.robot_defender, self.ball, left_side=not self.mray)  # Defender chases ball
+            else:   # Atacando
+                # Condicoes para avançar o robo zagueiro
+                if ball_coordinates.X > 52.5 and self.flagDefenderAttack: # Retorno do zagueiro
+                    self.flagDefenderAttack = False
+                elif ball_coordinates.X < 47.5 and not self.flagDefenderAttack: # Avanço do zagueiro
+                    self.flagDefenderAttack = True
+
+                # Definicão da posição de espera na intermediaria
+                if ball_coordinates.X < 47.5:
+                    if ball_coordinates.Y > 65:
+                        self.sideKeepPosition = 2
+                    else:
+                        self.sideKeepPosition = 3
+                
+                # Se ele for para o ataque
+                if self.flagDefenderAttack:
+                    # Condição de bola na area de atuacao
+                    area = (ball_coordinates.X < 35) and (ball_coordinates.Y > 40) and (ball_coordinates.Y < 90)
+                    attacker_area = (attacker_coordinates.X < 35) and (attacker_coordinates.Y > 50) and (attacker_coordinates.Y < 80)
+                    if area and not attacker_area: # Se a bola está na área
+                        action.defender_spin(self.robot_defender, self.ball, left_side=not self.mray)  # Defender chases ball
+                    else: # Mantem posicao de espera
+                        if self.sideKeepPosition==2:
+                            action.go_to_point(self.robot_defender, 47.5, 25, 180)
+                        elif self.sideKeepPosition==3:
+                            action.go_to_point(self.robot_defender, 47.5, 105, 180)
+                    
+                    if (ball_coordinates.Y > 100) and self.sideKeepPosition == 3:
+                        self.sideKeepPosition = 2
+                    elif (ball_coordinates.Y < 30) and self.sideKeepPosition == 2:
+                        self.sideKeepPosition = 3
+                    
+                else: # Se ele se mantem na defesa
+                    action.screen_out_ball(self.robot_defender, self.ball, 60, left_side=not self.mray, upper_lim=120, lower_lim=10)  # Defender behavior
+            print(self.sideKeepPosition)
+
+    def attacker(self):
+
+        ball_coordinates = self.ball.get_coordinates() # Coordenadas da bola
+
+        if self.mray:
+            if ball_coordinates.X > 85:
+                if ball_coordinates.Y > 65:
+                    action.go_to_point(self.robot_attacker, 47.5, 25, 180)
+                else:
+                    action.go_to_point(self.robot_attacker, 47.5, 105, 180)
+                #action.screen_out_ball(self.robots[2], self.ball, 110, left_side=not self.mray, upper_lim=120,
+                #                lower_lim=10)  # Attacker stays in midfield
+            else:
+                action.defender_spin(self.robots[2], self.ball, left_side=not self.mray)  # Attacker behavior
+        else:
+            if ball_coordinates.X < 85:
+                if ball_coordinates.Y > 65:
+                    action.go_to_point(self.robot_attacker, 112.5, 25, 180)
+                else:
+                    action.go_to_point(self.robot_attacker, 112.5, 105, 180)
+                #action.screen_out_ball(self.robots[2], self.ball, 110, left_side=not self.mray, upper_lim=120,
+                #                lower_lim=10)  # Attacker stays in midfield
+            else:
+                action.defender_spin(self.robots[2], self.ball, left_side=not self.mray)  # Attacker behavior
+                        
     def coach(self):
         """Input: None
         Description: The standard strategy, one robot as attacker, another as defender and another as goalkeeper.
@@ -188,8 +367,7 @@ class Strategy:
                     else:
                         self.robots[0].sim_set_vel(0, 20)
                 else:
-                    action.defender_penalty(self.robots[0], self.ball,
-                                             left_side=not self.mray)  # Goalkeeper move ball away
+                    action.defender_penalty(self.robots[0], self.ball,left_side=not self.mray)  # Goalkeeper move ball away
                 action.screen_out_ball(self.robots[1], self.ball, 55, left_side=not self.mray)
 
             else:

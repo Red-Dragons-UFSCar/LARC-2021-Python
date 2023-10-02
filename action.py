@@ -105,11 +105,17 @@ def defender_spin(robot: simClasses.Robot, ball: simClasses.Ball, left_side=True
     arrival_angle = calculate_arrival_angle_alternate(ball, left_side)
 
     # Teste para cantos
-    if ball_coordinates.Y > 120:
-        arrival_angle = 45*pi/180
-    elif ball_coordinates.Y < 10:
-        arrival_angle = -45*pi/180
-
+    if left_side:
+        if ball_coordinates.Y > 120:
+            arrival_angle = 45*pi/180
+        elif ball_coordinates.Y < 10:
+            arrival_angle = -45*pi/180
+    else:
+        if ball_coordinates.Y > 120:
+            arrival_angle = 135*pi/180
+        elif ball_coordinates.Y < 10:
+            arrival_angle = -135*pi/180
+    
     #arrival_angle=0
     robot.target.set_coordinates(ball_coordinates.X, ball_coordinates.Y, arrival_angle)
 
