@@ -189,9 +189,8 @@ if __name__ == "__main__":
         if COM_REF:
             if data_ref["foul"] == 6:
                 print("GAME ON")
-                #strategy.coach()
                 strategy.coach_fisico()
-                #action.screen_out_ball(robots[2], ball, 85, True, upper_lim = 90, lower_lim= 50)
+                #action.screen_out_ball(robots[0], ball, 85, True, upper_lim = 90, lower_lim= 50)
                 #action.rectangle(robots[2])
                 #action.defender_spin(robots[0], ball)
             elif data_ref["foul"] != 7:

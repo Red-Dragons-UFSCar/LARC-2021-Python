@@ -56,7 +56,12 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
         w -> Angular Velocity (float)"""
     #avoid_obst=False
     handle_edge_behaviour(robot)  # Checks if the robot is in some corner
-    navigate = Univector()  # Defines the navigation algorithm
+    navigate = Univector()  # Defines the navigation algorithM
+
+    if screen_out or robot.index == 0:
+        navigate.k_r = 3
+        navigate.d_e = 5
+    
     dl = 0.000001  # Constant to approximate phi_v
     k_w = 1.7  # Feedback constant for angle error (k_w=1 means no gain)
     k_p = 1  # Proporcional constant for stopping when arrive in target (k_p=1 means no gain)
