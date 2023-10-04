@@ -1,4 +1,4 @@
-from numpy import cos, sin, arctan2, sqrt, sign, pi, delete, append, array, exp
+from numpy import cos, sin, arctan2, sqrt, sign, pi, delete, append, array, exp, arccos
 
 from behaviours import Univector
 from corners import handle_edge_behaviour
@@ -119,7 +119,7 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
         v = min(abs(v1), abs(v2), abs(v3))  # Controller velocities v and w
         w = v * phi_v + k_w * sign(theta_e) * sqrt(abs(theta_e))
 
-    v, w = pid(robot, des_theta)
+    v, w = pid(robot, des_theta, screen_out)
     # Some code to store the past position, orientation and velocity
 
     #robot.v=v
@@ -165,7 +165,7 @@ def which_face(robot, target, des_theta, double_face, screen_out=False):
     #    robot.face = sideDecider_goalkeeper(RobotPos, angle, TargetPos, robot.index)
     return theta_e
 
-def pid(robot, des_theta):
+def pid(robot, des_theta, screen_out):
 
     #Kp = 3.5
     #Kd = 0.1
@@ -237,8 +237,32 @@ def pid(robot, des_theta):
     dmin = 10
     dmax = 60
 
+    vector_ball = [robot.target._coordinates.X-robot_coordinates.X, robot.target._coordinates.Y-robot_coordinates.Y]
+    abs_vector_ball = sqrt(vector_ball[0]**2 + vector_ball[1]**2)
+    vector_ball = vector_ball/abs_vector_ball
+
+    if robot.face == 1:
+        rotation = robot_coordinates.rotation
+    else:
+        rotation = arctan2(sin(robot_coordinates.rotation+pi), cos(robot_coordinates.rotation+pi))  # Error estimation with current face
+    
+    vector_robot = [cos(rotation), sin(rotation)]
+
+    dot_product = vector_ball[0]*vector_robot[0] + vector_ball[1]*vector_robot[1]
+
+    theta_ball = arccos(dot_product)
+
+    #print("Angulo: ", theta_ball*180/pi)
+    if theta_ball < 15:
+        flag_acelera = True
+    else:
+        flag_acelera = False
+
     if robot.calculate_distance(robot.target) < dmin:
-        v = vmin*robot.face
+        if flag_acelera and not screen_out:
+            v = vmax*robot.face
+        else:
+            v = vmin*robot.face
     elif robot.calculate_distance(robot.target) > dmax:
         v = vmax*robot.face
     else:

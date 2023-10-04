@@ -192,7 +192,7 @@ if __name__ == "__main__":
                 strategy.coach_fisico()
                 #action.screen_out_ball(robots[0], ball, 85, True, upper_lim = 90, lower_lim= 50)
                 #action.rectangle(robots[2])
-                #action.defender_spin(robots[0], ball)
+                #action.defender_spin(robots[2], ball)
             elif data_ref["foul"] != 7:
                 if selectedReplacer == "auto":
                     if data_ref["foul"] == 5 and (current_ref != -1 and current_ref != 6):
@@ -231,7 +231,7 @@ if __name__ == "__main__":
         else:
             print("REF OFF")
             #action.rectangle(robots[2])
-            #action.defender_spin(robots[2], ball)
+            action.defender_spin(robots[2], ball)
             #action.screen_out_ball(robots[1], ball, 40, True, upper_lim = 90, lower_lim= 50)
             #strategy.coach()
             
