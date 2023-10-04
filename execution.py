@@ -54,7 +54,7 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
     Description: Function to control the robot with or without obstacle avoidance
     Output: v -> Linear Velocity (float)
         w -> Angular Velocity (float)"""
-    avoid_obst=True
+    #avoid_obst=False
     handle_edge_behaviour(robot)  # Checks if the robot is in some corner
     navigate = Univector()  # Defines the navigation algorithm
     dl = 0.000001  # Constant to approximate phi_v
@@ -69,7 +69,7 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
 
     # Navigation: Go-to-Goal + Avoid Obstacle Vector Field
     robot.last_univector_angle = robot.univector_angle
-    robot.set_wall_obstacle()
+    #robot.set_wall_obstacle()
     obst = robot.obst
     if avoid_obst: # If obstacle avoidance is activated
         if field_is_hiperbolic:                                             # Use of the Hyperbolic field

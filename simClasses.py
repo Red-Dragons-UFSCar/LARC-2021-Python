@@ -105,8 +105,10 @@ class Obstacle(KinematicBody):
         """Input: Object lists.
         Description: Detects the nearest object and sets it as the current obstacle to avoid.
         Output: Current obstacle."""
-        enemies = self.robot.get_enemies()
+        #enemies = self.robot.get_enemies()
         friends = self.robot.get_friends()
+        #enemies = []
+        #friends = []
         distances = []
         #distances.extend(enemies)
         distances.extend(friends)

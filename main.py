@@ -9,6 +9,7 @@ import time
 import action
 from bridge import (Actuator, Replacer, Vision)
 import fouls
+from fouls_handler import FoulsHandler
 from simClasses import *
 from strategy import *
 from vss_communication import StrategyControl, Referee
@@ -125,6 +126,9 @@ if __name__ == "__main__":
     else:
         left_side = False
 
+
+    currentFouls = FoulsHandler('default')
+
     # Initialize all clients (simulation)
     '''
     actuator = Actuator(mray, "127.0.0.1", 20011)
@@ -134,7 +138,8 @@ if __name__ == "__main__":
     '''
     # Intialize all clients (real)
     client_control = StrategyControl(ip='224.5.23.2', port=10015, yellowTeam=mray, logger=False, pattern='ssl', convert_coordinates=True)  # Criação do objeto do controle e estratégia
-    referee = Referee("224.5.23.2", 10005, logger=False)
+    referee = Referee("224.5.23.2", 10003, logger=False)
+    #referee = Referee(mray, "224.5.23.2", 10003)
 
     # Initialize all  objects
     robots = []
@@ -162,6 +167,9 @@ if __name__ == "__main__":
     x = RepeatTimer((1/120), getData, args=(ball, robots, mray))
     x.start()
 
+    selectedReplacer = "auto"
+    #selectedReplacer = None
+
     # Main infinite loop
     t1 = time.time()
     while True:
@@ -169,6 +177,14 @@ if __name__ == "__main__":
 
         referee.update()  # Atualiza os dados do referee
         data_ref, errorCodeRef = referee.get_data()
+        #data_ref = referee.get_data()
+        print(data_ref)
+
+        if data_ref['foul'] != 5:
+            current_ref = data_ref['foul']
+            current_team_foul = data_ref['teamcolor']
+            current_quad = data_ref['foulQuadrant']
+        print(current_ref)
 
         if COM_REF:
             if data_ref["foul"] == 6:
@@ -178,6 +194,33 @@ if __name__ == "__main__":
                 #action.screen_out_ball(robots[2], ball, 85, True, upper_lim = 90, lower_lim= 50)
                 #action.rectangle(robots[2])
                 #action.defender_spin(robots[0], ball)
+            elif data_ref["foul"] != 7:
+                if selectedReplacer == "auto":
+                    if data_ref["foul"] == 5 and (current_ref != -1 and current_ref != 6):
+                        print("arruma stop")
+                        data_ref["foul"] = current_ref
+                        data_ref["teamcolor"] = current_team_foul
+                        data_ref["foulQuadrant"] = current_quad
+                        currentFouls.automatic_replacement(data_ref, not left_side, robots[0], robots[1], robots[2], enemy_robots[0], enemy_robots[1], enemy_robots[2])
+                        data_ref["foul"] = 5
+                        data_ref["foulQuadrant"] = 0
+                    #actuator.stop()
+                    elif current_ref == 6 or current_ref == 7:
+                        robots[0].sim_set_vel(0, 0)
+                        robots[1].sim_set_vel(0, 0)
+                        robots[2].sim_set_vel(0, 0)
+                        robots[0].face = 1
+                        robots[1].face = 1
+                        robots[2].face = 1 
+                    else:
+                        currentFouls.automatic_replacement(data_ref, not left_side, robots[0], robots[1], robots[2], enemy_robots[0], enemy_robots[1], enemy_robots[2])
+                else:
+                    robots[0].sim_set_vel(0, 0)
+                    robots[1].sim_set_vel(0, 0)
+                    robots[2].sim_set_vel(0, 0)
+                    robots[0].face = 1
+                    robots[1].face = 1
+                    robots[2].face = 1
             else:
                 print("GAME OFF")
                 robots[0].sim_set_vel(0, 0)

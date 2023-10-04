@@ -233,7 +233,6 @@ class Strategy:
                     
                 else: # Se ele se mantem na defesa
                     action.screen_out_ball(self.robot_defender, self.ball, 60, left_side=not self.mray, upper_lim=120, lower_lim=10)  # Defender behavior
-            print(self.sideKeepPosition)
 
         else:  # The same idea for other team
             if ball_coordinates.X > 85:  # Defendendo
@@ -276,7 +275,7 @@ class Strategy:
                     
                 else: # Se ele se mantem na defesa
                     action.screen_out_ball(self.robot_defender, self.ball, 60, left_side=not self.mray, upper_lim=120, lower_lim=10)  # Defender behavior
-            print(self.sideKeepPosition)
+            #print(self.sideKeepPosition)
 
     def attacker(self):
 
