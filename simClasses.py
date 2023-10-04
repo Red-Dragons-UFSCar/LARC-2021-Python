@@ -105,30 +105,33 @@ class Obstacle(KinematicBody):
         """Input: Object lists.
         Description: Detects the nearest object and sets it as the current obstacle to avoid.
         Output: Current obstacle."""
-        #enemies = self.robot.get_enemies()
+        enemies = self.robot.get_enemies()
         friends = self.robot.get_friends()
         #enemies = []
         #friends = []
         distances = []
-        #distances.extend(enemies)
+        distances.extend(enemies)
         distances.extend(friends)
 
         distances.sort(key=lambda a: self.robot.calculate_distance(a))
         obstacle = distances[0]
         self.set_obst(obstacle.get_coordinates().X, obstacle.get_coordinates().Y, obstacle.get_coordinates().rotation)
-        # for obst in friends:
-        #     print("Indice: ", obst.index, end='   ')
-        #     print("Cor: ", obst.teamYellow, end='   ')
-        #     print("X: ", obst._coordinates.X, end=' ')
-        #     print("Y: ", obst._coordinates.Y)
+        for obst in distances:
+            print("Indice: ", obst.index, end='   ')
+            print("Cor: ", obst.teamYellow, end='   ')
+            print("X: ", obst._coordinates.X, end=' ')
+            print("Y: ", obst._coordinates.Y)
 
 
-    def update2(self, ball, friends, enemies):
+    #def update2(self, ball, friends, enemies):
+    def update2(self, ball):
         """Input: ball, robot's friends and enemies list
         Description: Detects the nearest object and sets it as the current obstacle to avoid with some exceptions:
                          1 - The enemy player closest to the goal is not be considered obstacle
                          2 - If ball is too close to the enemy robot, he is not be considered obstacle
         Output:"""
+        enemies = self.robot.get_enemies()
+        friends = self.robot.get_friends()
         obstacles = enemies
 
         ball_distances = [enemy.calculate_distance(ball) for enemy in enemies]  # Distance to ball of all enemies robots

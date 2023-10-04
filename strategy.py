@@ -141,7 +141,7 @@ class Strategy:
 
     def goalkeeper(self):
         ball_coordinates = self.ball.get_coordinates()
-        self.mray = False
+        #self.mray = False
         if not self.mray:
             if ball_coordinates.X < self.lim_def_area_x and self.lim_def_area_y_i < ball_coordinates.Y < self.lim_def_area_y_s:  # If the ball has inside of defense area
                 if self.robot_goalkeeper.calculate_distance(self.ball)<9:
@@ -166,7 +166,7 @@ class Strategy:
             else:
                 action.screen_out_ball(self.robot_goalkeeper, self.ball, 20, left_side=not self.mray, upper_lim=81,
                                        lower_lim=42)
-        self.mray = True
+        #self.mray = True
                 
     def defender_standard(self):
         ball_coordinates = self.ball.get_coordinates()

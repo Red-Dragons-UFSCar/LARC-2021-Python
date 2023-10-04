@@ -29,15 +29,15 @@ def shoot(robot: simClasses.Robot, ball: simClasses.Ball, left_side=True):
 
 # TODO dar um jeito nessas funções extraídas
 def calculate_velocities(ball: simClasses.Ball, robot: simClasses.Robot, double_face=True):
-    friends = [None, None]
-    #friends = robot.get_friends()
+    #friends = [None, None]
+    friends = robot.get_friends()
     """Calculates the angular and linear velocities with the univec_controller function"""
     if friends[0] is None and friends[1] is None:  # No friends to avoid
         linear_velocity, angular_velocity = univec_controller(robot, robot.target, avoid_obst=False, n=16,
                                                               d=2, double_face=double_face)  # Calculate linear and angular velocity
     else:  # Both friends to avoid
         #robot.obst.update2(ball, robot.get_friends(), robot.get_enemies())
-        robot.obst.update()
+        robot.obst.update2(ball)
         linear_velocity, angular_velocity = univec_controller(robot, robot.target, avoid_obst=True, obst=robot.obst, n=4, d=4, double_face=True)
         print("X: ", robot.obst._coordinates.X, end=' ')
         print("Y: ", robot.obst._coordinates.Y)
@@ -1027,7 +1027,7 @@ def Robot2Position(robot, ball, friend1, friend2, enemy0, enemy1, enemy2, list_r
         robot.vMax = 20
         #v, w = univecController(robot, robot.target, avoid_obst=False) # Calculate linear and angular velocity
         #robot.obst.update2(robot, ball, friend3, friend4, enemy0, enemy1, enemy2, enemy3, enemy4)
-        robot.obst.update()
+        robot.obst.update2(ball)
         v, w = univec_controller(robot, robot.target, False, robot.obst, n=4, d=4)
         robot.sim_set_vel(v, w)
     else:
@@ -1038,7 +1038,7 @@ def Robot2Position(robot, ball, friend1, friend2, enemy0, enemy1, enemy2, list_r
     if not friend1.arrive():
         friend1.vMax = 20
         #friend1.obst.update2(friend1, ball, friend3, friend4, enemy0, enemy1, enemy2, enemy3, enemy4)
-        friend1.obst.update()
+        friend1.obst.update2(ball)
         v, w = univec_controller(friend1, friend1.target, True, friend1.obst, n=4, d=4)
         friend1.sim_set_vel(v, w)
     else:
@@ -1049,7 +1049,7 @@ def Robot2Position(robot, ball, friend1, friend2, enemy0, enemy1, enemy2, list_r
     if not friend2.arrive():
         friend2.vMax = 20
         #friend2.obst.update2(friend2, ball, friend3, friend4, enemy0, enemy1, enemy2, enemy3, enemy4)
-        friend2.obst.update()
+        friend2.obst.update2(ball)
         v, w = univec_controller(friend2, friend2.target, True, friend2.obst, n=4, d=4)
         friend2.sim_set_vel(v, w)
     else:

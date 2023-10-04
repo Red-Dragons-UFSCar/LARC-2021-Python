@@ -42,7 +42,7 @@ def verifyDirection(v):
         direction = 0b11
     return direction
 
-def getData(ball, robots, mray):
+def getData(ball, robots, enemy_robots, mray):
     """Input: Objeto da bola, lista de objetos dos robôs
     Description: Determina a palavra binária de direção da eletrônica a partir da velocidade linear recebida
     da estratégia.
@@ -64,6 +64,21 @@ def getData(ball, robots, mray):
 
     #print(data_our_bot)
 
+    data_their_bots2 = []
+    for i in range(len(data_their_bots)): # Tratamento provisório dos dados da visão - utilização de IDs maiores que 2
+        if data_their_bots[i]['robot_id'] > 2:
+            data_their_bots2.append(data_their_bots[i])
+    
+    data_their_bots = data_their_bots2
+
+    for i in range(len(data_their_bots)):  # Separação de dados recebidos da visão
+        for index, robot in enumerate(enemy_robots):
+            if data_their_bots[i]["robot_id"] == id_robots[index]:  # Se o id do robô recebido é igual ao robô desejado (Código Cin)
+                data_their_bots[i]["robot_id"] = id_robots.index(data_their_bots[i]["robot_id"])  # Adequação de ID dos robôs
+                data_their_bots[i]["orientation"] = arctan2(sin(data_their_bots[i]["orientation"] + pi), cos(data_their_bots[i]["orientation"] + pi))  # Adequação de orientação dos robôs
+                robot.set_simulator_data(data_their_bots[i])
+                break
+    
     data_our_bot2 = []
     for i in range(len(data_our_bot)): # Tratamento provisório dos dados da visão - utilização de IDs maiores que 2
         if data_our_bot[i]['robot_id'] > 2:
@@ -164,7 +179,7 @@ if __name__ == "__main__":
     strategy = Strategy(robots, enemy_robots, ball, not left_side, list_strategies)
 
     # Inicialização da thread de visão
-    x = RepeatTimer((1/120), getData, args=(ball, robots, mray))
+    x = RepeatTimer((1/120), getData, args=(ball, robots, enemy_robots, mray))
     x.start()
 
     selectedReplacer = "auto"
@@ -177,14 +192,11 @@ if __name__ == "__main__":
 
         referee.update()  # Atualiza os dados do referee
         data_ref, errorCodeRef = referee.get_data()
-        #data_ref = referee.get_data()
-        print(data_ref)
 
         if data_ref['foul'] != 5:
             current_ref = data_ref['foul']
             current_team_foul = data_ref['teamcolor']
             current_quad = data_ref['foulQuadrant']
-        print(current_ref)
 
         if COM_REF:
             if data_ref["foul"] == 6:
