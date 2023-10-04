@@ -74,7 +74,7 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
 
     # Navigation: Go-to-Goal + Avoid Obstacle Vector Field
     robot.last_univector_angle = robot.univector_angle
-    #robot.set_wall_obstacle()
+    robot.set_wall_obstacle()
     obst = robot.obst
     if avoid_obst: # If obstacle avoidance is activated
         if field_is_hiperbolic:                                             # Use of the Hyperbolic field

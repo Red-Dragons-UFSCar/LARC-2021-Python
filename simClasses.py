@@ -350,8 +350,10 @@ class Robot(KinematicBody):
                 objeto_menor_distancia = obst
                 menor_distancia = distancia
         #print(dict_obst)
-        self.obst.set_obst(objeto_menor_distancia._coordinates.X, objeto_menor_distancia._coordinates.Y, 0)
-        #print("Obstaculo definido")
+
+        if self.calculate_distance(self.obst) > self.calculate_distance(objeto_menor_distancia):
+            self.obst.set_obst(objeto_menor_distancia._coordinates.X, objeto_menor_distancia._coordinates.Y, 0)
+            print("Obstaculo definido")
         #print("x: ", self.obst._coordinates.X, end=' ')
         #print("y: ", self.obst._coordinates.Y, end=' ')
         #print("o: ", self.obst._coordinates.rotation)
