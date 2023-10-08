@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
     # Initialize all clients
     actuator = Actuator(mray, "127.0.0.1", 20011)
-    replacement = Replacer(mray, "224.5.23.2", 10004)
+    #replacement = Replacer(mray, "224.5.23.2", 10004)
     vision = Vision(mray, "224.0.0.1", 10002)
     referee = Referee(mray, "224.5.23.2", 10003)
 
@@ -95,8 +95,6 @@ if __name__ == "__main__":
         # Atualiza a situação das faltas
         referee.update()
         ref_data = referee.get_data()
-
-        print(ref_data)
 
         if ref_data['foul'] != 5:
             current_ref = ref_data['foul']
@@ -163,7 +161,6 @@ if __name__ == "__main__":
                 Strategy.penaltyDefensive = False
             if selectedReplacer == "auto":
                 if ref_data["foul"] == 5 and current_ref != -1:
-                    print("arruma stop")
                     ref_data["foul"] = current_ref
                     ref_data["yellow"] = current_team_foul
                     ref_data["quad"] = current_quad

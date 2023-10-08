@@ -39,24 +39,24 @@ class Strategy:
 
     def basicStg(self):
         if self.mray:
-            if self.ball.xPos > 125:
+            if self.ball.xPos < 125:
                 self.basicStgAtt()
             else:
                 self.basicStgDef()
         else:
-            if self.ball.xPos > 125:
+            if self.ball.xPos < 125:
                 self.basicStgDef()
             else:
                 self.basicStgAtt()
 
     def wallDeffenseDefault(self):
         if self.mray:
-            if self.ball.xPos > 125:
+            if self.ball.xPos < 125:
                 self.wallStgAtt()
             else:
                 self.wallStgDef()
         else:
-            if self.ball.xPos > 125:
+            if self.ball.xPos < 125:
                 self.wallStgDef()
             else:
                 self.wallStgAtt()

@@ -30,12 +30,15 @@ make
 
 # Execução
 
-Para executar nosso código, no terminal, você deverá executar o código main.py, passando os parâmetros de time escolhido (*blue* ou *yellow*) e a estratégia escolhida (*wallDeffenseDefault*, *blockingWallDeffense* ou *default5v5*). Por exemplo:
+Para executar nosso código, no terminal, você deverá executar o código main.py, passando os parâmetros de time escolhido (*blue* ou *yellow*), a estratégia escolhida (*wallDeffenseDefault*, *blockingWallDeffense* ou *default5v5*) e o tipo de posicionamento (*auto*). Por exemplo:
 
 ```sh
-python3 main.py blue wallDeffenseDefault
+python3 main.py blue wallDeffenseDefault auto
 ```
 
 ```sh
-python3 main.py yellow wallDeffenseDefault
+python3 main.py yellow wallDeffenseDefault auto
 ```
+
+*LEMBRETE:* Para utilizar o posicionamento automático é necessário alterar a constante "firaPort" nas constantes do VSSS Referee.
+

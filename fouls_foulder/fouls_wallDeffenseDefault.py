@@ -172,7 +172,6 @@ def automatic_replacement(ref_data, mray, strategy, robot0, robot1, robot2, robo
     list_r2 = []
     list_r3 = []
     list_r4 = []
-    print(ref_data)
 
     if mray == False:
         if ref_data["foul"] == 1:
@@ -210,7 +209,6 @@ def automatic_replacement(ref_data, mray, strategy, robot0, robot1, robot2, robo
             Robot2Position(robot0, ball, robot1, robot2, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4, list_r0, list_r1, list_r2, list_r3, list_r4)
 
         elif ref_data["foul"] == 4:
-            print("kickoff")
             list_r0 = SendRobotPosition(mray, ref_data, robot0.index, strategy)
             list_r1 = SendRobotPosition(mray, ref_data, robot1.index, strategy)
             list_r2 = SendRobotPosition(mray, ref_data, robot2.index, strategy)

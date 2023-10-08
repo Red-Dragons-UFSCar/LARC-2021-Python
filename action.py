@@ -78,7 +78,7 @@ def Robot2Position(robot, ball, friend1, friend2, friend3, friend4, enemy0, enem
 
     #Robot, friend1 e friend2 funcionando corretamente
     if not robot.arrive():
-        robot.vMax = 20
+        robot.vMax = 40
         #v, w = univecController(robot, robot.target, avoid_obst=False) # Calculate linear and angular velocity
         robot.obst.update2(robot, ball, friend3, friend4, enemy0, enemy1, enemy2, enemy3, enemy4)
         v, w = univecController(robot, robot.target, True, robot.obst, n=4, d=4)
@@ -89,7 +89,7 @@ def Robot2Position(robot, ball, friend1, friend2, friend3, friend4, enemy0, enem
         #print("Robo 1 chegou")
 
     if not friend1.arrive():
-        friend1.vMax = 20
+        friend1.vMax = 40
         friend1.obst.update2(friend1, ball, friend3, friend4, enemy0, enemy1, enemy2, enemy3, enemy4)
         v, w = univecController(friend1, friend1.target, True, friend1.obst, n=4, d=4)
         friend1.simSetVel(v, w)
@@ -99,7 +99,7 @@ def Robot2Position(robot, ball, friend1, friend2, friend3, friend4, enemy0, enem
         #print("Robo 2 chegou")
 
     if not friend2.arrive():
-        friend2.vMax = 20
+        friend2.vMax = 40
         friend2.obst.update2(friend2, ball, friend3, friend4, enemy0, enemy1, enemy2, enemy3, enemy4)
         v, w = univecController(friend2, friend2.target, True, friend2.obst, n=4, d=4)
         friend2.simSetVel(v, w)
@@ -110,7 +110,7 @@ def Robot2Position(robot, ball, friend1, friend2, friend3, friend4, enemy0, enem
 
     #Tentativa 1, para os dois novos robos.
     if not friend3.arrive():
-        friend3.vMax = 20
+        friend3.vMax = 40
         friend3.obst.update2(friend3, ball, friend1, friend4, enemy0, enemy1, enemy2, enemy3, enemy4)
         v, w = univecController(friend3, friend3.target, True, friend3.obst, n=4, d=4)
         friend3.simSetVel(v, w)
@@ -119,7 +119,7 @@ def Robot2Position(robot, ball, friend1, friend2, friend3, friend4, enemy0, enem
         friend3.simSetVel(0, 0)
 
     if not friend4.arrive():
-        friend4.vMax = 20
+        friend4.vMax = 40
         friend4.obst.update2(friend4, ball, friend3, friend1, enemy0, enemy1, enemy2, enemy3, enemy4)
         v, w = univecController(friend4, friend4.target, True, friend4.obst, n=4, d=4)
         friend4.simSetVel(v, w)
@@ -868,20 +868,24 @@ def defesa_atacantes(ball, robot0, robot1, robot2, robot3, robot4, robot_enemy_0
 
         if robot3.isLeader:
             defenderSpin(robot3, ball, not robot3.teamYellow, robot1, robot2, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
-            follower(robot4, robot3, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
+            atacante_idle(robot4, not up, True, ball)
+            #follower(robot4, robot3, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
         if robot4.isLeader:
             defenderSpin(robot4, ball, not robot3.teamYellow, robot1, robot2, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
-            follower(robot3, robot4, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
+            atacante_idle(robot3, up, True, ball)
+            #follower(robot3, robot4, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
     
     if (not robot0.teamYellow) and (ball.xPos > 70 or ball.yPos < 50 or ball.yPos > 130):
         leaderSelector(robot3, robot4, ball)
 
         if robot3.isLeader:
             defenderSpin(robot3, ball, not robot3.teamYellow, robot1, robot2, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
-            follower(robot4, robot3, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
+            atacante_idle(robot4, not up, True, ball)
+            #follower(robot4, robot3, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
         if robot4.isLeader:
             defenderSpin(robot4, ball, not robot3.teamYellow, robot1, robot2, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
-            follower(robot3, robot4, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
+            atacante_idle(robot3, up, True, ball)
+            #follower(robot3, robot4, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
 
 def ataque(ball, robot1, robot2, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4):
 
