@@ -333,20 +333,26 @@ class Robot(KinematicBody):
         #Travado em X, acompanhando em Y
         #Direita
         if self._coordinates.Y > 45 and self._coordinates.Y < 85:
-            obj1.set_obst(162+10, self._coordinates.Y, 0)
+            obj1.set_obst(169+10, self._coordinates.Y, 0)
         else:
-            obj1.set_obst(162, self._coordinates.Y, 0)
+            obj1.set_obst(169, self._coordinates.Y, 0)
         #Esquerda
         if self._coordinates.Y > 45 and self._coordinates.Y < 85:
-            obj2.set_obst(-2-10, self._coordinates.Y, 0)
+            obj2.set_obst(-9-10, self._coordinates.Y, 0)
         else:
-            obj2.set_obst(-2, self._coordinates.Y, 0)
+            obj2.set_obst(-9, self._coordinates.Y, 0)
         
         #Travado em Y, acompanhando em X
         #cima
-        obj3.set_obst(self._coordinates.X, 132, 0)
+        if self._coordinates.X < 10 or self._coordinates.X > 160:
+            obj3.set_obst(self._coordinates.X, 90, 0)
+        else:
+            obj3.set_obst(self._coordinates.X, 139, 0)
         #baixo
-        obj4.set_obst(self._coordinates.X, -2, 0)
+        if self._coordinates.X < 10 or self._coordinates.X > 160:
+            obj4.set_obst(self._coordinates.X, 40, 0)
+        else:
+            obj4.set_obst(self._coordinates.X, -9, 0)
 
         dict_obst = {obj1: 0, obj2: 0, obj3:0 , obj4: 0}
         for obst in dict_obst:

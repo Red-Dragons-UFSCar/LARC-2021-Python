@@ -136,8 +136,9 @@ class Strategy:
         self.lim_def_area_y_i = 30
         
         self.goalkeeper()
-        self.defender()
-        self.attacker()
+        #self.defender()
+        #self.attacker()
+        self.two_attackers()
 
     def goalkeeper(self):
         ball_coordinates = self.ball.get_coordinates()

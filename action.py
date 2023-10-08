@@ -710,18 +710,18 @@ def project_coordinates(robot_leader):
     robot_leader_coordinates = robot_leader.get_coordinates()
     if robot_leader_coordinates.Y > 65:
         if robot_leader_coordinates.X > 75:
-            proj_x = robot_leader_coordinates.X - (15+15)
-            proj_y = robot_leader_coordinates.Y - (30+15)
+            proj_x = robot_leader_coordinates.X - (15)
+            proj_y = robot_leader_coordinates.Y - (30+10)
         else:
-            proj_x = robot_leader_coordinates.X + (15+15)
-            proj_y = robot_leader_coordinates.Y - (15+15)
+            proj_x = robot_leader_coordinates.X + (15)
+            proj_y = robot_leader_coordinates.Y - (15+10)
     else:
         if robot_leader_coordinates.X > 75:
-            proj_x = robot_leader_coordinates.X - (15+15)
-            proj_y = robot_leader_coordinates.Y + (30+15)
+            proj_x = robot_leader_coordinates.X - (15)
+            proj_y = robot_leader_coordinates.Y + (30+10)
         else:
-            proj_x = robot_leader_coordinates.X + (15+15)
-            proj_y = robot_leader_coordinates.Y + (15+15)
+            proj_x = robot_leader_coordinates.X + (15)
+            proj_y = robot_leader_coordinates.Y + (15+10)
     return proj_x, proj_y
 
 

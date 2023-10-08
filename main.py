@@ -24,8 +24,8 @@ class RepeatTimer(Timer):
 COM_REF = True
 
 # Flag que ativa o posicionamento automatico
-selectedReplacer = "auto"
-#selectedReplacer = None
+#selectedReplacer = "auto"
+selectedReplacer = None
 
 # Eletronica
 ser = serial.Serial()
@@ -174,7 +174,7 @@ if __name__ == "__main__":
     '''
     # Intialize all clients (real)
     client_control = StrategyControl(ip='224.5.23.2', port=10015, yellowTeam=mray, logger=False, pattern='ssl', convert_coordinates=True)  # Criação do objeto do controle e estratégia
-    referee = Referee("224.5.23.2", 10003, logger=False)
+    referee = Referee("224.5.23.2", 10100, logger=False)
     #referee = Referee(mray, "224.5.23.2", 10003)
 
     # Clients campo
