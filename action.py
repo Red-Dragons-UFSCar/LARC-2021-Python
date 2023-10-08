@@ -39,8 +39,8 @@ def calculate_velocities(ball: simClasses.Ball, robot: simClasses.Robot, double_
         #robot.obst.update2(ball, robot.get_friends(), robot.get_enemies())
         robot.obst.update2(ball)
         linear_velocity, angular_velocity = univec_controller(robot, robot.target, avoid_obst=True, obst=robot.obst, n=4, d=4, double_face=True)
-        print("X: ", robot.obst._coordinates.X, end=' ')
-        print("Y: ", robot.obst._coordinates.Y)
+        #print("X: ", robot.obst._coordinates.X, end=' ')
+        #print("Y: ", robot.obst._coordinates.Y)
     return linear_velocity, angular_velocity
 
 
@@ -1028,7 +1028,7 @@ def Robot2Position(robot, ball, friend1, friend2, enemy0, enemy1, enemy2, list_r
         #v, w = univecController(robot, robot.target, avoid_obst=False) # Calculate linear and angular velocity
         #robot.obst.update2(robot, ball, friend3, friend4, enemy0, enemy1, enemy2, enemy3, enemy4)
         robot.obst.update2(ball)
-        v, w = univec_controller(robot, robot.target, False, robot.obst, n=4, d=4)
+        v, w = univec_controller(robot, robot.target, True, robot.obst, n=4, d=4, pos_auto=True)
         robot.sim_set_vel(v, w)
     else:
         robot.vMax = 50
@@ -1039,7 +1039,7 @@ def Robot2Position(robot, ball, friend1, friend2, enemy0, enemy1, enemy2, list_r
         friend1.vMax = 20
         #friend1.obst.update2(friend1, ball, friend3, friend4, enemy0, enemy1, enemy2, enemy3, enemy4)
         friend1.obst.update2(ball)
-        v, w = univec_controller(friend1, friend1.target, True, friend1.obst, n=4, d=4)
+        v, w = univec_controller(friend1, friend1.target, True, friend1.obst, n=4, d=4, pos_auto=True)
         friend1.sim_set_vel(v, w)
     else:
         friend1.vMax = 50
@@ -1050,7 +1050,7 @@ def Robot2Position(robot, ball, friend1, friend2, enemy0, enemy1, enemy2, list_r
         friend2.vMax = 20
         #friend2.obst.update2(friend2, ball, friend3, friend4, enemy0, enemy1, enemy2, enemy3, enemy4)
         friend2.obst.update2(ball)
-        v, w = univec_controller(friend2, friend2.target, True, friend2.obst, n=4, d=4)
+        v, w = univec_controller(friend2, friend2.target, True, friend2.obst, n=4, d=4, pos_auto=True)
         friend2.sim_set_vel(v, w)
     else:
         friend2.vMax = 50

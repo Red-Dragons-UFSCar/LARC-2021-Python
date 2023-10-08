@@ -23,6 +23,10 @@ class RepeatTimer(Timer):
 # Flag que ativa a comunicação com o Referee
 COM_REF = True
 
+# Flag que ativa o posicionamento automatico
+selectedReplacer = "auto"
+#selectedReplacer = None
+
 # Eletronica
 ser = serial.Serial()
 ser.baudrate = 115200
@@ -62,15 +66,24 @@ def getData(ball, robots, enemy_robots, mray):
     
     data_ball = field[0]["ball"]  # Salva os dados da bola
 
-    #print(data_our_bot)
+    print(data_our_bot)
+    #print(field[0]["robots_yellow"])
 
-    data_their_bots2 = []
-    for i in range(len(data_their_bots)): # Tratamento provisório dos dados da visão - utilização de IDs maiores que 2
-        if data_their_bots[i]['robot_id'] > 2:
-            data_their_bots2.append(data_their_bots[i])
-    
-    data_their_bots = data_their_bots2
+    # Inimigos ignorando as tags 
+    #'''
+    n_inimigos = len(data_their_bots)
+    for i in range(3):
+        if i < n_inimigos:
+            data_their_bots[i]["orientation"] = arctan2(sin(data_their_bots[i]["orientation"] + pi), cos(data_their_bots[i]["orientation"] + pi))  # Adequação de orientação dos robôs
+            enemy_robots[i].set_simulator_data(data_their_bots[i])
+        else:
+            robot_obstacle = dict([ ("robot_id", 15), ("x", -30), ("y", -30), ("orientation", 1), 
+                ("vx", 0), ("vy", 0), ("vorientation", 0) ])
+            enemy_robots[i].set_simulator_data(robot_obstacle)
+    #'''
+    # Fim de obstaculo ignorando tags
 
+    ''' ANTIGO
     for i in range(len(data_their_bots)):  # Separação de dados recebidos da visão
         for index, robot in enumerate(enemy_robots):
             if data_their_bots[i]["robot_id"] == id_robots[index]:  # Se o id do robô recebido é igual ao robô desejado (Código Cin)
@@ -78,13 +91,18 @@ def getData(ball, robots, enemy_robots, mray):
                 data_their_bots[i]["orientation"] = arctan2(sin(data_their_bots[i]["orientation"] + pi), cos(data_their_bots[i]["orientation"] + pi))  # Adequação de orientação dos robôs
                 robot.set_simulator_data(data_their_bots[i])
                 break
+    '''
+    for i in range(len(data_their_bots)):  # Separação de dados recebidos da visão
+        #data_their_bots[i]["robot_id"] = id_robots.index(data_their_bots[i]["robot_id"])  # Adequação de ID dos robôs
+        data_their_bots[i]["orientation"] = arctan2(sin(data_their_bots[i]["orientation"] + pi), cos(data_their_bots[i]["orientation"] + pi))  # Adequação de orientação dos robôs
+        enemy_robots[i].set_simulator_data(data_their_bots[i])
     
-    data_our_bot2 = []
-    for i in range(len(data_our_bot)): # Tratamento provisório dos dados da visão - utilização de IDs maiores que 2
-        if data_our_bot[i]['robot_id'] > 2:
-            data_our_bot2.append(data_our_bot[i])
-    
-    data_our_bot = data_our_bot2
+    #data_our_bot2 = []
+    #for i in range(len(data_our_bot)): # Tratamento provisório dos dados da visão - utilização de IDs maiores que 2
+    #    if data_our_bot[i]['robot_id'] > 2:
+    #        data_our_bot2.append(data_our_bot[i])
+    #
+    #data_our_bot = data_our_bot2
 
     for i in range(len(data_our_bot)):  # Separação de dados recebidos da visão
         for index, robot in enumerate(robots):
@@ -98,10 +116,13 @@ def getData(ball, robots, enemy_robots, mray):
         ball.set_simulator_data(data_ball)
 
 # IDs dos robôs em ordem 0, 1 e 2 na visão da cin
-id_robots = [6, 10, 5]
+id_robots = [9, 10, 4]
+#id_robots = [2, 10, 9]
 
 t_start = time.time()
 t1 = time.time()
+
+flag_foul = False
 
 if __name__ == "__main__":
 
@@ -156,6 +177,10 @@ if __name__ == "__main__":
     referee = Referee("224.5.23.2", 10003, logger=False)
     #referee = Referee(mray, "224.5.23.2", 10003)
 
+    # Clients campo
+    #client_control = StrategyControl(ip='224.5.23.2', port=10322, yellowTeam=mray, logger=False, pattern='ssl', convert_coordinates=True)  # Criação do objeto do controle e estratégia
+    #referee = Referee("224.5.23.2", 10312, logger=False)
+
     # Initialize all  objects
     robots = []
     for i in range(args.num_robots):
@@ -181,9 +206,6 @@ if __name__ == "__main__":
     # Inicialização da thread de visão
     x = RepeatTimer((1/120), getData, args=(ball, robots, enemy_robots, mray))
     x.start()
-
-    selectedReplacer = "auto"
-    #selectedReplacer = None
 
     # Main infinite loop
     t1 = time.time()
@@ -241,11 +263,13 @@ if __name__ == "__main__":
                 robots[1].face = 1
                 robots[2].face = 1 
         else:
-            print("REF OFF")
+            #print("REF OFF")
             #action.rectangle(robots[2])
             action.defender_spin(robots[2], ball)
             #action.screen_out_ball(robots[1], ball, 40, True, upper_lim = 90, lower_lim= 50)
             #strategy.coach()
+            print("X: ", robots[0]._coordinates.X, end=' ')
+            print("Y: ", robots[0]._coordinates.Y)
             
         # ---- Envio de informações para a eletronica
 

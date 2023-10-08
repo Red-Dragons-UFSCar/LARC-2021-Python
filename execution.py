@@ -48,7 +48,7 @@ def calculate_phi_v(robot, target):
     return phi_V
 
 def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_when_arrive=False, double_face=True,
-                      field_is_hiperbolic=True, screen_out=False):
+                      field_is_hiperbolic=True, screen_out=False, pos_auto=False):
     """Input: Robot object, Target object, Flag to activate Obstacle Avoidance, Obstacle object, Constants n and d of Univector,
        Flag to activate deceleration when approaching target, Flag to activate face swap, Flag to activate Hiperbolic Field
     Description: Function to control the robot with or without obstacle avoidance
@@ -119,7 +119,7 @@ def univec_controller(robot, target, avoid_obst=True, obst=None, n=8, d=2, stop_
         v = min(abs(v1), abs(v2), abs(v3))  # Controller velocities v and w
         w = v * phi_v + k_w * sign(theta_e) * sqrt(abs(theta_e))
 
-    v, w = pid(robot, des_theta, screen_out)
+    v, w = pid(robot, des_theta, screen_out, pos_auto)
     # Some code to store the past position, orientation and velocity
 
     #robot.v=v
@@ -165,7 +165,7 @@ def which_face(robot, target, des_theta, double_face, screen_out=False):
     #    robot.face = sideDecider_goalkeeper(RobotPos, angle, TargetPos, robot.index)
     return theta_e
 
-def pid(robot, des_theta, screen_out):
+def pid(robot, des_theta, screen_out, pos_auto):
 
     #Kp = 3.5
     #Kd = 0.1
@@ -253,13 +253,18 @@ def pid(robot, des_theta, screen_out):
     theta_ball = arccos(dot_product)
 
     #print("Angulo: ", theta_ball*180/pi)
-    if theta_ball < 15:
-        flag_acelera = True
+    if theta_ball < 30:
+        if robot.contador_velocidade > 10:
+            flag_acelera = True
+        else:
+            robot.contador_velocidade = robot.contador_velocidade + 1
+            flag_acelera = False
     else:
         flag_acelera = False
 
     if robot.calculate_distance(robot.target) < dmin:
         if flag_acelera and not screen_out:
+            print("celera")
             v = vmax*robot.face
         else:
             v = vmin*robot.face
@@ -267,6 +272,9 @@ def pid(robot, des_theta, screen_out):
         v = vmax*robot.face
     else:
         v = vmin*robot.face + (robot.calculate_distance(robot.target)-dmin)/(dmax-dmin) *(vmax-vmin)*robot.face
+    
+    if pos_auto: v = 30
+    
     ## Adaptação 2
     '''
     def sigmoid(x):

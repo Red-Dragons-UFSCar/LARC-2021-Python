@@ -116,11 +116,11 @@ class Obstacle(KinematicBody):
         distances.sort(key=lambda a: self.robot.calculate_distance(a))
         obstacle = distances[0]
         self.set_obst(obstacle.get_coordinates().X, obstacle.get_coordinates().Y, obstacle.get_coordinates().rotation)
-        for obst in distances:
-            print("Indice: ", obst.index, end='   ')
-            print("Cor: ", obst.teamYellow, end='   ')
-            print("X: ", obst._coordinates.X, end=' ')
-            print("Y: ", obst._coordinates.Y)
+        #for obst in distances:
+        #    print("Indice: ", obst.index, end='   ')
+        #    print("Cor: ", obst.teamYellow, end='   ')
+        #    print("X: ", obst._coordinates.X, end=' ')
+        #    print("Y: ", obst._coordinates.Y)
 
 
     #def update2(self, ball, friends, enemies):
@@ -151,9 +151,9 @@ class Obstacle(KinematicBody):
                       obstacles[0].get_coordinates().rotation)
         
         #for obstacle in obstacles:
-            #print("Indice: ", obstacle.index, end='   ')
-            #print("Cor: ", obstacle.teamYellow, end='   ')
-            #print("X: ", obstacle._coordinates.X)
+        #    print("Indice: ", obstacle.index, end='   ')
+        #    print("Cor: ", obstacle.teamYellow, end='   ')
+        #    print("X: ", obstacle._coordinates.X)
             
 
 
@@ -247,6 +247,9 @@ class Robot(KinematicBody):
         self.contKeepFace = 0
 
         self.contWall = 0
+        self.contador_velocidade = 0
+
+        self.pos_auto = True
 
     def arrive(self):
         """Input: None.
@@ -329,9 +332,15 @@ class Robot(KinematicBody):
         
         #Travado em X, acompanhando em Y
         #Direita
-        obj1.set_obst(162, self._coordinates.Y, 0)
+        if self._coordinates.Y > 45 and self._coordinates.Y < 85:
+            obj1.set_obst(162+10, self._coordinates.Y, 0)
+        else:
+            obj1.set_obst(162, self._coordinates.Y, 0)
         #Esquerda
-        obj2.set_obst(-2, self._coordinates.Y, 0)
+        if self._coordinates.Y > 45 and self._coordinates.Y < 85:
+            obj2.set_obst(-2-10, self._coordinates.Y, 0)
+        else:
+            obj2.set_obst(-2, self._coordinates.Y, 0)
         
         #Travado em Y, acompanhando em X
         #cima
