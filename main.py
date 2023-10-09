@@ -157,7 +157,6 @@ if __name__ == "__main__":
         
         elif ref_data["foul"] != 7:
             #Caso decidam não posicionar no stop
-            #if selectedReplacer == "auto":
             if ref_data["foul"] != 5: # Mudando a flag exceto em caso de Stop
                 Strategy.penaltyOffensive = False
                 Strategy.penaltyDefensive = False
@@ -172,20 +171,6 @@ if __name__ == "__main__":
                 #actuator.stop()
                 currentFouls.automatic_replacement(ref_data, mray, selectedStrategy, robot0, robot1, robot2, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4)
                 #Para facilitar caso não possa posicionar no stop, peguei da imagem do grupo
-                """
-                if data_ref["foul"] >= 5:
-                    robots[0].sim_set_vel(0, 0)
-                    robots[1].sim_set_vel(0, 0)
-                    robots[2].sim_set_vel(0, 0)
-                    robots[3].sim_set_vel(0, 0)
-                    robots[4].sim_set_vel(0, 0)
-
-                    robots[0].face = 1
-                    robots[1].face = 1
-                    robots[2].face = 1
-                    robots[3].face = 1
-                    robots[4].face = 1
-                """
             else:
                 currentFouls.replacement_fouls(replacement,ref_data,mray)
                 actuator.stop()
