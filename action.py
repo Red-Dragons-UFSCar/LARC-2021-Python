@@ -69,7 +69,7 @@ def SendRobotPosition(mray, ref_data, number_robot, file, if_else = None):
     return data[side][current_foul][offensive_defensive_quadrant][list_robot[number_robot]]
 
 def Robot2Position(robot, ball, friend1, friend2, friend3, friend4, enemy0, enemy1, enemy2, enemy3, enemy4, list_r0, list_r1, list_r2, list_r3, list_r4):
-    #Recebendo as informações corretamente
+    #Recebendo as informações corretamente    
     robot.target.update(list_r0[0], list_r0[1], deg2rad(list_r0[2])) #xpos, ypos, theta
     friend1.target.update(list_r1[0], list_r1[1], deg2rad(list_r1[2])) #xpos, ypos, theta
     friend2.target.update(list_r2[0], list_r2[1], deg2rad(list_r2[2])) #xpos, ypos, theta
