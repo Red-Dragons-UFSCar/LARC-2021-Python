@@ -207,7 +207,7 @@ class Robot(KinematicBody):
         self.contStopped = 0
         self.holdLeader = 0
         self.index = int32(index)
-        self.actuator = actuator
+        #self.actuator = actuator
         self.face = 1  # ? Defines the current face of the robot
         self.rightMotor = 0  # ? Right motor handle
         self.leftMotor = 0  # ? Left motor handle
@@ -368,7 +368,6 @@ class Robot(KinematicBody):
 
         if self.calculate_distance(self.obst) > self.calculate_distance(objeto_menor_distancia):
             self.obst.set_obst(objeto_menor_distancia._coordinates.X, objeto_menor_distancia._coordinates.Y, 0)
-            print("Obstaculo definido")
         #print("x: ", self.obst._coordinates.X, end=' ')
         #print("y: ", self.obst._coordinates.Y, end=' ')
         #print("o: ", self.obst._coordinates.rotation)

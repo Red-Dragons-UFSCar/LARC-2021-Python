@@ -131,7 +131,7 @@ def defender_spin(robot: simClasses.Robot, ball: simClasses.Ball, left_side=True
         robot.sim_set_vel(linear_velocity, angular_velocity)
         #robot.sim_set_vel(0, 0)
         return
-    robot.sim_set_vel2(50 * robot.face, 50 * robot.face)  # Send the velocity of right and left wheel
+    robot.sim_set_vel2(80 * robot.face, 80 * robot.face)  # Send the velocity of right and left wheel
     #robot.sim_set_vel(linear_velocity, angular_velocity)
 
 
@@ -268,15 +268,18 @@ def screen_out_ball(robot: simClasses.Robot, ball: simClasses.KinematicBody, sta
 
 
 def calculate_velocities_screenout(robot: simClasses.Robot):
-    #friends = robot.get_friends()
-    friends=[None, None]
+    friends = robot.get_friends()
+    #friends=[None, None]
     if friends[0] is None and friends[1] is None:  # No friends to avoid
         linear_velocity, angular_velocity = univec_controller(robot, robot.target, avoid_obst=False,
                                                               stop_when_arrive=True, screen_out=True)  # Calculate linear and angular velocity
     else:  # Both friends to avoid
-        print("To desviando")
         robot.obst.update()
-        linear_velocity, angular_velocity = univec_controller(robot, robot.target, True, robot.obst,
+        if robot.calculate_distance(robot.target) > 15:
+            avoid_obst = True
+        else:
+            avoid_obst = False
+        linear_velocity, angular_velocity = univec_controller(robot, robot.target, avoid_obst, robot.obst,
                                                               stop_when_arrive=True, screen_out=True)
     return linear_velocity, angular_velocity
 

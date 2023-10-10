@@ -66,7 +66,7 @@ def getData(ball, robots, enemy_robots, mray):
     
     data_ball = field[0]["ball"]  # Salva os dados da bola
 
-    print(data_our_bot)
+    #print(data_our_bot)
     #print(field[0]["robots_yellow"])
 
     # Inimigos ignorando as tags 
@@ -92,10 +92,10 @@ def getData(ball, robots, enemy_robots, mray):
                 robot.set_simulator_data(data_their_bots[i])
                 break
     '''
-    for i in range(len(data_their_bots)):  # Separação de dados recebidos da visão
-        #data_their_bots[i]["robot_id"] = id_robots.index(data_their_bots[i]["robot_id"])  # Adequação de ID dos robôs
-        data_their_bots[i]["orientation"] = arctan2(sin(data_their_bots[i]["orientation"] + pi), cos(data_their_bots[i]["orientation"] + pi))  # Adequação de orientação dos robôs
-        enemy_robots[i].set_simulator_data(data_their_bots[i])
+    for i in range(len(enemy_robots)):  # Separação de dados recebidos da visão
+        #data_their_bots[i]["orientation"] = arctan2(sin(data_their_bots[i]["orientation"] + pi), cos(data_their_bots[i]["orientation"] + pi))  # Adequação de orientação dos robôs
+        #enemy_robots[i].set_simulator_data(data_their_bots[i])
+        enemy_robots[i]._coordinates.rotation = arctan2(sin(enemy_robots[i]._coordinates.rotation + pi), cos(enemy_robots[i]._coordinates.rotation + pi))  # Adequação de orientação dos robôs
     
     #data_our_bot2 = []
     #for i in range(len(data_our_bot)): # Tratamento provisório dos dados da visão - utilização de IDs maiores que 2
@@ -175,7 +175,6 @@ if __name__ == "__main__":
     # Intialize all clients (real)
     client_control = StrategyControl(ip='224.5.23.2', port=10015, yellowTeam=mray, logger=False, pattern='ssl', convert_coordinates=True)  # Criação do objeto do controle e estratégia
     referee = Referee("224.5.23.2", 10100, logger=False)
-    #referee = Referee(mray, "224.5.23.2", 10003)
 
     # Clients campo
     #client_control = StrategyControl(ip='224.5.23.2', port=10322, yellowTeam=mray, logger=False, pattern='ssl', convert_coordinates=True)  # Criação do objeto do controle e estratégia
@@ -228,7 +227,9 @@ if __name__ == "__main__":
                 #action.rectangle(robots[2])
                 #action.defender_spin(robots[2], ball)
             elif data_ref["foul"] != 7:
+                strategy.reset_functions()
                 if selectedReplacer == "auto":
+                    '''
                     if data_ref["foul"] == 5 and (current_ref != -1 and current_ref != 6):
                         print("arruma stop")
                         data_ref["foul"] = current_ref
@@ -239,6 +240,8 @@ if __name__ == "__main__":
                         data_ref["foulQuadrant"] = 0
                     #actuator.stop()
                     elif current_ref == 6 or current_ref == 7:
+                    '''
+                    if data_ref["foul"] >= 5:
                         robots[0].sim_set_vel(0, 0)
                         robots[1].sim_set_vel(0, 0)
                         robots[2].sim_set_vel(0, 0)
@@ -255,6 +258,7 @@ if __name__ == "__main__":
                     robots[1].face = 1
                     robots[2].face = 1
             else:
+                strategy.reset_functions()
                 print("GAME OFF")
                 robots[0].sim_set_vel(0, 0)
                 robots[1].sim_set_vel(0, 0)
@@ -263,13 +267,14 @@ if __name__ == "__main__":
                 robots[1].face = 1
                 robots[2].face = 1 
         else:
-            #print("REF OFF")
+            #strategy.coach_fisico()
+            print("REF OFF")
             #action.rectangle(robots[2])
-            action.defender_spin(robots[2], ball)
+            #action.defender_spin(robots[2], ball)
             #action.screen_out_ball(robots[1], ball, 40, True, upper_lim = 90, lower_lim= 50)
             #strategy.coach()
-            print("X: ", robots[0]._coordinates.X, end=' ')
-            print("Y: ", robots[0]._coordinates.Y)
+            #print("X: ", robots[0]._coordinates.X, end=' ')
+            #print("Y: ", robots[0]._coordinates.Y)
             
         # ---- Envio de informações para a eletronica
 

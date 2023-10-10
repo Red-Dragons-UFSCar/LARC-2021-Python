@@ -1,5 +1,6 @@
 import action, penalty_handler
 from numpy import *
+from copy import deepcopy
 
 
 class Strategy:
@@ -27,6 +28,13 @@ class Strategy:
         self.goal_already_happened = False
         self.flagDefenderAttack = False
         self.sideKeepPosition = 0
+
+        self.enableSwitch = False
+        self.last_ball_x = self.ball._coordinates.X
+
+        self.robot_goalkeeper = self.robots[0]
+        self.robot_defender = self.robots[1]
+        self.robot_attacker = self.robots[2]
 
     def handle_game_on(self):
         if self.goal_already_happened:
@@ -126,6 +134,48 @@ class Strategy:
             else:
                 self.stg_def_v2()
     
+    def coach_fisico_2(self):
+        self.lim_def_area_x = 35
+        self.lim_def_area_y_s = 110
+        self.lim_def_area_y_i = 30
+
+        if not self.mray:
+            if self.ball._coordinates.X < 75:
+                self.enableSwitch = True
+
+            transicao_defensiva = self.ball._coordinates.X > 85
+            robo_na_bola = self.robot_defender.calculate_distance(self.ball) < 15
+            if self.enableSwitch and transicao_defensiva and robo_na_bola:
+                print("TROQUEIII")
+                #aux = self.robot_attacker
+                #self.robot_attacker = self.robot_defender
+                #self.robot_defender = aux
+
+                '''
+                if self.robot_attacker.index == self.robots[2].index:
+                    self.robot_attacker = self.robots[1]
+                    self.robot_defender = self.robots[2]
+                else:
+                    self.robot_attacker = self.robots[2]
+                    self.robot_defender = self.robots[1]
+                '''
+                self.robots[2], self.robots[1] = self.robots[1], self.robots[2]
+                #self.robot_attacker, self.robot_defender = self.robot_defender, self.robot_attacker
+                self.enableSwitch = False
+            elif transicao_defensiva:
+                self.enableSwitch = False
+        print(self.enableSwitch)
+        
+        self.goalkeeper()
+        self.defender()
+        self.attacker()
+        #self.two_attackers()
+    
+    def reset_functions(self):
+        self.robot_goalkeeper = self.robots[0]
+        self.robot_defender = self.robots[1]
+        self.robot_attacker = self.robots[2]
+    
     def coach_fisico(self):
         self.robot_goalkeeper = self.robots[0]
         self.robot_defender = self.robots[1]
@@ -136,9 +186,11 @@ class Strategy:
         self.lim_def_area_y_i = 30
         
         self.goalkeeper()
-        #self.defender()
-        #self.attacker()
-        self.two_attackers()
+        self.defender()
+        self.attacker()
+        #self.two_attackers()
+
+        self.last_ball_x = self.ball._coordinates.X
 
     def goalkeeper(self):
         ball_coordinates = self.ball.get_coordinates()
@@ -223,9 +275,9 @@ class Strategy:
                         action.defender_spin(self.robot_defender, self.ball, left_side=not self.mray)  # Defender chases ball
                     else: # Mantem posicao de espera
                         if self.sideKeepPosition==0:
-                            action.go_to_point(self.robot_defender, 112.5, 25, 0)
+                            action.go_to_point(self.robot_defender, 112.5-10, 25+10, 0)
                         else:
-                            action.go_to_point(self.robot_defender, 112.5, 105, 0)
+                            action.go_to_point(self.robot_defender, 112.5-10, 105-10, 0)
                     
                     if (ball_coordinates.Y > 100) and self.sideKeepPosition == 1:
                         self.sideKeepPosition = 0
@@ -259,15 +311,15 @@ class Strategy:
                 # Se ele for para o ataque
                 if self.flagDefenderAttack:
                     # Condição de bola na area de atuacao
-                    area = (ball_coordinates.X < 35) and (ball_coordinates.Y > 40) and (ball_coordinates.Y < 90)
-                    attacker_area = (attacker_coordinates.X < 35) and (attacker_coordinates.Y > 50) and (attacker_coordinates.Y < 80)
+                    area = (ball_coordinates.X < 40) and (ball_coordinates.Y > 40) and (ball_coordinates.Y < 90)
+                    attacker_area = (attacker_coordinates.X < 40) and (attacker_coordinates.Y > 50) and (attacker_coordinates.Y < 80)
                     if area and not attacker_area: # Se a bola está na área
                         action.defender_spin(self.robot_defender, self.ball, left_side=not self.mray)  # Defender chases ball
                     else: # Mantem posicao de espera
                         if self.sideKeepPosition==2:
-                            action.go_to_point(self.robot_defender, 47.5, 25, 180)
+                            action.go_to_point(self.robot_defender, 47.5+20, 25+10, 180)
                         elif self.sideKeepPosition==3:
-                            action.go_to_point(self.robot_defender, 47.5, 105, 180)
+                            action.go_to_point(self.robot_defender, 47.5+20, 105-10, 180)
                     
                     if (ball_coordinates.Y > 100) and self.sideKeepPosition == 3:
                         self.sideKeepPosition = 2
@@ -283,7 +335,7 @@ class Strategy:
         ball_coordinates = self.ball.get_coordinates() # Coordenadas da bola
 
         if self.mray:
-            if ball_coordinates.X > 85:
+            if ball_coordinates.X > 83:
                 if ball_coordinates.Y > 65:
                     action.go_to_point(self.robot_attacker, 47.5, 25, 180)
                 else:
@@ -293,7 +345,7 @@ class Strategy:
             else:
                 action.defender_spin(self.robots[2], self.ball, left_side=not self.mray)  # Attacker behavior
         else:
-            if ball_coordinates.X < 85:
+            if ball_coordinates.X < 88:
                 if ball_coordinates.Y > 65:
                     action.go_to_point(self.robot_attacker, 112.5, 25, 180)
                 else:
