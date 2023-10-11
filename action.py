@@ -866,6 +866,24 @@ def defesa_atacantes(ball, robot0, robot1, robot2, robot3, robot4, robot_enemy_0
             atacante_idle(robot3, up, True, ball)
             #follower(robot3, robot4, ball, robot0, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
 
+def defesa_atacante_solo(ball, robot0, robot1, robot2, robot3, robot4, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4):
+    if ball.yPos > 90:
+        up = True
+    else:
+        up = False
+
+    if robot0.teamYellow and ball.xPos > 180 and ball.yPos > 50 and ball.yPos < 130:
+        atacante_idle(robot3, up, True, ball)
+    
+    if (not robot0.teamYellow) and ball.xPos < 70 and ball.yPos > 50 and ball.yPos < 130:
+        atacante_idle(robot3, up, True, ball)
+    
+    if robot0.teamYellow and (ball.xPos < 180 or ball.yPos < 50 or ball.yPos > 130):
+        defenderSpin(robot3, ball, not robot3.teamYellow, robot1, robot2, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
+    
+    if (not robot0.teamYellow) and (ball.xPos > 70 or ball.yPos < 50 or ball.yPos > 130):
+        defenderSpin(robot3, ball, not robot3.teamYellow, robot1, robot2, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
+
 
 def ataque(ball, robot1, robot2, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4):
 

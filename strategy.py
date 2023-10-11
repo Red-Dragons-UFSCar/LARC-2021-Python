@@ -377,7 +377,8 @@ class Strategy:
 
 
     def wallStgDefAtaqueFraco(self):
-        action.defenderSpin(self.robot3,self.ball)
+        action.defesa_atacante_solo(self.ball, self.robot0, self.robot1, self.robot2, self.robot3, self.robot4, 
+                                self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4)
 
 
         if not self.mray and self.ball.xPos > 205 and self.ball.yPos > 65 and self.ball.yPos < 115 or self.mray and self.ball.xPos < 45 and self.ball.yPos > 65 and self.ball.yPos < 115:
@@ -418,7 +419,7 @@ class Strategy:
 
 
     def wallStgDefZagueirOlinha(self):
-        action.defesa_atacantes3(self.ball, self.robot0, self.robot1, self.robot2, self.robot3, self.robot4, 
+        action.defesa_atacante_solo(self.ball, self.robot0, self.robot1, self.robot2, self.robot3, self.robot4, 
                                 self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4)
         
 
