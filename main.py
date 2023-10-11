@@ -38,7 +38,8 @@ if __name__ == "__main__":
 
     # Choose strategy
 
-    strategyList = ['wallDeffenseDefault', 'blockingWallDeffense', 'default5v5', 'tripleAttack']
+    strategyList = ['wallDeffenseDefault', 'blockingWallDeffense', 'default5v5', 'tripleAttack', 'breakWallAtaque', 'breakWallZaga']
+
     try:
         selectedStrategy = sys.argv[2]
         currentFouls = FoulsHandler(selectedStrategy)
@@ -46,13 +47,15 @@ if __name__ == "__main__":
         print("[ERRO]")
         print("Digite como parâmetro a estratégia que você ira jogar!")
         print("Exemplo: python3 main.py yellow wallDeffenseDefault")
-        print("\n=== Estratégias disponíveis ===\nwallDeffenseDefault\nblockingWallDeffense\ndefault5v5\ntripleAttack")
+        print("\n=== Estratégias disponíveis ===\n")
+        print(strategyList)
         sys.exit()
     if selectedStrategy not in strategyList:
         print("[ERRO]")
         print("Digite como parâmetro a estratégia disponível que você ira jogar!")
         print("Exemplo: python3 main.py yellow wallDeffenseDefault")
-        print("\n=== Estratégias disponíveis ===\nwallDeffenseDefault\nblockingWallDeffense\ndefault5v5")
+        print("\n=== Estratégias disponíveis ===\n")
+        print(strategyList)
         sys.exit()
 
     # Initialize all clients
@@ -115,9 +118,13 @@ if __name__ == "__main__":
         wallDeffenseDefault     ==>     Parede Vermelha padrão com ataque padrão
         blockingWallDeffense    ==>     Parede Vermelha sem o goleiro e com ataque de bloqueio de defesa inimiga
         default5v5              ==>     Código original do Joao padrão com defesa e ataque padrões
+        tripleAttack            ==>     Ataque com 3 atacantes
+        breakWallAtaque         ==>     Break Wall com um atacante
+        breakWallZaga           ==>     Break Wall com um zagueiro
         """
 
         #action.triple_ataque(ball, robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4)
+        #action.ataque(ball, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4)
 
         
         if ref_data["game_on"]:

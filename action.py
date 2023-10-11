@@ -575,45 +575,6 @@ def triple_leaderSelector(robot1, robot2, robot3, ball):
                 elif robot2.holdLeader > 0:
                     robot2.holdLeader += 1
 
-def mirror_follower(robot_follower, robot_leader, ball, robot0=None, robot_enemy_0=None, robot_enemy_1=None, robot_enemy_2=None, robot_enemy_3=None, robot_enemy_4=None):
-
-    '''
-    Defines the position of the follower based on the leader position, the position is a mirror position based on the leader
-    '''
-    if robot_leader.yPos > 90:
-        if robot_leader.xPos > 126:
-            proj_x = robot_leader.xPos - 15
-            proj_y = 90 - (180 - robot_leader.yPos)
-        else:
-            proj_x = robot_leader.xPos + 15
-            proj_y = 90 - (180 - robot_leader.yPos)
-    else:
-        if robot_leader.xPos > 126:
-            proj_x = robot_leader.xPos - 15
-            proj_y = 90 + robot_leader.yPos
-        else:
-            proj_x = robot_leader.xPos + 15
-            proj_y = 90 + robot_leader.yPos
-    '''
-    Calculate distante between the follower and the projected point
-    '''
-    dist = sqrt((robot_follower.xPos - proj_x) ** 2 + (robot_follower.yPos - proj_y) ** 2)
-    arrival_theta = arctan2(ball.yPos - robot_follower.yPos, ball.xPos - robot_follower.xPos)
-    robot_follower.target.update(proj_x, proj_y, arrival_theta)
-
-    if dist < 10: # Check if the robot is close to the projected point and stops the robot
-        stop(robot_follower)
-    else:
-        # No friends to avoid
-        if robot0 is None and robot_enemy_0 is None and robot_enemy_1 is None and robot_enemy_2 is None:
-            v, w = univecController(robot_follower, robot_follower.target, avoidObst=False, n=16, d=2)
-        else:  # Both friends to avoid
-            robot_follower.obst.update2(robot_follower, ball, robot0, robot_leader, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4)
-            v, w = univecController(robot_follower, robot_follower.target, True, robot_follower.obst, n=4, d=4)
-
-        robot_follower.simSetVel(v, w)
-
-
 def followLeader(robot0, robot1, robot2, ball, robot_enemy_0, robot_enemy_1, robot_enemy_2, robot_enemy_3, robot_enemy_4):
 
     leaderSelector(robot1, robot2, ball)

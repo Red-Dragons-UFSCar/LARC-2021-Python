@@ -178,7 +178,7 @@ class Obstacle:
         self.setObst(enemys[index].xPos, enemys[index].yPos, 0, 0)
 
 
-    def update3(self, robot, ball, friend1, friend2, enemy1, enemy2, enemy3, enemy4, enemy5):
+    def update_teste(self, robot, ball, friend1, friend2, enemy1, enemy2, enemy3, enemy4, enemy5):
         enemys = array([enemy1, enemy2, enemy3, enemy4, enemy5])
         d_ball = array([[enemy1.dist(ball)],
                         [enemy2.dist(ball)],
@@ -236,8 +236,20 @@ class Obstacle:
                 y_area = 130
 
         areaObst = Robot(6, None, not robot.teamYellow)
+        wallObst = Robot(7, None, not robot.teamYellow)
+        
         areaObst.xPos = x_area
         areaObst.yPos = y_area
+
+        if robot.teamYellow:
+            x_wall = 235
+        else:
+            x_wall = 15
+        
+        y_wall = robot.yPos
+
+        wallObst.xPos = x_wall
+        wallObst.yPos = y_wall
         
         if len(enemys) == 5: # If the first exception did not happen
             # Distances to goal
@@ -272,6 +284,7 @@ class Obstacle:
         enemys = append(enemys, friend1)
         enemys = append(enemys, friend2)
         enemys = append(enemys, areaObst)
+        enemys = append(enemys, wallObst)
         d_robot = zeros(len(enemys))
 
         # Detecting nearest object
