@@ -119,9 +119,9 @@ def defenderSpin(robot, ball, left_side=True, friend1=None, friend2=None, enemy1
         if flagVelocity:
             dy = tan(robot.theta)*dx + robot.yPos # Calculate the height of the goal arrival
             if dy > 85 and dy < 95:
-                if robot.index != 0:
+                if robot.index < 6:
                     robot.simSetVel2(70*robot.face, 70*robot.face) # Send the velocity of right and left wheel
-                    print("zuuum + ", robot.theta)
+                    #print("zuuum + ", robot.theta)
                 else:
                     robot.simSetVel(v,w) # Calculate linear and angular velocity
             else:
