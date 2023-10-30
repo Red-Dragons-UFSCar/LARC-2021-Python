@@ -230,8 +230,10 @@ def pid(robot, des_theta, screen_out, pos_auto):
     else:
         v = 30*robot.face*fator
     #'''
-
-    vmin = 30
+    if screen_out:
+        vmin = 40
+    else:
+        vmin = 30
     vmax = 60
 
     dmin = 10
@@ -254,7 +256,7 @@ def pid(robot, des_theta, screen_out, pos_auto):
 
     #print("Angulo: ", theta_ball*180/pi)
     if theta_ball < 30:
-        if robot.contador_velocidade > 60:
+        if robot.contador_velocidade > 120:
             flag_acelera = True
         else:
             robot.contador_velocidade = robot.contador_velocidade + 1
@@ -265,7 +267,11 @@ def pid(robot, des_theta, screen_out, pos_auto):
     if robot.calculate_distance(robot.target) < dmin:
         if flag_acelera and not screen_out:
             print("celera")
-            v = 45*robot.face
+            if robot.index == 2:
+                v = 45*robot.face
+            else:
+                v = 45*robot.face
+            #v = vmin*robot.face
         else:
             v = vmin*robot.face
     elif robot.calculate_distance(robot.target) > dmax:

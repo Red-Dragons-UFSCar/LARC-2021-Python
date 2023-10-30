@@ -131,7 +131,7 @@ def defender_spin(robot: simClasses.Robot, ball: simClasses.Ball, left_side=True
         robot.sim_set_vel(linear_velocity, angular_velocity)
         #robot.sim_set_vel(0, 0)
         return
-    robot.sim_set_vel2(80 * robot.face, 80 * robot.face)  # Send the velocity of right and left wheel
+    robot.sim_set_vel2(85 * robot.face, 85 * robot.face)  # Send the velocity of right and left wheel
     #robot.sim_set_vel(linear_velocity, angular_velocity)
 
 

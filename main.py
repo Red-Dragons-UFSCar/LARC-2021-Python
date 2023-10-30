@@ -116,7 +116,7 @@ def getData(ball, robots, enemy_robots, mray):
         ball.set_simulator_data(data_ball)
 
 # IDs dos robôs em ordem 0, 1 e 2 na visão da cin
-id_robots = [9, 10, 4]
+id_robots = [11, 10, 4]
 #id_robots = [2, 10, 9]
 
 t_start = time.time()
@@ -173,12 +173,12 @@ if __name__ == "__main__":
     referee = Referee(mray, "224.5.23.2", 10003)
     '''
     # Intialize all clients (real)
-    client_control = StrategyControl(ip='224.5.23.2', port=10015, yellowTeam=mray, logger=False, pattern='ssl', convert_coordinates=True)  # Criação do objeto do controle e estratégia
-    referee = Referee("224.5.23.2", 10100, logger=False)
+    #client_control = StrategyControl(ip='224.5.23.2', port=10015, yellowTeam=mray, logger=False, pattern='ssl', convert_coordinates=True)  # Criação do objeto do controle e estratégia
+    #referee = Referee("224.5.23.2", 10100, logger=False)
 
     # Clients campo
-    #client_control = StrategyControl(ip='224.5.23.2', port=10322, yellowTeam=mray, logger=False, pattern='ssl', convert_coordinates=True)  # Criação do objeto do controle e estratégia
-    #referee = Referee("224.5.23.2", 10312, logger=False)
+    client_control = StrategyControl(ip='224.5.23.2', port=10322, yellowTeam=mray, logger=False, pattern='ssl', convert_coordinates=True)  # Criação do objeto do controle e estratégia
+    referee = Referee("224.5.23.2", 10312, logger=False)
 
     # Initialize all  objects
     robots = []

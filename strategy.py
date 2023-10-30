@@ -269,15 +269,15 @@ class Strategy:
                 # Se ele for para o ataque
                 if self.flagDefenderAttack:
                     # Condição de bola na area de atuacao
-                    area = (ball_coordinates.X > 125) and (ball_coordinates.Y > 40) and (ball_coordinates.Y < 90)
+                    area = (ball_coordinates.X > 125-6) and (ball_coordinates.Y > 40) and (ball_coordinates.Y < 90)
                     attacker_area = (attacker_coordinates.X > 125) and (attacker_coordinates.Y > 50) and (attacker_coordinates.Y < 80)
                     if area and not attacker_area: # Se a bola está na área
                         action.defender_spin(self.robot_defender, self.ball, left_side=not self.mray)  # Defender chases ball
                     else: # Mantem posicao de espera
                         if self.sideKeepPosition==0:
-                            action.go_to_point(self.robot_defender, 112.5-10, 25+10, 0)
+                            action.go_to_point(self.robot_defender, 112.5-10, 25+10, 90)
                         else:
-                            action.go_to_point(self.robot_defender, 112.5-10, 105-10, 0)
+                            action.go_to_point(self.robot_defender, 112.5-10, 105-10, -90)
                     
                     if (ball_coordinates.Y > 100) and self.sideKeepPosition == 1:
                         self.sideKeepPosition = 0
@@ -311,15 +311,15 @@ class Strategy:
                 # Se ele for para o ataque
                 if self.flagDefenderAttack:
                     # Condição de bola na area de atuacao
-                    area = (ball_coordinates.X < 40) and (ball_coordinates.Y > 40) and (ball_coordinates.Y < 90)
+                    area = (ball_coordinates.X < 40+6) and (ball_coordinates.Y > 40) and (ball_coordinates.Y < 90)
                     attacker_area = (attacker_coordinates.X < 40) and (attacker_coordinates.Y > 50) and (attacker_coordinates.Y < 80)
                     if area and not attacker_area: # Se a bola está na área
                         action.defender_spin(self.robot_defender, self.ball, left_side=not self.mray)  # Defender chases ball
                     else: # Mantem posicao de espera
                         if self.sideKeepPosition==2:
-                            action.go_to_point(self.robot_defender, 47.5+20, 25+10, 180)
+                            action.go_to_point(self.robot_defender, 47.5+20, 25+10, 90)
                         elif self.sideKeepPosition==3:
-                            action.go_to_point(self.robot_defender, 47.5+20, 105-10, 180)
+                            action.go_to_point(self.robot_defender, 47.5+20, 105-10, -90)
                     
                     if (ball_coordinates.Y > 100) and self.sideKeepPosition == 3:
                         self.sideKeepPosition = 2
@@ -335,7 +335,7 @@ class Strategy:
         ball_coordinates = self.ball.get_coordinates() # Coordenadas da bola
 
         if self.mray:
-            if ball_coordinates.X > 83:
+            if ball_coordinates.X > 90:
                 if ball_coordinates.Y > 65:
                     action.go_to_point(self.robot_attacker, 47.5, 25, 180)
                 else:
@@ -345,7 +345,7 @@ class Strategy:
             else:
                 action.defender_spin(self.robots[2], self.ball, left_side=not self.mray)  # Attacker behavior
         else:
-            if ball_coordinates.X < 88:
+            if ball_coordinates.X < 80:
                 if ball_coordinates.Y > 65:
                     action.go_to_point(self.robot_attacker, 112.5, 25, 180)
                 else:
