@@ -103,11 +103,14 @@ class Strategy:
             else:
                 self.tripleStgAtt()
 
+
+    #coloca 3 robos na função triple_ataque e o goleiro e o zagueiro fazem screenOut 
     def tripleStgAtt(self):
         action.triple_ataque(self.ball, self.robot2, self.robot3, self.robot4, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4)
         action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
         action.screenOutBall(self.robot1, self.ball, 105, leftSide=not self.mray, upperLim=175, lowerLim=95)
 
+    #ataque básico segue o líder não utilizado
     def basicStgAtt2(self):
         if not self.mray:
             action.screenOutBall(self.robot1, self.ball, 105, leftSide=not self.mray, upperLim=85, lowerLim=5)
@@ -130,8 +133,7 @@ class Strategy:
                 action.Zagueiro(self.robot1,self.robot2,self.ball,45)
                 action.ataque(self.ball,self.robot3,self.robot4,self.robotEnemy0,self.robotEnemy1,self.robotEnemy2,self.robotEnemy3,self.robotEnemy4)
 
-
-
+    #defesa original segue o líder
     def basicStgDef(self):
         """Basic original strategy"""
         action.screenOutBall(self.robot3, self.ball, 150, leftSide=not self.mray, upperLim=85, lowerLim=5)
@@ -165,7 +167,7 @@ class Strategy:
         else:
             self.robot0.contStopped = 0
 
-
+    #ataque segue o líder com dois robos, os e goleiro fazem screenOut
     def basicStgAtt(self):
         """Basic alternative strategy"""
         #listRobots = [self.robot0, self.robot1, self.robot2, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4]
@@ -237,12 +239,16 @@ class Strategy:
         else:
             action.Zagueiro(self.robot1,self.robot2,self.ball,45)
         
-
+    #posição de ataque na estratégia de wall Deffense
+    #o ataque utiliza o segue o líder espelhado e os zagueiros ficam na posição de barreira
     def wallStgAtt(self):
         action.ataque(self.ball, self.robot3, self.robot4, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4)
         action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
         action.defenderWall(self.robot1, self.robot2,self.ball, leftSide=not self.mray)
 
+    #ataque com estratégia para quebrar defesa de barreira reovendo o goleiro
+    #dois robos atacam normalmente e um terceiro fica parado na área adversária esperando a bola chegar perto para realizar um chute
+    #os zagueiros ficam na estratégia de barreira
     def breakWallStgAtt(self):           
         if not self.mray and self.ball.xPos > 205 and self.ball.yPos > 65 and self.ball.yPos < 115 or self.mray and self.ball.xPos < 45 and self.ball.yPos > 65 and self.ball.yPos < 115:
             action.shoot(self.robot4, self.ball, leftSide=not self.mray)
@@ -285,7 +291,8 @@ class Strategy:
                                                                                 self.robotEnemy2, self.robotEnemy3, self.robotEnemy4,
                                                                                 leftSide=not self.mray)
 
-
+    #posição de defesa da estratégia de barreira
+    #fixa os zagueiros na posição e faz os atacantes voltarem para buscar a bola na área de defesa
     def wallStgDef(self):
         action.defesa_atacantes(self.ball, self.robot0, self.robot1, self.robot2, self.robot3, self.robot4, 
                                 self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4)
@@ -360,6 +367,10 @@ class Strategy:
         if sqrt((self.ball.xPos-self.robot4.xPos)**2+(self.ball.yPos-self.robot4.yPos)**2) > 30:
              self.penaltyOffensive = False
 
+    #estratégia de quebra de barreira removendo um dos atacantes
+    #a zaga e o goleiro funcionam como a estratégia de barreira padrão
+    #um robô fica parado na área esperando a bola e bloqueando a barreira
+    #e outro robô fica tentando levar a bola ao gol
     def breakWallStgAttFraco(self):
         action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
         action.defesa_atacante_solo(self.ball, self.robot0, self.robot1, self.robot2, self.robot3, self.robot4, 
@@ -376,7 +387,7 @@ class Strategy:
         else:
             action.defenderWall(self.robot1,self.robot2,self.ball, leftSide=not self.mray)
 
-
+    #posição de defesa na estratégia de quebra de barreira utilizando um dos atacantes
     def wallStgDefAtaqueFraco(self):
         action.defesa_atacante_solo(self.ball, self.robot0, self.robot1, self.robot2, self.robot3, self.robot4, 
                                 self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4)
@@ -402,6 +413,9 @@ class Strategy:
                 action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
         action.defenderWall(self.robot1, self.robot2,self.ball, leftSide=not self.mray)
 
+    #posição de ataque na estratégia de quebra de barreira utilizando um dos zagueiros
+    #o ataque funciona com dois robôs e um terceiro que foi removido da zaga
+    #fica parado dentro da área adversária esperando a bola e bloquando a barreira
     def breakWallStgAttZagueiroLinha(self):
         action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
 
@@ -418,7 +432,7 @@ class Strategy:
             action.defenderWallSolo(self.robot2,self.ball, leftSide=not self.mray)
         action.ataque(self.ball, self.robot1, self.robot3, self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4)
 
-
+    #posição de defesa da estratégia de quebra de barreira utilizando um dos zagueiros
     def wallStgDefZagueirOlinha(self):
         action.defesa_atacante_solo(self.ball, self.robot0, self.robot1, self.robot2, self.robot3, self.robot4, 
                                 self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4)

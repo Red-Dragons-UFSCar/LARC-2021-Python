@@ -37,7 +37,6 @@ if __name__ == "__main__":
         mray = False
 
     # Choose strategy
-
     strategyList = ['wallDeffenseDefault', 'blockingWallDeffense', 'default5v5', 'tripleAttack', 'breakWallAtaque', 'breakWallZaga']
 
     try:
