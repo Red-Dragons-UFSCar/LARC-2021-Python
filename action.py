@@ -820,6 +820,11 @@ def select_leader(robot1: simClasses.Robot, robot2: simClasses.Robot, ball: simC
     return leader, follower
 
 def rectangle(robot: simClasses.Robot, double_face=False):
+    """Input: Robot to perform a trajectory, flag double_face to switch face
+    Description: Defines a trajectory to test robot movimentation
+    Output: None"""
+
+    # Sequence 1
     '''
         4          3
 
@@ -829,6 +834,7 @@ def rectangle(robot: simClasses.Robot, double_face=False):
     #posicoes_y = [25, 25, 105, 105]
     #posicoes_angulo = [-90*pi/180, 0, 90*pi/180, 180*pi/180]
 
+    # Sequence 2
     '''
         1             5
                2/6       4
@@ -838,6 +844,7 @@ def rectangle(robot: simClasses.Robot, double_face=False):
     #posicoes_y = [105, 65, 25, 65, 105, 65, 25]
     #posicoes_angulo = [90*pi/180, -45*pi/180, 0, 90*pi/180, 180*pi/180, -135*pi/180, -135*pi/180]
 
+    # Sequence 3
     '''
         2             3/6
                     
@@ -853,16 +860,15 @@ def rectangle(robot: simClasses.Robot, double_face=False):
                                  posicoes_y[robot.stateRetangle%n_points], 
                                  posicoes_angulo[robot.stateRetangle%n_points])
     
+    # Step to next point if robot near the target
     if robot.calculate_distance(robot.target) < 5:
         robot.stateRetangle += 1
-    
-    #print("Indice alvo: ", robot.stateRetangle%4)
 
     linear_velocity, angular_velocity = calculate_velocities(robot.target, robot, double_face)
 
     coordinates = robot.get_coordinates()
 
-    #print(coordinates.rotation )
+    # Conditions to make robot leave corners
     if coordinates.Y < 7.5 and -pi/2 -pi/12 < coordinates.rotation < -pi/2 +pi/12:
         print("[PRESO] Baixo")
         linear_velocity = -30*robot.face
@@ -884,17 +890,22 @@ def rectangle(robot: simClasses.Robot, double_face=False):
 
 
 def CornerAvoid(robot:simClasses.Robot):
+    """Input: Robot object
+    Description: Verify if robot is in some field border or field corner
+    Output: None"""
     xUperLimit = 145
     xLowerLimit = 25
 
     yUperLimit = 110
     yLowerLimit = 20
 
+    # Correction angle face if has switched
     if robot.face == 1:
-        robotAngle = robot._coordinates.rotation# Radianos
+        robotAngle = robot._coordinates.rotation
     else:
         robotAngle = arctan2(sin(robot._coordinates.rotation + pi), 
                              cos(robot._coordinates.rotation + pi))
+        
     robotPos = (robot._coordinates.X,robot._coordinates.Y) # X, Y
     
     border = False
@@ -919,24 +930,27 @@ def CornerAvoid(robot:simClasses.Robot):
         #print("Preso na parede de Cima")
         border = True
     
+    # If border is detected
     if border:
-        #print("Entrei")
-        if robot.contWall > 15:
-            #print("TROQUE IMEDIATAMENTE")
+        if robot.contWall > 15: # After some cycles, function return True to switch robot face
             return True
         else:
-            #print("Contei")
             robot.contWall+=1
+            robot.contWall+=1
+            
+            robot.contWall+=1   
             
     else:
         robot.contWall=0
         return False
 
-
-
     return
 
 def go_to_point(robot:simClasses.Robot, x:float, y:float, theta:float):
+    """Input: Robot object and target coordinates (x, y, theta)
+    Description: Makes robot go to a desired point in field
+    Output: None"""
+
     robot.target.set_coordinates(x,y,theta)
     linear_velocity, angular_velocity = calculate_velocities(robot.target, robot)
 
@@ -946,7 +960,12 @@ def go_to_point(robot:simClasses.Robot, x:float, y:float, theta:float):
         robot.sim_set_vel(linear_velocity, angular_velocity)
 
 def SendRobotPosition(mray, ref_data, number_robot, file, if_else = None):
+    """Input: Team yellow flag, Referee data, Robot id and File name
+    Description: Gets the fouls positioning information
+    Output: List with robots positions in current foul"""
+
     """
+    Referee fouls codes:
     FREE_KICK = 0
     PENALTY_KICK = 1
     GOAL_KICK = 2
@@ -956,8 +975,9 @@ def SendRobotPosition(mray, ref_data, number_robot, file, if_else = None):
     GAME_ON = 6
     HALT = 7    
     """
+
+    # Open file with fouls positions
     file_name = "fouls_foulder/positions/" + file + '.json'
-    
     with open(file_name) as f:
         data = json.load(f)
 
@@ -981,7 +1001,6 @@ def SendRobotPosition(mray, ref_data, number_robot, file, if_else = None):
         current_foul = "free_ball"
     elif ref_data["foul"] == 4:
         current_foul = "kickoff"
-    #current_foul = str(ref_data["foul"])
 
     #Setting Offensive or Defensive strategy
     if ref_data["foulQuadrant"] == 0:
@@ -1004,31 +1023,20 @@ def SendRobotPosition(mray, ref_data, number_robot, file, if_else = None):
     else:
         offensive_defensive_quadrant = 'quad4'
 
-    #Setting the goal kick strategy. strategy = if or else
-    """
-    if current_foul == '1' and if_else != None:
-        if if_else == 'if':
-            strategy = 'if'
-        elif if_else == 'else':
-            strategy = 'else'
-    
-    """
-
-    #if current_foul == '1' and if_else != None:
-    #    return data[side][current_foul][offensive_defensive_quadrant][if_else][list_robot[number_robot]]
-
     return data[side][current_foul][offensive_defensive_quadrant][list_robot[number_robot]]
 
 def Robot2Position(robot, ball, friend1, friend2, enemy0, enemy1, enemy2, list_r0, list_r1, list_r2):
-    #Recebendo as informações corretamente
-    robot.target.set_coordinates(list_r0[0], list_r0[1], deg2rad(list_r0[2])) #xpos, ypos, theta
-    friend1.target.set_coordinates(list_r1[0], list_r1[1], deg2rad(list_r1[2])) #xpos, ypos, theta
-    friend2.target.set_coordinates(list_r2[0], list_r2[1], deg2rad(list_r2[2])) #xpos, ypos, theta
+    """Input: Team robots objects, ball object, enemy robots objects, fouls positons of json
+    Description: Control the robots to desired position for every foul
+    Output: True"""
+    #Defines targets positions r0, r1 and r2 
+    robot.target.set_coordinates(list_r0[0], list_r0[1], deg2rad(list_r0[2])) 
+    friend1.target.set_coordinates(list_r1[0], list_r1[1], deg2rad(list_r1[2])) 
+    friend2.target.set_coordinates(list_r2[0], list_r2[1], deg2rad(list_r2[2])) 
 
-    #Robot, friend1 e friend2 funcionando corretamente
+    # For every robot, control to the desired position
     if not robot.arrive():
         robot.vMax = 20
-        #v, w = univecController(robot, robot.target, avoid_obst=False) # Calculate linear and angular velocity
         #robot.obst.update2(robot, ball, friend3, friend4, enemy0, enemy1, enemy2, enemy3, enemy4)
         robot.obst.update2(ball)
         v, w = univec_controller(robot, robot.target, True, robot.obst, n=4, d=4, pos_auto=True)
@@ -1036,18 +1044,15 @@ def Robot2Position(robot, ball, friend1, friend2, enemy0, enemy1, enemy2, list_r
     else:
         robot.vMax = 50
         robot.sim_set_vel(0, 0)
-        #print("Robo 1 chegou")
 
     if not friend1.arrive():
         friend1.vMax = 20
-        #friend1.obst.update2(friend1, ball, friend3, friend4, enemy0, enemy1, enemy2, enemy3, enemy4)
         friend1.obst.update2(ball)
         v, w = univec_controller(friend1, friend1.target, True, friend1.obst, n=4, d=4, pos_auto=True)
         friend1.sim_set_vel(v, w)
     else:
         friend1.vMax = 50
         friend1.sim_set_vel(0, 0)
-        #print("Robo 2 chegou")
 
     if not friend2.arrive():
         friend2.vMax = 20
@@ -1058,9 +1063,6 @@ def Robot2Position(robot, ball, friend1, friend2, enemy0, enemy1, enemy2, list_r
     else:
         friend2.vMax = 50
         friend2.sim_set_vel(0, 0)
-        #print("Robo 3 chegou")
-
-    #Tentativa 1, para os dois novos robos.
     
     return True
 

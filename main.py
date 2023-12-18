@@ -27,11 +27,14 @@ COM_REF = True
 #selectedReplacer = "auto"
 selectedReplacer = None
 
-# Eletronica
+# Parametros da Eletronica
 ser = serial.Serial()
 ser.baudrate = 115200
 ser.port = '/dev/ttyUSB0' # Mudar aqui dependendo da COM do transmissor
 ser.open()
+
+# IDs dos robôs em ordem 0 (goleiro), 1 (zagueiro) e 2 (atacante) na visão da cin
+id_robots = [11, 10, 4]
 
 def verifyDirection(v):
     """Input: Velocidade linear
@@ -47,11 +50,9 @@ def verifyDirection(v):
     return direction
 
 def getData(ball, robots, enemy_robots, mray):
-    """Input: Objeto da bola, lista de objetos dos robôs
-    Description: Determina a palavra binária de direção da eletrônica a partir da velocidade linear recebida
-    da estratégia.
-    Output: Direção (2 bits)"""
-    #TODO Colocar os robos adversários aqui também
+    """Input: Objeto da bola, lista de robôs aliados, lista de robôs inimigos, flag de time amarelo
+    Description: Função para a interrupção de tempo para aquisição de imagens da visão
+    Output: Atualização da Visão (None)"""
 
     # Informações da visão
     client_control.update(mray)
@@ -66,43 +67,23 @@ def getData(ball, robots, enemy_robots, mray):
     
     data_ball = field[0]["ball"]  # Salva os dados da bola
 
-    #print(data_our_bot)
-    #print(field[0]["robots_yellow"])
+    # Dados da visão para robôs adversários
 
-    # Inimigos ignorando as tags 
-    #'''
     n_inimigos = len(data_their_bots)
-    for i in range(3):
-        if i < n_inimigos:
-            data_their_bots[i]["orientation"] = arctan2(sin(data_their_bots[i]["orientation"] + pi), cos(data_their_bots[i]["orientation"] + pi))  # Adequação de orientação dos robôs
+    for i in range(3): # Para os três robôs inimigos 
+        if i < n_inimigos: # Enquanto tiverem robôs inimigos detectando, atualizar com os dados da visao
+            data_their_bots[i]["orientation"] = arctan2(sin(data_their_bots[i]["orientation"] + pi), 
+                                                        cos(data_their_bots[i]["orientation"] + pi))  # Adequação de orientação dos robôs
             enemy_robots[i].set_simulator_data(data_their_bots[i])
-        else:
+        else: # Se exitir algum inimigo faltando, definir como um obstaculo fora do campo
             robot_obstacle = dict([ ("robot_id", 15), ("x", -30), ("y", -30), ("orientation", 1), 
                 ("vx", 0), ("vy", 0), ("vorientation", 0) ])
             enemy_robots[i].set_simulator_data(robot_obstacle)
-    #'''
-    # Fim de obstaculo ignorando tags
-
-    ''' ANTIGO
-    for i in range(len(data_their_bots)):  # Separação de dados recebidos da visão
-        for index, robot in enumerate(enemy_robots):
-            if data_their_bots[i]["robot_id"] == id_robots[index]:  # Se o id do robô recebido é igual ao robô desejado (Código Cin)
-                data_their_bots[i]["robot_id"] = id_robots.index(data_their_bots[i]["robot_id"])  # Adequação de ID dos robôs
-                data_their_bots[i]["orientation"] = arctan2(sin(data_their_bots[i]["orientation"] + pi), cos(data_their_bots[i]["orientation"] + pi))  # Adequação de orientação dos robôs
-                robot.set_simulator_data(data_their_bots[i])
-                break
-    '''
-    for i in range(len(enemy_robots)):  # Separação de dados recebidos da visão
-        #data_their_bots[i]["orientation"] = arctan2(sin(data_their_bots[i]["orientation"] + pi), cos(data_their_bots[i]["orientation"] + pi))  # Adequação de orientação dos robôs
-        #enemy_robots[i].set_simulator_data(data_their_bots[i])
-        enemy_robots[i]._coordinates.rotation = arctan2(sin(enemy_robots[i]._coordinates.rotation + pi), cos(enemy_robots[i]._coordinates.rotation + pi))  # Adequação de orientação dos robôs
     
-    #data_our_bot2 = []
-    #for i in range(len(data_our_bot)): # Tratamento provisório dos dados da visão - utilização de IDs maiores que 2
-    #    if data_our_bot[i]['robot_id'] > 2:
-    #        data_our_bot2.append(data_our_bot[i])
-    #
-    #data_our_bot = data_our_bot2
+    for i in range(len(enemy_robots)):  # Separação de dados recebidos da visão
+        # Acho que isso está sendo feito repetido... Mas não tem problema
+        enemy_robots[i]._coordinates.rotation = arctan2(sin(enemy_robots[i]._coordinates.rotation + pi), 
+                                                        cos(enemy_robots[i]._coordinates.rotation + pi))  # Adequação de orientação dos robôs
 
     for i in range(len(data_our_bot)):  # Separação de dados recebidos da visão
         for index, robot in enumerate(robots):
@@ -114,10 +95,6 @@ def getData(ball, robots, enemy_robots, mray):
     
     for i in range(len(data_ball)): # Recebimento dos dados da bola
         ball.set_simulator_data(data_ball)
-
-# IDs dos robôs em ordem 0, 1 e 2 na visão da cin
-id_robots = [11, 10, 4]
-#id_robots = [2, 10, 9]
 
 t_start = time.time()
 t1 = time.time()
@@ -173,12 +150,8 @@ if __name__ == "__main__":
     referee = Referee(mray, "224.5.23.2", 10003)
     '''
     # Intialize all clients (real)
-    #client_control = StrategyControl(ip='224.5.23.2', port=10015, yellowTeam=mray, logger=False, pattern='ssl', convert_coordinates=True)  # Criação do objeto do controle e estratégia
-    #referee = Referee("224.5.23.2", 10100, logger=False)
-
-    # Clients campo
-    client_control = StrategyControl(ip='224.5.23.2', port=10322, yellowTeam=mray, logger=False, pattern='ssl', convert_coordinates=True)  # Criação do objeto do controle e estratégia
-    referee = Referee("224.5.23.2", 10312, logger=False)
+    client_control = StrategyControl(ip='224.5.23.2', port=10015, yellowTeam=mray, logger=False, pattern='ssl', convert_coordinates=True)  # Criação do objeto do controle e estratégia
+    referee = Referee("224.5.23.2", 10100, logger=False)
 
     # Initialize all  objects
     robots = []
@@ -214,50 +187,41 @@ if __name__ == "__main__":
         referee.update()  # Atualiza os dados do referee
         data_ref, errorCodeRef = referee.get_data()
 
-        if data_ref['foul'] != 5:
+        # Este bloco parece não ser necessário
+        if data_ref['foul'] != 5:  # Se a falta for diferente de STOP, ela é salva
             current_ref = data_ref['foul']
             current_team_foul = data_ref['teamcolor']
             current_quad = data_ref['foulQuadrant']
 
+        # Comunicação via Referee
         if COM_REF:
-            if data_ref["foul"] == 6:
+            if data_ref["foul"] == 6:  # Se game_on
                 print("GAME ON")
                 strategy.coach_fisico()
-                #action.screen_out_ball(robots[0], ball, 85, True, upper_lim = 90, lower_lim= 50)
-                #action.rectangle(robots[2])
-                #action.defender_spin(robots[2], ball)
-            elif data_ref["foul"] != 7:
+
+            elif data_ref["foul"] != 7:  # Se algo diferente de HALT
                 strategy.reset_functions()
-                if selectedReplacer == "auto":
-                    '''
-                    if data_ref["foul"] == 5 and (current_ref != -1 and current_ref != 6):
-                        print("arruma stop")
-                        data_ref["foul"] = current_ref
-                        data_ref["teamcolor"] = current_team_foul
-                        data_ref["foulQuadrant"] = current_quad
-                        currentFouls.automatic_replacement(data_ref, not left_side, robots[0], robots[1], robots[2], enemy_robots[0], enemy_robots[1], enemy_robots[2])
-                        data_ref["foul"] = 5
-                        data_ref["foulQuadrant"] = 0
-                    #actuator.stop()
-                    elif current_ref == 6 or current_ref == 7:
-                    '''
-                    if data_ref["foul"] >= 5:
+
+                if selectedReplacer == "auto":  # Se posicionamento automativo
+                    if data_ref["foul"] >= 5:  # Caso uma flag de stop ou halt seja recebida
                         robots[0].sim_set_vel(0, 0)
                         robots[1].sim_set_vel(0, 0)
                         robots[2].sim_set_vel(0, 0)
                         robots[0].face = 1
                         robots[1].face = 1
                         robots[2].face = 1 
-                    else:
+                    else:  # Caso esteja no período de faltas ainda
                         currentFouls.automatic_replacement(data_ref, not left_side, robots[0], robots[1], robots[2], enemy_robots[0], enemy_robots[1], enemy_robots[2])
-                else:
+                
+                else: # Se posicionamento manual
                     robots[0].sim_set_vel(0, 0)
                     robots[1].sim_set_vel(0, 0)
                     robots[2].sim_set_vel(0, 0)
                     robots[0].face = 1
                     robots[1].face = 1
                     robots[2].face = 1
-            else:
+
+            else:  # Se HALT
                 strategy.reset_functions()
                 print("GAME OFF")
                 robots[0].sim_set_vel(0, 0)
@@ -267,17 +231,12 @@ if __name__ == "__main__":
                 robots[1].face = 1
                 robots[2].face = 1 
         else:
-            #strategy.coach_fisico()
             print("REF OFF")
-            #action.rectangle(robots[2])
-            #action.defender_spin(robots[2], ball)
-            #action.screen_out_ball(robots[1], ball, 40, True, upper_lim = 90, lower_lim= 50)
-            #strategy.coach()
-            #print("X: ", robots[0]._coordinates.X, end=' ')
-            #print("Y: ", robots[0]._coordinates.Y)
+            #action.rectangle(robots[2])  # Teste de movimentação do robô
             
         # ---- Envio de informações para a eletronica
 
+        # Sim, as velocidades estão ao contrário...
         vl_1 = int(robots[0].vR)
         vr_1 = int(robots[0].vL)
         vl_2 = int(robots[1].vR)
@@ -293,16 +252,11 @@ if __name__ == "__main__":
         dirMot1_Robo3 = verifyDirection(vl_3)
         dirMot2_Robo3 = verifyDirection(vr_3)
 
-        #if( not (vl_3 == 100 and vr_3 == 100) ):
-        #    vl_3 = min(vl_3, 80)
-        #    vr_3 = min(vr_3, 80)
-
         # Palavra de Bytes de direção
         direcao1 = dirMot1_Robo1<<6 | dirMot2_Robo1<<4 | dirMot1_Robo2<<2 | dirMot2_Robo2
         direcao2 = dirMot1_Robo3<<6 | dirMot2_Robo3<<4
 
         # Vetor de mensagem para a eletrônica
-        #print("Palavra: ", [111, direcao1, direcao2, vl_1, vr_1, vl_2, vr_2, vl_3, vr_3, 113])
         Rd = bytearray([111, direcao1, direcao2, abs(vl_1), abs(vr_1), abs(vl_2), abs(vr_2), abs(vl_3), abs(vr_3), 113])
         
         # Escrita na porta serial

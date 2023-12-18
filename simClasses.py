@@ -105,30 +105,26 @@ class Obstacle(KinematicBody):
         """Input: Object lists.
         Description: Detects the nearest object and sets it as the current obstacle to avoid.
         Output: Current obstacle."""
+        # Gets all obstacles for a robot
         enemies = self.robot.get_enemies()
         friends = self.robot.get_friends()
-        #enemies = []
-        #friends = []
+
+        # Join all obstacles in a list
         distances = []
         distances.extend(enemies)
         distances.extend(friends)
 
+        # Gets a closer obstacle and defines as a obstacle for robot
         distances.sort(key=lambda a: self.robot.calculate_distance(a))
         obstacle = distances[0]
         self.set_obst(obstacle.get_coordinates().X, obstacle.get_coordinates().Y, obstacle.get_coordinates().rotation)
-        #for obst in distances:
-        #    print("Indice: ", obst.index, end='   ')
-        #    print("Cor: ", obst.teamYellow, end='   ')
-        #    print("X: ", obst._coordinates.X, end=' ')
-        #    print("Y: ", obst._coordinates.Y)
 
 
-    #def update2(self, ball, friends, enemies):
     def update2(self, ball):
         """Input: ball, robot's friends and enemies list
         Description: Detects the nearest object and sets it as the current obstacle to avoid with some exceptions:
                          1 - The enemy player closest to the goal is not be considered obstacle
-                         2 - If ball is too close to the enemy robot, he is not be considered obstacle
+                         2 - If ball is too close to enemy robot, he is not be considered obstacle
         Output:"""
         enemies = self.robot.get_enemies()
         friends = self.robot.get_friends()
@@ -138,23 +134,18 @@ class Obstacle(KinematicBody):
         goal_distances = [enemy.calculate_distance_from_goal(enemy.teamYellow) for enemy in enemies]
 
         for index in range(len(obstacles)-1, -1, -1):
-            if ball_distances[index] < 15:
+            if ball_distances[index] < 15:  # Verify obstacle distance to ball
                 obstacles.pop(index)
-            elif goal_distances[index] < 20 and ball.calculate_distance_from_goal(self.robot.teamYellow) < 20:
+            elif (goal_distances[index] < 20 and 
+                  ball.calculate_distance_from_goal(self.robot.teamYellow) < 20):  # Verify obstacle distance to goal
                 obstacles.pop(index)
 
+        # Gets a closer obstacle
         obstacles.extend(friends)
         obstacles.sort(key=lambda a: self.robot.calculate_distance(a))
-
-        # Setting current obstacle
+        # Define current obstacle
         self.set_obst(obstacles[0].get_coordinates().X, obstacles[0].get_coordinates().Y,
                       obstacles[0].get_coordinates().rotation)
-        
-        #for obstacle in obstacles:
-        #    print("Indice: ", obstacle.index, end='   ')
-        #    print("Cor: ", obstacle.teamYellow, end='   ')
-        #    print("X: ", obstacle._coordinates.X)
-            
 
 
 class Ball(KinematicBody):
@@ -170,13 +161,11 @@ class Ball(KinematicBody):
         """Input: FIRASim ball location data.
         Description: Sets positional and velocity data from simulator.
         Output: None"""
-        # Original
-        #self._coordinates.X = data_ball.x + data_ball.vx * 100 * 8 / 60
-        #self._coordinates.Y = data_ball.y + data_ball.vy * 100 * 8 / 60
-
-        # Alterado
         self._coordinates.X = data_ball['x'] + data_ball['vx'] * 100 * 8 / 60
         self._coordinates.Y = data_ball['y'] + data_ball['vy'] * 100 * 8 / 60
+
+        self._velocities.X = data_ball['vx']
+        self._velocities.Y = data_ball['vy']
 
         # Check if prev is out of field, in this case reflect ball movement to reproduce the collision
         # if self._coordinates.X > 160:
@@ -188,9 +177,6 @@ class Ball(KinematicBody):
         #     self._coordinates.Y = 130 - (self._coordinates.Y - 130)
         # elif self._coordinates.Y < 0:
         #     self._coordinates.Y = - self._coordinates.Y
-
-        self._velocities.X = data_ball['vx']
-        self._velocities.Y = data_ball['vy']
 
 
 class Robot(KinematicBody):
@@ -226,30 +212,24 @@ class Robot(KinematicBody):
         self.target = Target()  # ? Defines the robot target
         self._enemies = []
         self._friends = []
-        self.pastPose = zeros(12).reshape(4,
-                                          3)
-        self.contZum = 0
+        self.pastPose = zeros(12).reshape(4, 3)
+        self.contZum = 0  # Counter to activate "Zum" behavior
+        self.last_univector_angle = 0  # Save last angle of univector field
+        self.univector_angle = 0  # Save current univector field angle
         
-        # PID1
-        self.last_univector_angle = 0
-        self.univector_angle = 0
-        self.theta_e = 0
-        self.int_theta_e = 0
-        self.last_theta = 0
-
-        # PID3
+        # PID Constants
         self.u_k1 = 0
         self.e_k1 = 0
         self.e_k2 = 0
 
-        self.stateRetangle = 0
-        self.flagKeepFace = False
-        self.contKeepFace = 0
+        self.stateRetangle = 0  # Atribute to helps action.rectangle()
+        self.flagKeepFace = False  # Flag to robot don't switch face
+        self.contKeepFace = 0  # Counter to flagKeepFace
 
-        self.contWall = 0
-        self.contador_velocidade = 0
+        self.contWall = 0  # Counter of robot blocked in wall
+        self.contador_velocidade = 0  # Counter to keeps down linear velocity in PID
 
-        self.pos_auto = True
+        self.pos_auto = True  # Flag to automatic positioning
 
     def arrive(self):
         """Input: None.
@@ -277,21 +257,10 @@ class Robot(KinematicBody):
         if isinstance(w, ndarray):
             w = w[0]
 
-        '''
-        if self.face == 1:
-            #self.vR = v + 0.5 * self.L * w
-            #self.vL = v - 0.5 * self.L * w
-            self.vR = v + 0.5 * self.L * w
-            self.vL = v - 0.5 * self.L * w
-        else:
-            self.vL = -v - 0.5 * self.L * w
-            self.vR = -v + 0.5 * self.L * w
-        '''
-
+        # Dynamic model of differential robot
         self.vR = v + 0.5 * self.L * w
         self.vL = v - 0.5 * self.L * w
         
-        #print(self.vR)
         #self.actuator.send(self.index, v1, v2)
         #self.actuator.send_mensage(self.index,self.teamYellow,self.vR,self.vL)
         
@@ -325,6 +294,10 @@ class Robot(KinematicBody):
         return self.target
     
     def set_wall_obstacle(self):
+        """Input: None.
+        Description: Defines side closer to robot as a obstacle outside of field. This helps keep
+        trajectory robot inside of game field.
+        Output: Closer object and closer distance."""
         obj1 = Obstacle(None)
         obj2 = Obstacle(None)
         obj3 = Obstacle(None)
@@ -355,20 +328,22 @@ class Robot(KinematicBody):
             obj4.set_obst(self._coordinates.X, -9, 0)
 
         dict_obst = {obj1: 0, obj2: 0, obj3:0 , obj4: 0}
+
+        # Calcula as distâncias de cada obstaculo
         for obst in dict_obst:
             dict_obst[obst] = self.calculate_distance(obst)
+        
         objeto_menor_distancia = None
         menor_distancia = None
 
+        # Define qual é o mais perto
         for obst, distancia in dict_obst.items():
             if objeto_menor_distancia is None or distancia < menor_distancia:
                 objeto_menor_distancia = obst
                 menor_distancia = distancia
-        #print(dict_obst)
 
+        # Verifica se o obstaculo da parede é mais próximo que o definido até o momento
         if self.calculate_distance(self.obst) > self.calculate_distance(objeto_menor_distancia):
             self.obst.set_obst(objeto_menor_distancia._coordinates.X, objeto_menor_distancia._coordinates.Y, 0)
-        #print("x: ", self.obst._coordinates.X, end=' ')
-        #print("y: ", self.obst._coordinates.Y, end=' ')
-        #print("o: ", self.obst._coordinates.rotation)
+        
         return objeto_menor_distancia, menor_distancia
