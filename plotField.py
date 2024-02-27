@@ -6,7 +6,6 @@ from bridge import (Actuator, Replacer, Vision, Referee,
                         NUM_BOTS, convert_angle, Entity)
 from simClasses import *
 import action
-import fouls
 
 from strategy import *
 
@@ -16,10 +15,10 @@ class PlotField:
 
     def plotInteractive(self, target, obstacle = None):
         self.univec = behaviours.Univector()                                                 # Objeto univector
-        self.x_pos = range(1, 150, 5)                                                        # Plot do campo inteiro
-        self.y_pos = range(1, 150, 5)
+        self.x_pos = range(40, 190, 4)                                                        # Plot do campo inteiro
+        self.y_pos = range(30, 150, 4)
 
-        self.robo = Robot(0, "nada")
+        self.robo = Robot(0, "nada", False)
 
         self.x_plot = []
         self.y_plot = []
@@ -66,17 +65,15 @@ if __name__ == '__main__':
 
     vision = Vision(mray, "224.0.0.1", 10002)
 
-    robot0 = Robot(0, actuator=None)
-    robot1 = Robot(1, actuator=None)
-    robot2 = Robot(2, actuator=None)
+    robot0 = Robot(0, actuator=None, mray=mray)
+    robot1 = Robot(1, actuator=None, mray=mray)
+    robot2 = Robot(2, actuator=None, mray=mray)
 
-    robotEnemy0 = Robot(0, actuator=None)
-    robotEnemy1 = Robot(1, actuator=None)
-    robotEnemy2 = Robot(2, actuator=None)
+    robotEnemy0 = Robot(0, actuator=None, mray= not mray)
+    robotEnemy1 = Robot(1, actuator=None, mray= not mray)
+    robotEnemy2 = Robot(2, actuator=None, mray= not mray)
 
     ball = Ball()
-
-    strategy = Strategy(robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, ball, mray)
 
     plot = PlotField()
 
@@ -104,6 +101,6 @@ if __name__ == '__main__':
             arrivalTheta=arctan2(65-ball.yPos,-ball.xPos) #? Angle between the ball and point (0,65)
 
         robot2.target.update(ball.xPos,ball.yPos,arrivalTheta)
-        robot2.obst.update(robot2,robot0,robot1,robotEnemy0,robotEnemy1,robotEnemy2)
+        robot2.obst.update(robot2,[robot0,robot1, robotEnemy0,robotEnemy1,robotEnemy2])
 
         plot.plotInteractive(robot2.target, robot2.obst)
