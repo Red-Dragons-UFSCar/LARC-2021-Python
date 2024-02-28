@@ -116,6 +116,33 @@ class Obstacle:
         # self.setObst(enemys[index].xPos,enemys[index].yPos,0,0)
     '''
 
+    def wall_obstacle(self, robot_x, robot_y, team_yellow):
+        anchor_x_left = 13
+        anchor_x_right = 240
+        anchor_y_up = 193
+        anchor_y_down = -13
+
+        if not team_yellow and (robot_y > 70 and robot_y < 105):
+                anchor_x_right=anchor_x_right+15
+        if team_yellow and (robot_y > 70 and robot_y < 105):
+                anchor_x_left=anchor_x_left-15
+
+        wall_up = [robot_x, anchor_y_up]
+        wall_down = [robot_x, anchor_y_down]    
+        wall_left = [anchor_x_left, robot_y]
+        wall_right = [anchor_x_right, robot_y]
+            
+
+        walls = [wall_left, wall_right, wall_up, wall_down]
+
+        distances = []
+        for wall in walls:
+            distance = sqrt((wall[0]-robot_x)**2 + (wall[1]-robot_y)**2 )
+            distances.append(distance)
+
+        index = argmin(distances)
+        return (walls[index][0], walls[index][1])
+
     def update2(self, robot, ball, friend1, friend2, enemy1, enemy2, enemy3, enemy4, enemy5):
         enemys = array([enemy1, enemy2, enemy3, enemy4, enemy5])
         d_ball = array([[enemy1.dist(ball)],
@@ -174,8 +201,24 @@ class Obstacle:
             d_robot[i] = robot.dist(enemys[i])
         index = argmin(d_robot)
 
+        wall = self.wall_obstacle(robot.xPos, robot.yPos, robot.teamYellow)
+        if robot.index == 2:
+            print("Parede x: ", wall[0])
+            print("Parede y: ", wall[1])
+
+        wall_distance = sqrt( (wall[0] - robot.xPos)**2 +  (wall[1] - robot.yPos)**2)
+
+        if wall_distance < d_robot[index]:
+            x_obst = wall[0]
+            y_obst = wall[1]
+            if robot.index == 2:
+                print("Desviando de parede!!!")
+        else:
+            x_obst = enemys[index].xPos
+            y_obst = enemys[index].yPos
+
         # Setting current obstacle
-        self.setObst(enemys[index].xPos, enemys[index].yPos, 0, 0)
+        self.setObst(x_obst, y_obst, 0, 0)
 
 
     def update_teste(self, robot, ball, friend1, friend2, enemy1, enemy2, enemy3, enemy4, enemy5):

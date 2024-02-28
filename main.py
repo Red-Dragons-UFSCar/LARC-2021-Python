@@ -125,7 +125,7 @@ if __name__ == "__main__":
         #action.triple_ataque(ball, robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4)
         #action.ataque(ball, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4)
 
-        
+        #'''
         if ref_data["game_on"]:
             strategy.coach(selectedStrategy)
 
@@ -154,7 +154,8 @@ if __name__ == "__main__":
             actuator.stop()
 
         else:
-            actuator.stop()
+            actuator.stop()#'''
+        #strategy.coach(selectedStrategy)
         
 
         t2 = time.time()
