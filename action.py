@@ -70,7 +70,7 @@ def defenderSpin2(robot,ball,leftSide=True,friends=[],enemys=[]):
 
     robot.simSetVel(v,w)
 
-def defenderSpin(robot, ball, left_side=True, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None, enemy4=None, enemy5=None):
+def defenderSpin(robot, ball, left_side=True, friend1=None, friend2=None, friend3=None, friend4=None, enemy1=None, enemy2=None, enemy3=None, enemy4=None, enemy5=None):
     if left_side: # Playing in the left side of field
         arrival_theta = arctan2(90 - ball.yPos,  235- ball.xPos)  # Angle between the ball and point (150,65)
     else: # Playing in the right side of field
@@ -80,7 +80,7 @@ def defenderSpin(robot, ball, left_side=True, friend1=None, friend2=None, enemy1
     if friend1 is None and friend2 is None:  # No friends to avoid
         v, w = univecController(robot, robot.target, avoidObst=False, n=16, d=2) # Calculate linear and angular velocity
     else:  # Both friends to avoid
-        robot.obst.update2(robot, ball, friend1, friend2, enemy1, enemy2, enemy3, enemy4, enemy5)
+        robot.obst.update2(robot, ball, friend1, friend2, friend3, friend4, enemy1, enemy2, enemy3, enemy4, enemy5)
         v, w = univecController(robot, robot.target, True, robot.obst, n=4, d=4, doubleFace=True)
 
     d = robot.dist(ball) # Calculate distance between ball and robot
@@ -1212,3 +1212,155 @@ def calculate_arrival_angle_attack_penalty(left_side, robot):
         else:
             arrival_angle = deg2rad(165)
     return arrival_angle
+
+def screenOutBall_diagonal(robot,ball,leftSide=True,friend1=None,friend2=None):
+    xPos = ball.xPos #+ ball.vx*100*22/60 # Só mudei isso
+    yPos = ball.yPos #+ ball.vy*100*22/60
+
+    midField_y = 90
+    upperLim_y = 130
+    lowerLim_y = 50
+    if leftSide:
+        upperLim_x = 200
+        lowerLim_x = 125
+    else:
+        upperLim_x = 125
+        lowerLim_x = 50
+        
+    
+    #Check if ball is inside the limits
+    if xPos >= upperLim_x:
+        xPoint = upperLim_x
+
+    elif xPos <= lowerLim_x:
+        xPoint = lowerLim_x
+    else:
+        xPoint = xPos
+
+    if ball.yPos < midField_y:
+        if leftSide:
+            #yPoint = midField_y - ( (midField_y-lowerLim_y)*(xPoint-125)/abs(upperLim_x-lowerLim_x) )
+            yPoint = midField_y - ( (midField_y-lowerLim_y)*(upperLim_x-xPoint)/abs(upperLim_x-lowerLim_x) )
+            if robot.xPos <= xPos:
+                #arrivalTheta=arctan2((lowerLim_y-midField_y), (upperLim_x - lowerLim_x))
+                arrivalTheta=arctan2((midField_y-lowerLim_y), (upperLim_x - lowerLim_x))
+            else:
+                #arrivalTheta=arctan2((lowerLim_y-midField_y), (upperLim_x - lowerLim_x)) + pi
+                arrivalTheta=arctan2((midField_y-50), (upperLim_x - lowerLim_x)) + pi
+            robot.target.update(xPoint,yPoint,arrivalTheta)
+        else: #TODO fazer aqui ainda
+            #Fazer para a borda
+            yPoint = lowerLim_y + ( (midField_y-lowerLim_y)*(xPoint-upperLim_x)/(lowerLim_x-upperLim_x) )
+            if robot.xPos <= xPos:
+                #Fazer para a borda
+                arrivalTheta=arctan2((midField_y-lowerLim_y), (lowerLim_x - upperLim_x)) + pi
+                arrivalTheta=arctan2(sin(arrivalTheta), cos(arrivalTheta))
+                print("aa")
+            else:
+                #Fazer para a borda
+                arrivalTheta=arctan2((midField_y-lowerLim_y), (lowerLim_x - upperLim_x))
+                
+            robot.target.update(xPoint,yPoint,arrivalTheta)
+    else:
+        if leftSide:
+            #yPoint = midField_y + ( (upperLim_y-midField_y)*(xPoint-upperLim_x)/abs(upperLim_x-lowerLim_x) )
+            yPoint = midField_y + ( (upperLim_y-midField_y)*(upperLim_x-xPoint)/abs(upperLim_x-lowerLim_x) )
+            if robot.xPos <= xPos:
+                #arrivalTheta=arctan2((upperLim_y-midField_y), (upperLim_x - lowerLim_x))
+                arrivalTheta=arctan2((midField_y-upperLim_y), (upperLim_x - lowerLim_x))
+            else:
+                #arrivalTheta=arctan2((upperLim_y-midField_y), (upperLim_x - lowerLim_x)) + pi
+                arrivalTheta=arctan2((midField_y-upperLim_y), (upperLim_x - lowerLim_x)) + pi
+            robot.target.update(xPoint,yPoint,arrivalTheta)
+        else: #TODO fazer aqui ainda
+            #yPoint = midField_y + ( (upperLim_y-midField_y)*(upperLim_x-xPoint)/abs(upperLim_x-lowerLim_x) )
+            yPoint = upperLim_y + ( (midField_y-upperLim_y)*(xPoint-upperLim_x)/(lowerLim_x-upperLim_x) )
+            if robot.xPos <= xPos:
+                #Fazer para a borda
+                arrivalTheta=arctan2((midField_y-upperLim_y), (lowerLim_x - upperLim_x)) + pi
+            else:
+                #Fazer para a borda
+                arrivalTheta=arctan2((midField_y-upperLim_y), (lowerLim_x - upperLim_x))
+            robot.target.update(xPoint,yPoint,arrivalTheta)
+
+    print("X: ", xPoint)
+    print("Y: ", yPoint)
+    print("Theta: ", arrivalTheta*180/pi)
+    if friend1 is None and friend2 is None: #? No friends to avoid
+        v,w=univecController(robot,robot.target,avoidObst=False,stopWhenArrive=True)
+    else: #? Both friends to avoid
+        robot.obst.update(robot,friend1,friend2)
+        v,w=univecController(robot,robot.target,True,robot.obst,stopWhenArrive=True)
+
+    robot.simSetVel(v,w)
+
+def screenOutBall_inverse(robot,ball,staticPoint,leftSide=True,upperLim=200,lowerLim=0,friend1=None,friend2=None):
+    xPos = ball.xPos #+ ball.vx*100*22/60 # Só mudei isso
+    yPos = ball.yPos #+ ball.vy*100*22/60
+    #Check if ball is inside the limits
+    if yPos >= upperLim:
+        yPoint = lowerLim
+
+    elif yPos <= lowerLim:
+        yPoint = upperLim
+
+    else:
+        yPoint = 2*90-yPos # ymeio - (ybola - ymeio)
+
+
+    #Check the field side
+    if leftSide:
+        if robot.yPos <= yPoint:
+            arrivalTheta=pi/2
+        else:
+            arrivalTheta=-pi/2
+        robot.target.update(staticPoint,yPoint,arrivalTheta)
+    else:
+        if robot.yPos <= yPoint:
+            arrivalTheta=pi/2
+        else:
+            arrivalTheta=-pi/2
+        robot.target.update(250 - staticPoint,yPoint,arrivalTheta)
+
+    if robot.contStopped > 60:
+        if robot.teamYellow:
+            if abs(robot.theta) < 10:
+                v = -30
+                w = 5
+            else:
+                v = 30
+                w = -5
+        else:
+            if abs(robot.theta) < 10:
+                v = -30
+                w = 0
+            else:
+                v = 30
+                w = 0
+    else:
+        if friend1 is None and friend2 is None: #? No friends to avoid
+            v,w=univecController(robot,robot.target,avoidObst=False,stopWhenArrive=True)
+        else: #? Both friends to avoid
+            robot.obst.update(robot,friend1,friend2)
+            v,w=univecController(robot,robot.target,True,robot.obst,stopWhenArrive=True)
+
+    robot.simSetVel(v,w)
+
+def go_to_point(robot, ball, x:float, y:float, theta:float, friend1=None, friend2=None, friend3=None, friend4=None, enemy1=None, enemy2=None, 
+                enemy3=None, enemy4=None, enemy5=None):
+    """Input: Robot object and target coordinates (x, y, theta)
+    Description: Makes robot go to a desired point in field
+    Output: None"""
+
+    robot.target.update(x,y,theta)
+    if friend1 is None and friend2 is None: #? No friends to avoid
+        v,w=univecController(robot,robot.target,avoidObst=False,stopWhenArrive=True)
+    else: #? Both friends to avoid
+        #robot.obst.update(robot,friend1,friend2)
+        robot.obst.update2(robot, ball, friend1, friend2, friend3, friend4, enemy1, enemy2, enemy3, enemy4, enemy5)
+        v,w=univecController(robot,robot.target,True,robot.obst,stopWhenArrive=True)
+
+    if robot.arrive():
+        stop(robot)
+    else:
+        robot.simSetVel(v,w)

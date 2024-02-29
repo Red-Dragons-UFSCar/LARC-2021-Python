@@ -40,8 +40,300 @@ class Strategy:
                 self.breakWallAtaque()
             elif selectedStrategy == "breakWallZaga":
                 self.breakWallZaga()
+            elif selectedStrategy == "pivAla":
+                self.grid_field()
             else:
                 self.basicStg()
+
+    def grid_field(self):
+        self.defensive_up = False
+        self.defensive_down = False
+        self.defensive_center = False
+        self.offensive_up = False
+        self.offensive_down = False
+        self.offensive_center = False
+
+        self.pivo = self.robot4
+        self.ala_esquerdo = self.robot3
+        self.ala_direito = self.robot2
+        self.zagueiro = self.robot1
+        self.goleiro = self.robot0
+
+        # TODO: fazer para o amarelo
+        if self.mray:
+            if self.ball.xPos > 120:
+                if self.ball.yPos > 130:
+                    self.defensive_up = True
+                elif self.ball.yPos < 50:
+                    self.defensive_down = True
+                else:
+                    self.defensive_center = True
+            else:
+                if self.ball.yPos > 130:
+                    self.offensive_up = True
+                elif self.ball.yPos < 50:
+                    self.offensive_down = True
+                else:
+                    self.offensive_center = True
+        else:
+            if self.ball.xPos > 120:
+                if self.ball.yPos > 130:
+                    self.offensive_up = True
+                elif self.ball.yPos < 50:
+                    self.offensive_down = True
+                else:
+                    self.offensive_center = True
+            else:
+                if self.ball.yPos > 130:
+                    self.defensive_up = True
+                elif self.ball.yPos < 50:
+                    self.defensive_down = True
+                else:
+                    self.defensive_center = True
+        
+        self.pivo_strategy()
+        self.ala_esquerdo_strategy()
+        self.ala_direito_strategy()
+        self.zagueiro_strategy()
+        self.goleiro_strategy()
+
+    def pivo_strategy(self):
+        if self.offensive_center:
+            action.defenderSpin(self.pivo, self.ball, left_side=not self.pivo.teamYellow, friend1=self.ala_esquerdo, friend2=self.ala_direito,
+                                friend3=self.zagueiro, friend4=self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2,
+                                enemy3=self.robotEnemy3, enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+        elif self.offensive_down or self.offensive_up:
+            action.screenOutBall_diagonal(self.pivo,self.ball,leftSide=not self.pivo.teamYellow)
+        else:
+            action.screenOutBall_inverse(self.pivo, self.ball, 135, leftSide= not self.pivo.teamYellow, upperLim=130, lowerLim=50)
+    
+    def ala_esquerdo_strategy(self):
+        if self.mray:
+            condition_idle_attack = self.ball.xPos < 50
+            idle_point_attack_x, idle_point_attack_y, idle_point_attack_theta =  30, 120, -pi/2
+            idle_point_midfield_x, idle_point_midfield_y, idle_point_midfield_theta =  90, 150, -pi
+
+            condition_defense_toBall = self.ball.xPos > 200 
+
+            condition_idle_deffense = self.ball.xPos > 200 and self.ball.yPos < 130
+            idle_point_deffense_x, idle_point_deffense_y, idle_point_deffense_theta =  180, 150, 0
+        else:
+            condition_idle_attack = self.ball.xPos > 200
+            idle_point_attack_x, idle_point_attack_y, idle_point_attack_theta =  220, 120, -pi/2
+            idle_point_midfield_x, idle_point_midfield_y, idle_point_midfield_theta =  150, 150, 0
+
+            condition_defense_toBall = self.ball.xPos < 50 
+
+            condition_idle_deffense = self.ball.xPos < 50 and self.ball.yPos < 130
+            idle_point_deffense_x, idle_point_deffense_y, idle_point_deffense_theta =  70, 150, 0
+
+
+        if self.offensive_up:
+            action.defenderSpin(self.ala_esquerdo, self.ball, left_side=not self.ala_esquerdo.teamYellow, friend1=self.pivo, friend2=self.ala_direito, 
+                                friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+            
+        elif self.offensive_down:
+            if condition_idle_attack:
+                xPoint = idle_point_attack_x
+                yPoint = idle_point_attack_y
+                theta = idle_point_attack_theta
+                action.go_to_point(self.ala_esquerdo, self.ball, xPoint, yPoint, theta, friend1=self.pivo, friend2=self.ala_direito, 
+                                   friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                   enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+            else:
+                xPoint = idle_point_midfield_x
+                yPoint = idle_point_midfield_y
+                theta = idle_point_midfield_theta
+                action.go_to_point(self.ala_esquerdo, self.ball, xPoint, yPoint, theta, friend1=self.pivo, friend2=self.ala_direito, 
+                                   friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                   enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+                
+        elif self.offensive_center:
+            if self.ala_esquerdo.dist(self.ball) < 25:
+                self.ala_esquerdo.spin = False
+                action.defenderSpin(self.ala_esquerdo, self.ball, left_side=not self.ala_esquerdo.teamYellow, friend1=self.pivo, friend2=self.ala_direito, 
+                                    friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                    enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+            elif condition_idle_attack:
+                xPoint = idle_point_attack_x
+                yPoint = idle_point_attack_y
+                theta = idle_point_attack_theta
+                action.go_to_point(self.ala_esquerdo, self.ball, xPoint, yPoint, theta, friend1=self.pivo, friend2=self.ala_direito, 
+                                   friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                   enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+            else:
+                action.go_to_point(self.ala_esquerdo, self.ball, self.pivo.xPos, self.pivo.yPos+40, 0, friend1=self.pivo, friend2=self.ala_direito, 
+                                   friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                   enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+                
+        elif self.defensive_up:
+            if condition_idle_deffense:
+                xPoint = idle_point_deffense_x
+                yPoint = idle_point_deffense_y
+                theta = idle_point_deffense_theta
+                action.go_to_point(self.ala_esquerdo, self.ball, xPoint, yPoint, theta, friend1=self.pivo, friend2=self.ala_direito, 
+                                   friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                   enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+            elif condition_defense_toBall :
+                action.defenderSpin(self.ala_esquerdo, self.ball, left_side=not self.ala_esquerdo.teamYellow, friend1=self.pivo, friend2=self.ala_direito, 
+                                    friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                    enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+            else:
+                pass # Definido no follow leader do zagueiro
+
+        elif self.defensive_center or self.defensive_down:
+            if condition_defense_toBall:
+                xPoint = idle_point_deffense_x
+                yPoint = idle_point_deffense_y
+                theta = idle_point_deffense_theta
+                action.go_to_point(self.ala_esquerdo, self.ball, xPoint, yPoint, theta, friend1=self.pivo, friend2=self.ala_direito, 
+                                friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+            else:
+                action.go_to_point(self.ala_esquerdo, self.ball, self.zagueiro.xPos, self.zagueiro.yPos+40, 0, friend1=self.pivo, friend2=self.ala_direito, 
+                                friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+        else:
+            self.ala_esquerdo.simSetVel2(0,0)
+
+    def ala_direito_strategy(self):
+        if self.mray:
+            condition_idle_attack = self.ball.xPos < 50
+            idle_point_attack_x, idle_point_attack_y, idle_point_attack_theta =  30, 60, pi/2
+            idle_point_midfield_x, idle_point_midfield_y, idle_point_midfield_theta =  90, 30, -pi
+
+            condition_defense_toBall = self.ball.xPos > 200 
+
+            condition_idle_deffense = self.ball.xPos > 200 and self.ball.yPos < 130
+            idle_point_deffense_x, idle_point_deffense_y, idle_point_deffense_theta =  180, 30, 0
+        else:
+            condition_idle_attack = self.ball.xPos > 200
+            idle_point_attack_x, idle_point_attack_y, idle_point_attack_theta =  220, 60, -pi/2
+            idle_point_midfield_x, idle_point_midfield_y, idle_point_midfield_theta =  150, 30, 0
+
+            condition_defense_toBall = self.ball.xPos < 50
+
+            condition_idle_deffense = self.ball.xPos < 50 and self.ball.yPos > 50
+            idle_point_deffense_x, idle_point_deffense_y, idle_point_deffense_theta =  70, 30, 0
+
+        if self.offensive_down:
+            action.defenderSpin(self.ala_direito, self.ball, left_side=not self.ala_esquerdo.teamYellow, friend1=self.pivo, friend2=self.ala_esquerdo, 
+                                friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+        elif self.offensive_up:
+            if condition_idle_attack:
+                xPoint = idle_point_attack_x
+                yPoint = idle_point_attack_y
+                theta = idle_point_attack_theta
+                action.go_to_point(self.ala_direito, self.ball, xPoint, yPoint, theta, friend1=self.pivo, friend2=self.ala_esquerdo, 
+                                   friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                   enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+            else:
+                xPoint = idle_point_midfield_x
+                yPoint = idle_point_midfield_y
+                theta = idle_point_midfield_theta
+                action.go_to_point(self.ala_direito, self.ball, xPoint, yPoint, theta, friend1=self.pivo, friend2=self.ala_esquerdo, 
+                                   friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                   enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+        elif self.offensive_center:
+            if self.ala_direito.dist(self.ball) < 25:
+                self.ala_direito.spin = False
+                action.defenderSpin(self.ala_direito, self.ball, left_side=not self.ala_esquerdo.teamYellow, friend1=self.pivo, friend2=self.ala_esquerdo, 
+                                friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+            elif condition_idle_attack:
+                xPoint = idle_point_attack_x
+                yPoint = idle_point_attack_y
+                theta = idle_point_attack_theta
+                action.go_to_point(self.ala_direito, self.ball, xPoint, yPoint, theta, friend1=self.pivo, friend2=self.ala_esquerdo, 
+                                   friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                   enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+            else:
+                action.go_to_point(self.ala_direito, self.ball, self.pivo.xPos, self.pivo.yPos-40, 0, friend1=self.pivo, friend2=self.ala_esquerdo, 
+                                   friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                   enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+        elif self.defensive_down:
+            if condition_idle_deffense:
+                xPoint = idle_point_deffense_x
+                yPoint = idle_point_deffense_y
+                theta = idle_point_deffense_theta
+                action.go_to_point(self.ala_direito, self.ball, xPoint, yPoint, theta, friend1=self.pivo, friend2=self.ala_esquerdo, 
+                                   friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                   enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+            elif self.ball.xPos < 50:
+                action.defenderSpin(self.ala_direito, self.ball, left_side=not self.ala_esquerdo.teamYellow, friend1=self.pivo, friend2=self.ala_esquerdo, 
+                                friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+            else:
+                pass # Definido no follow leader do zagueiro
+        elif self.defensive_up or self.defensive_center:
+            if condition_defense_toBall:
+                xPoint = idle_point_deffense_x
+                yPoint = idle_point_deffense_y
+                theta = idle_point_deffense_theta
+                action.go_to_point(self.ala_direito, self.ball, xPoint, yPoint, theta, friend1=self.pivo, friend2=self.ala_esquerdo, 
+                                   friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                   enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+            else:
+                action.go_to_point(self.ala_direito, self.ball, self.zagueiro.xPos, self.zagueiro.yPos-40, 0, friend1=self.pivo, friend2=self.ala_esquerdo, 
+                                    friend3=self.zagueiro, friend4 = self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                    enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+        else:
+            self.ala_direito.simSetVel2(0,0)
+
+    def zagueiro_strategy(self):
+        if self.mray:
+            condition_goalkeeper_area = self.ball.xPos > 220 and self.ball.yPos > 50 and self.ball.yPos < 130
+            condition_defender_toBall = self.ball.xPos > 200
+        else:
+            condition_goalkeeper_area = self.ball.xPos < 30 and self.ball.yPos > 50 and self.ball.yPos < 130
+            condition_defender_toBall = self.ball.xPos < 50
+
+        if self.defensive_center:
+            if condition_goalkeeper_area:
+                action.screenOutBall(self.zagueiro, self.ball, 45, leftSide=not self.mray, upperLim=175, lowerLim=5)
+            else:
+                action.defenderSpin(self.zagueiro, self.ball, left_side=not self.ala_esquerdo.teamYellow, friend1=self.goleiro, friend2=self.ala_esquerdo, 
+                                    friend3=self.ala_direito, friend4=self.pivo, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                    enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+        elif self.defensive_up:
+            if condition_defender_toBall:
+                action.defenderSpin(self.zagueiro, self.ball, left_side=not self.ala_esquerdo.teamYellow, friend1=self.goleiro, friend2=self.ala_esquerdo, 
+                                    friend3=self.ala_direito, friend4=self.pivo, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                    enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+            else:
+                action.followLeader(self.goleiro, self.zagueiro, self.ala_esquerdo, self.ball, self.robotEnemy0, self.robotEnemy1,
+                                self.robotEnemy2,self.robotEnemy3,self.robotEnemy4)
+        elif self.defensive_down:
+            if condition_defender_toBall:
+                action.defenderSpin(self.zagueiro, self.ball, left_side=not self.ala_esquerdo.teamYellow, friend1=self.goleiro, friend2=self.ala_esquerdo, 
+                                    friend3=self.ala_direito, friend4=self.pivo, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2, enemy3=self.robotEnemy3, 
+                                    enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
+            else:
+                action.followLeader(self.goleiro, self.zagueiro, self.ala_direito, self.ball, self.robotEnemy0, self.robotEnemy1,
+                                self.robotEnemy2,self.robotEnemy3,self.robotEnemy4)
+        elif self.offensive_center or self.offensive_down or self.offensive_up:
+            action.screenOutBall(self.zagueiro, self.ball, 105, leftSide=not self.mray, upperLim=110, lowerLim=70)
+        else:
+            self.zagueiro.simSetVel2(0,0)
+
+    def goleiro_strategy(self):
+        if not self.mray:
+            if self.ball.xPos < 40 and self.ball.yPos > 50 and self.ball.yPos < 130:
+                action.defenderPenalty(self.goleiro, self.ball, leftSide=not self.mray)
+            else:
+                action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
+        else:
+            if self.ball.xPos > 195 and self.ball.yPos > 50 and self.ball.yPos < 130:
+                action.defenderPenalty(self.goleiro, self.ball, leftSide=not self.mray)
+            else:
+                action.screenOutBall(self.robot0, self.ball, 20, leftSide=not self.mray, upperLim=110, lowerLim=70)
+        if ((abs(self.robot0.theta) < deg2rad(10)) or (abs(self.robot0.theta) > deg2rad(170))) and (self.robot0.xPos < 25 or self.robot0.xPos > 225):
+            self.robot0.contStopped += 1
+        else:
+            self.robot0.contStopped = 0
+
 
     def breakWallAtaque(self):
         if self.mray:

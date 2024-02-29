@@ -117,16 +117,18 @@ class Obstacle:
     '''
 
     def wall_obstacle(self, robot_x, robot_y, team_yellow):
-        anchor_x_left = 13
+        anchor_x_left = 13      # Pontos fixos dos obstaculos
         anchor_x_right = 240
         anchor_y_up = 193
         anchor_y_down = -13
 
+        # Tratamento da area ofensiva
         if not team_yellow and (robot_y > 70 and robot_y < 105):
                 anchor_x_right=anchor_x_right+15
         if team_yellow and (robot_y > 70 and robot_y < 105):
                 anchor_x_left=anchor_x_left-15
 
+        # Definição dos obstaculos
         wall_up = [robot_x, anchor_y_up]
         wall_down = [robot_x, anchor_y_down]    
         wall_left = [anchor_x_left, robot_y]
@@ -135,21 +137,32 @@ class Obstacle:
 
         walls = [wall_left, wall_right, wall_up, wall_down]
 
+        # Distancia dos obstaculos em relação ao robô
         distances = []
         for wall in walls:
             distance = sqrt((wall[0]-robot_x)**2 + (wall[1]-robot_y)**2 )
             distances.append(distance)
 
-        index = argmin(distances)
+        index = argmin(distances) # Obstaculo com a menor distancia
         return (walls[index][0], walls[index][1])
 
-    def update2(self, robot, ball, friend1, friend2, enemy1, enemy2, enemy3, enemy4, enemy5):
-        enemys = array([enemy1, enemy2, enemy3, enemy4, enemy5])
-        d_ball = array([[enemy1.dist(ball)],
-                        [enemy2.dist(ball)],
-                        [enemy3.dist(ball)],
-                        [enemy4.dist(ball)],
-                        [enemy5.dist(ball)]]) # Distance to ball of all enemies robots
+    def update2(self, robot, ball, friend1=None, friend2=None, friend3=None, friend4=None, enemy1=None, enemy2=None, enemy3=None, enemy4=None, enemy5=None):
+        #enemys = array([enemy1, enemy2, enemy3, enemy4, enemy5])
+        enemys = []
+        if not (enemy1 is None): enemys.append(enemy1)
+        if not (enemy2 is None): enemys.append(enemy2)
+        if not (enemy3 is None): enemys.append(enemy3)
+        if not (enemy4 is None): enemys.append(enemy4)
+        if not (enemy5 is None): enemys.append(enemy5)
+        #d_ball = array([[enemy1.dist(ball)],
+        #                [enemy2.dist(ball)],
+        #                [enemy3.dist(ball)],
+        #                [enemy4.dist(ball)],
+        #                [enemy5.dist(ball)]]) # Distance to ball of all enemies robots
+        d_ball = []
+        for enemy in enemys:
+            d_ball.append(enemy.dist(ball))
+        d_ball = array(d_ball)
         index = argmin(d_ball) # Index of shortest distance
 
         if d_ball[index] < 15: # If robot is too close, disconsider
@@ -192,8 +205,10 @@ class Obstacle:
                 enemys = delete(enemys, index)
 
         # Adding the team robots
-        enemys = append(enemys, friend1)
-        enemys = append(enemys, friend2)
+        if not (friend1 is None): enemys = append(enemys, friend1)
+        if not (friend2 is None): enemys = append(enemys, friend2)
+        if not (friend3 is None): enemys = append(enemys, friend3)
+        if not (friend4 is None): enemys = append(enemys, friend4)
         d_robot = zeros(len(enemys))
 
         # Detecting nearest object
@@ -202,17 +217,12 @@ class Obstacle:
         index = argmin(d_robot)
 
         wall = self.wall_obstacle(robot.xPos, robot.yPos, robot.teamYellow)
-        if robot.index == 2:
-            print("Parede x: ", wall[0])
-            print("Parede y: ", wall[1])
 
         wall_distance = sqrt( (wall[0] - robot.xPos)**2 +  (wall[1] - robot.yPos)**2)
 
         if wall_distance < d_robot[index]:
             x_obst = wall[0]
             y_obst = wall[1]
-            if robot.index == 2:
-                print("Desviando de parede!!!")
         else:
             x_obst = enemys[index].xPos
             y_obst = enemys[index].yPos

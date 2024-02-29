@@ -37,7 +37,7 @@ if __name__ == "__main__":
         mray = False
 
     # Choose strategy
-    strategyList = ['wallDeffenseDefault', 'blockingWallDeffense', 'default5v5', 'tripleAttack', 'breakWallAtaque', 'breakWallZaga']
+    strategyList = ['wallDeffenseDefault', 'blockingWallDeffense', 'default5v5', 'tripleAttack', 'breakWallAtaque', 'breakWallZaga', 'pivAla']
 
     try:
         selectedStrategy = sys.argv[2]
@@ -155,7 +155,7 @@ if __name__ == "__main__":
 
         else:
             actuator.stop()#'''
-        #strategy.coach(selectedStrategy)
+        #strategy.grid_field()
         
 
         t2 = time.time()

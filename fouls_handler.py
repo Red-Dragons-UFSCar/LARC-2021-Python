@@ -39,3 +39,9 @@ def FoulsHandler(selectedStrategy):
             return currentFouls
         except:
             print("Erro ao importar o módulo de fouls")
+    elif selectedStrategy == "pivAla":
+        try:
+            currentFouls = importlib.import_module('fouls_foulder.fouls_pivAla')
+            return currentFouls
+        except:
+            print("Erro ao importar o módulo de fouls")
