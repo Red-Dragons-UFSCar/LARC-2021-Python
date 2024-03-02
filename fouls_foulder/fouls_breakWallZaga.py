@@ -84,7 +84,7 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade0 = Entity(x=15, y=90,a=0, index=0)
                 entidade1 = Entity(x=46.51, y=84.43,a=90, index=1)
                 entidade2 = Entity(x=46.51, y=95.55,a=90, index=2)
-                entidade3 = Entity(x=90, y=70,a=30, index=3)
+                entidade3 = Entity(x=95, y=90,a=0, index=3)
                 entidade4 = Entity(x=90, y=110,a=-30, index=4)
             replacement.place_all([entidade0, entidade1, entidade2, entidade3, entidade4])
 
@@ -156,8 +156,8 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade0 = Entity(x=235, y=90,a=0, index=0)
                 entidade1 = Entity(x=203.48, y=84.44,a=90, index=1)
                 entidade2 = Entity(x=203.48, y=95.55,a=90, index=2)
-                entidade3 = Entity(x=145, y=70,a=150, index=3)
-                entidade4 = Entity(x=145, y=110,a=-150, index=4)
+                entidade3 = Entity(x=155, y=90,a=180, index=3)
+                entidade4 = Entity(x=160, y=115,a=215, index=4)
             else: # Ofensivo
                 entidade0 = Entity(x=235, y=90,a=0, index=0)
                 entidade1 = Entity(x=203.48, y=84.44,a=90, index=1)
