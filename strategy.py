@@ -83,19 +83,19 @@ class Strategy:
                     self.offensive_down = True
                 else:
                     self.offensive_center = True
+
+                self.ala_esquerdo_strategy()
+                self.ala_direito_strategy()
             else:
-                if self.ball.yPos > 130:
-                    self.defensive_up = True
-                elif self.ball.yPos < 50:
-                    self.defensive_down = True
-                else:
-                    self.defensive_center = True
+                action.defesa_atacantes(self.ball, self.robot0, self.robot1, self.robot4, self.robot3, self.robot2, 
+                                self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4)
+                
         
+    
         self.pivo_strategy()
-        self.ala_esquerdo_strategy()
-        self.ala_direito_strategy()
-        self.zagueiro_strategy()
-        self.goleiro_strategy()
+        action.defenderWall(self.robot0, self.robot1,self.ball, leftSide=not self.mray)
+        #self.zagueiro_strategy()
+        #self.goleiro_strategy()
 
     def pivo_strategy(self):
         if self.offensive_center:
