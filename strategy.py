@@ -61,13 +61,10 @@ class Strategy:
 
         # TODO: fazer para o amarelo
         if self.mray:
-            if self.ball.xPos > 120:
-                if self.ball.yPos > 130:
-                    self.defensive_up = True
-                elif self.ball.yPos < 50:
-                    self.defensive_down = True
-                else:
-                    self.defensive_center = True
+            if self.ball.xPos > 130:
+                action.defesa_atacantes(self.ball, self.robot0, self.robot1, self.robot4, self.robot3, self.robot2, 
+                                self.robotEnemy0, self.robotEnemy1, self.robotEnemy2, self.robotEnemy3, self.robotEnemy4)
+    
             else:
                 if self.ball.yPos > 130:
                     self.offensive_up = True
@@ -75,6 +72,8 @@ class Strategy:
                     self.offensive_down = True
                 else:
                     self.offensive_center = True
+                self.ala_esquerdo_strategy()
+                self.ala_direito_strategy()
         else:
             if self.ball.xPos > 120:
                 if self.ball.yPos > 130:
@@ -98,7 +97,14 @@ class Strategy:
         #self.goleiro_strategy()
 
     def pivo_strategy(self):
-        if self.offensive_center:
+
+        if not self.mray and self.ball.xPos > 205 and self.ball.yPos > 65 and self.ball.yPos < 115 or self.mray and self.ball.xPos < 45 and self.ball.yPos > 65 and self.ball.yPos < 115:
+            action.shoot(self.robot4, self.ball, leftSide=not self.mray)
+        else:
+            action.breakWall(self.robot4, self.ball, self.quadrant,self.robot0, self.robot1, self.robotEnemy0, self.robotEnemy1,
+                                                                                self.robotEnemy2, self.robotEnemy3, self.robotEnemy4,
+                                                                                leftSide=not self.mray)
+        """if self.offensive_center:
             action.defenderSpin(self.pivo, self.ball, left_side=not self.pivo.teamYellow, friend1=self.ala_esquerdo, friend2=self.ala_direito,
                                 friend3=self.zagueiro, friend4=self.goleiro, enemy1=self.robotEnemy1, enemy2=self.robotEnemy2,
                                 enemy3=self.robotEnemy3, enemy4=self.robotEnemy4, enemy5=self.robotEnemy0)
@@ -106,7 +112,8 @@ class Strategy:
             action.screenOutBall_diagonal(self.pivo,self.ball,leftSide=not self.pivo.teamYellow)
         else:
             action.screenOutBall_inverse(self.pivo, self.ball, 135, leftSide= not self.pivo.teamYellow, upperLim=130, lowerLim=50)
-    
+        """ 
+        
     def ala_esquerdo_strategy(self):
         if self.mray:
             condition_idle_attack = self.ball.xPos < 50

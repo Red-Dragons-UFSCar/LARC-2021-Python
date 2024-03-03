@@ -29,7 +29,7 @@ def FoulsHandler(selectedStrategy):
             print("Erro ao importar o módulo de fouls")
     elif selectedStrategy == "breakWallAtaque":
         try:
-            currentFouls = importlib.import_module('fouls_foulder.fouls_wallDeffenseDefault')
+            currentFouls = importlib.import_module('fouls_foulder.fouls_breakWallZaga')
             return currentFouls
         except:
             print("Erro ao importar o módulo de fouls")

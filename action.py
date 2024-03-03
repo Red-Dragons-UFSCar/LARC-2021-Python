@@ -1149,7 +1149,7 @@ def cruzamento(ball, robot2, robot3, alvo):
 
 def breakWall(robot, ball, quadrant, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None, enemy4=None, enemy5=None, leftSide=True):
     r = 35
-    xgoal = 235 if leftSide else 15
+    xgoal = 247 if leftSide else -2
     side = 1 if leftSide else 0
     xtarget = xgoal + r * cos(pi*side)
     ytarget = 90 + r * sin(pi*side)      
@@ -1221,7 +1221,7 @@ def screenOutBall_diagonal(robot,ball,leftSide=True,friend1=None,friend2=None):
     upperLim_y = 130
     lowerLim_y = 50
     if leftSide:
-        upperLim_x = 200
+        upperLim_x = 215
         lowerLim_x = 125
     else:
         upperLim_x = 125
