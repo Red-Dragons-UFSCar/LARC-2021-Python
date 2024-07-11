@@ -34,14 +34,16 @@ def replacement_fouls(replacement, ref_data, mray):
                         entidade4 = Entity(x=189.5, y=90,a=25, index=4)
                     '''
                     # Spin
+                    '''
                     r = random.uniform(0,1)
                     if r <0.5:
                         entidade4 = Entity(x=180, y=70,a=50, index=4)
                     else:
                         entidade4 = Entity(x=180, y=110,a=-50, index=4)
+                    '''
                     # Spin novo
                     # Tirar 2.2 em x, 6 em y
-                    # entidade4 = Entity(x=195.3, y=84, a=90, index=4)
+                    entidade4 = Entity(x=195.3, y=84, a=90, index=4)
                 replacement.place_all([entidade0, entidade1, entidade2, entidade3, entidade4])
 
         elif ref_data["foul"] == 2:
@@ -110,11 +112,15 @@ def replacement_fouls(replacement, ref_data, mray):
                 else:
                     entidade4 = Entity(x=59.5, y=90,a=155, index=4)'''
                 # Spin
+                '''
                 r = random.uniform(0,1)
                 if r <0.5:
                     entidade4 = Entity(x=70, y=70,a=130, index=4)
                 else:
                     entidade4 = Entity(x=70, y=110,a=-130, index=4)
+                '''
+                # New-spin
+                entidade4 = Entity(x=54.7, y=84, a=90, index=4)
             else: # Defensivo
                 entidade0 = Entity(x=231, y=90,a=180, index=0)
                 entidade1 = Entity(x=85, y=90,a=0, index=1)

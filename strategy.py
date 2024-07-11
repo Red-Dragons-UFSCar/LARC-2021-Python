@@ -27,7 +27,8 @@ class Strategy:
             self.penaltyModeDefensive()
         elif self.penaltyOffensive == True:
             #self.penaltyReto()
-            self.penaltyModeOffensiveSpin()
+            #self.penaltyModeOffensiveSpin()
+            self.penaltyModeOffensiveNewSpin()
         else: # If the game is not in penalty mode
             if selectedStrategy == "blockingWallDeffense":
                 self.breakWallStgAtt()
@@ -524,6 +525,12 @@ class Strategy:
                     action.girar(self.robot4, 100, 0)
         if sqrt((self.ball.xPos-self.robot4.xPos)**2+(self.ball.yPos-self.robot4.yPos)**2) > 30:
             self.penaltyOffensive = False
+
+    def penaltyModeOffensiveNewSpin(self):
+        if not self.robot4.teamYellow:
+            action.girar(self.robot4,100,-100)
+        else:
+            action.girar(self.robot4,-100,100)
 
     def basicStgAtt3(self):
         """Basic alternative strategy"""
