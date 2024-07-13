@@ -41,7 +41,7 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade0 = Entity(x=22, y=90, a=0, index=0)
                 entidade1 = Entity(x=60, y=90, a=0, index=1)
                 entidade2 = Entity(x=120, y=50, a=0, index=2)
-                entidade3 = Entity(x=120, y=130, a=0, index=3)
+                entidade3 = Entity(x=120, y=140, a=0, index=3)
                 # Reto
                 """rand = random.random()
                     if rand > 1/2:
@@ -86,13 +86,13 @@ def replacement_fouls(replacement, ref_data, mray):
                 entidade1 = Entity(x=46.51, y=84.45, a=-109.98, index=1)
                 entidade2 = Entity(x=95, y=40, a=0, index=2)
                 entidade3 = Entity(x=45, y=148, a=0, index=3)
-                entidade4 = Entity(x=70, y=85, a=90, index=4)
+                entidade4 = Entity(x=73, y=85, a=90, index=4)
             elif ref_data["quad"] == 3:
                 entidade0 = Entity(x=46.51, y=95.54, a=-70.01, index=0)
                 entidade1 = Entity(x=42.71, y=105.99, a=-70.01, index=1)
                 entidade2 = Entity(x=45, y=30, a=0, index=2)
                 entidade3 = Entity(x=95, y=140, a=0, index=3)
-                entidade4 = Entity(x=70, y=95, a=-90, index=4)
+                entidade4 = Entity(x=73, y=95, a=-90, index=4)
             elif ref_data["quad"] == 4:
                 entidade0 = Entity(x=42.71, y=74.00, a=-109.98, index=0)
                 entidade1 = Entity(x=46.51, y=84.45, a=-109.98, index=1)
