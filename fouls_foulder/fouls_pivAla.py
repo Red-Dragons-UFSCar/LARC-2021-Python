@@ -126,8 +126,8 @@ def replacement_fouls(replacement, ref_data, mray):
 
                 entidade0 = Entity(x=228, y=90, a=180, index=0)
                 entidade1 = Entity(x=190, y=90, a=180, index=1)
-                entidade2 = Entity(x=130, y=60, a=0, index=2)
-                entidade3 = Entity(x=130, y=130, a=0, index=3)
+                entidade2 = Entity(x=140, y=60, a=0, index=2)
+                entidade3 = Entity(x=140, y=130, a=0, index=3)
                 # Reto
                 """rand = random.random()
                 if rand > 1/2:
