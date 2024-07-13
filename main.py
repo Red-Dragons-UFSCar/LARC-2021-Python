@@ -124,7 +124,7 @@ if __name__ == "__main__":
 
         #action.triple_ataque(ball, robot0, robot1, robot2, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4)
         #action.ataque(ball, robot3, robot4, robotEnemy0, robotEnemy1, robotEnemy2, robotEnemy3, robotEnemy4)
-
+        print(strategy.penaltyOffensive)
         #'''
         if ref_data["game_on"]:
             strategy.coach(selectedStrategy)
@@ -142,14 +142,16 @@ if __name__ == "__main__":
 
         elif ref_data["foul"] == 1 and ref_data["yellow"] == (mray):
             #Detectando penalti ofensivo
+            print("salve")
             strategy.penaltyOffensive = True
             actuator.stop()
             currentFouls.replacement_fouls(replacement,ref_data,mray)
 
         elif ref_data["foul"] != 7:
             if ref_data["foul"] != 5: # Mudando a flag exceto em caso de Stop
-                Strategy.penaltyOffensive = False
-                Strategy.penaltyDefensive = False
+                print("oi")
+                strategy.penaltyOffensive = False
+                strategy.penaltyDefensive = False
             currentFouls.replacement_fouls(replacement,ref_data,mray)
             actuator.stop()
 
