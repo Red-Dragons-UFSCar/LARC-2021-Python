@@ -1148,7 +1148,7 @@ def cruzamento(ball, robot2, robot3, alvo):
 
 
 def breakWall(robot, ball, quadrant, friend1=None, friend2=None, enemy1=None, enemy2=None, enemy3=None, enemy4=None, enemy5=None, leftSide=True):
-    r = 45
+    r = 35
     xgoal = 247 if leftSide else -2
     side = 1 if leftSide else 0
     xtarget = xgoal + r * cos(pi*side)
