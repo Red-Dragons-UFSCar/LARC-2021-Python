@@ -160,7 +160,7 @@ def replacement_fouls(replacement, ref_data, mray):
             entidade1 = Entity(x=180, y=90, a=180, index=1)
             entidade2 = Entity(x=180, y=30, a=180, index=2)
             entidade3 = Entity(x=180, y=150, a=180, index=3)
-            entidade4 = Entity(x=100, y=90, a=180, index=4)
+            entidade4 = Entity(x=100, y=100, a=180, index=4)
             replacement.place_all(
                 [entidade0, entidade1, entidade2, entidade3, entidade4]
             )
