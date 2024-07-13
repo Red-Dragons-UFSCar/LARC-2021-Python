@@ -27,8 +27,8 @@ class Strategy:
             self.penaltyModeDefensive()
         elif self.penaltyOffensive == True:
             #self.penaltyReto()
-            self.penaltyModeOffensiveSpin()
-            #self.penaltyModeOffensiveNewSpin()
+            #self.penaltyModeOffensiveSpin()
+            self.penaltyModeOffensiveNewSpin()
         else: # If the game is not in penalty mode
             if selectedStrategy == "blockingWallDeffense":
                 self.breakWallStgAtt()
