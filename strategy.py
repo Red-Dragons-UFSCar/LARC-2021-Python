@@ -531,6 +531,8 @@ class Strategy:
             action.girar(self.robot4,100,-100)
         else:
             action.girar(self.robot4,-100,100)
+        if sqrt((self.ball.xPos-self.robot4.xPos)**2+(self.ball.yPos-self.robot4.yPos)**2) > 30:
+            self.penaltyOffensive = False
 
     def basicStgAtt3(self):
         """Basic alternative strategy"""
